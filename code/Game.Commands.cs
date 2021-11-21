@@ -39,6 +39,7 @@ namespace Sketch
 			if(time < 0)
 			{
 				Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Invalid SelectWordTime value (must be non-negative)." );
+				return;
 			}
 
 			Current.SelectWordTime = time;
@@ -51,9 +52,23 @@ namespace Sketch
 			if ( time <= 0 )
 			{
 				Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Invalid PlayTime value (must be greater than 0)." );
+				return;
 			}
 
 			Current.PlayTime = time;
+		}
+
+		[AdminCmd( "sketch_wordpoolsize", Help = "How many words the drawer gets to choose from." )]
+		public static void SetWordPoolSize( int size )
+		{
+			//Invalid time, error out.
+			if ( size <= 0 )
+			{
+				Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Invalid WordPoolSize value (must be greater than 0)." );
+				return;
+			}
+
+			Current.WordPoolSize = size;
 		}
 	}
 }

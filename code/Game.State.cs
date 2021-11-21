@@ -57,8 +57,15 @@ namespace Sketch
 			public override string StateName() => "Selecting Word";
 			private RealTimeUntil stateEnds;
 
+			private string[] wordpool;
+			private string selectedWord;
+
 			public SelectingWordState()
 			{
+				wordpool = Words.RandomWords( Current.WordPoolSize );
+				var client = Client.All[Current.CurrentPlayerIndex];
+				Current.SendWordPool( To.Single( client ), wordpool );
+
 				stateEnds = Current.SelectWordTime;
 			}
 
@@ -70,6 +77,8 @@ namespace Sketch
 
 			public override void Tick()
 			{
+
+
 				if(stateEnds < 0)
 				{
 					SetState( new PlayingState() );
@@ -222,6 +231,12 @@ namespace Sketch
 		public int CurrentPlayerIndex = 0;
 
 		/// <summary>
+		/// How many words the drawer gets to choose from.
+		/// Set by sketch_wordpoolsize command. Must be greater than 0.
+		/// </summary>
+		public int WordPoolSize { get; set; } = 3;
+
+		/// <summary>
 		/// How long the drawer has to pick a word. 
 		/// Set by sketch_selectwordtime command. Set to 0 for random words.
 		/// </summary>
@@ -245,6 +260,11 @@ namespace Sketch
 			CurrentStateName = CurrentState.StateName();
 			CurrentStateTime = CurrentState.StateTime();
 			CurrentState.Tick();
+		}
+
+		[ClientRpc]
+		public void SendWordPool(string[] pool)
+		{
 		}
 	}
 }

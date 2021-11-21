@@ -17,7 +17,6 @@ namespace Sketch
 		/// Initializes Words.WordList (duh dumbass) from local file.
 		/// Errors out if file does not exist.
 		/// </summary>
-		[Event.Hotload]
 		public static void InitWordList()
 		{
 			if(FileSystem.Mounted.FileExists(ListPath))
