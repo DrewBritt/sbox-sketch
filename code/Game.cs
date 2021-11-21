@@ -17,6 +17,7 @@ namespace Sketch
 			if(IsServer)
 			{
 				//Hud = new Hud();
+				Words.InitWordList();
 			}
 		}
 		public override void ClientJoined( Client cl )
