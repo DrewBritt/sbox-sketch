@@ -1,4 +1,6 @@
 ﻿hud {
+    pointer-events: all;
+
     left:0;
     top:0;
 
@@ -7,6 +9,8 @@
     height: 100%;
 
     .gamescreen {
-        width: 40%;
+        width: 60%;
+        flex-direction: column;
+        align-items: center;
     }
 }
