@@ -8,6 +8,7 @@ namespace Sketch
 	public partial class Game : GameBase
 	{
 		public static Game Current { get; protected set; }
+		public HUD Hud { get; set; }
 
 		public Game()
 		{
@@ -16,8 +17,12 @@ namespace Sketch
 
 			if(IsServer)
 			{
-				//Hud = new Hud();
 				Words.InitWordList();
+			}
+
+			if(IsClient)
+			{
+				Hud = new HUD();
 			}
 		}
 		public override void ClientJoined( Client cl )
