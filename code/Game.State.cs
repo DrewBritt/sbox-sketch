@@ -57,13 +57,13 @@ namespace Sketch
 			public override string StateName() => "Selecting Word";
 			private RealTimeUntil stateEnds;
 
-			private string[] wordpool;
-			private string selectedWord;
+			public string[] wordpool;
+			public string selectedWord;
 
 			public SelectingWordState()
 			{
 				wordpool = Words.RandomWords( Current.WordPoolSize );
-				var client = Client.All[Current.CurrentPlayerIndex];
+				var client = Client.All[Current.CurrentDrawerIndex];
 				Current.SendWordPool( To.Single( client ), wordpool );
 
 				stateEnds = Current.SelectWordTime;
@@ -170,7 +170,7 @@ namespace Sketch
 					if(Current.CurRound < Current.MaxRounds)
 					{
 						Current.CurRound++;
-						Current.CurrentPlayerIndex = 0;
+						Current.CurrentDrawerIndex = 0;
 						SetState( new SelectingWordState() );
 					} else
 					{
@@ -228,7 +228,7 @@ namespace Sketch
 		/// Keeps track of drawer in Client.All
 		/// TODO: See if switching to custom player list (pawns) is better.
 		/// </summary>
-		public int CurrentPlayerIndex = 0;
+		public int CurrentDrawerIndex = 0;
 
 		/// <summary>
 		/// How many words the drawer gets to choose from.
@@ -265,6 +265,25 @@ namespace Sketch
 		[ClientRpc]
 		public void SendWordPool(string[] pool)
 		{
+			//Popup UI shit on drawer client (display words as buttons to select)
+
+		}
+
+		[ServerCmd]
+		public static void SelectWord(string word)
+		{
+			//Verify if command caller is the current drawer
+			if ( ConsoleSystem.Caller != Client.All[Current.CurrentDrawerIndex] ) return;
+
+			//Verify if word is in wordpool
+			if (Current.CurrentState is SelectingWordState state && state.wordpool.Contains(word))
+			{
+				//Set word to draw
+				state.selectedWord = word;
+				return;
+			}
+
+			Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Selected word is not in word pool." );
 		}
 	}
 }
