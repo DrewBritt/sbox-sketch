@@ -84,6 +84,16 @@ namespace Sketch
 				return $"{time.Minutes:D2}:{time.Seconds:D2}";
 			}
 
+			/// <summary>
+			/// Stores word and progresses to PlayingState().
+			/// </summary>
+			/// <param name="word"></param>
+			public void SelectWord(string word)
+			{
+				Current.CurrentWord = word;
+				stateEnds = -1;
+			}
+
 			public override void Tick()
 			{
 				if(stateEnds < 0)
@@ -353,7 +363,7 @@ namespace Sketch
 				//And if selected word is valid
 				if ( state.wordpool.Contains( word ) )
 				{
-					Current.CurrentWord = word;
+					state.SelectWord( word );
 					return;
 				}
 
