@@ -1,5 +1,38 @@
 ﻿scoreboard {
-    top: 0;
-    left: 0;
-    width: 20%;
+    z-index: 100;
+    width: 30%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+
+
+    .container {
+        width: 80%;
+        flex-direction: column;
+        background-color: rgba( 0, 0, 0, 0.9 );
+        font-family: Poppins;
+        font-size: 18px;
+        font-weight: 500;
+        color: white;
+    }
+
+    .name {
+        flex-grow: 1;
+    }
+
+    .score {
+        width: 90px;
+        text-align: right;
+    }
+
+    .canvas {
+        flex-direction: column;
+        min-height: 50%;
+        min-width: 30%;
+
+        .entry {
+            margin-bottom: 2px;
+            padding: 4px;
+        }
+    }
 }

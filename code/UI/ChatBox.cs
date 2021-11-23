@@ -5,68 +5,43 @@ using Sandbox.UI.Construct;
 
 namespace Sketch
 {
-	public partial class CustomChatBox : Panel
+	[UseTemplate]
+	public partial class ChatBox : Panel
 	{
-		public static CustomChatBox Current;
+		public static ChatBox Current;
 
+		public Panel Container { get; protected set; }
 		public Panel Canvas { get; protected set; }
 		public TextEntry Input { get; protected set; }
 
-		public CustomChatBox()
+		public ChatBox()
 		{
 			Current = this;
 
-			StyleSheet.Load( "Code/UI/CustomChatBox.scss" );
+			StyleSheet.Load( "UI/ChatBox.scss" );
 
-			Canvas = Add.Panel( "customchat_canvas" );
+			Container = Add.Panel("container");
+
+			Canvas = Container.Add.Panel( "chat_canvas" );
 			Canvas.PreferScrollToBottom = true;
 
-			Input = Add.TextEntry( "" );
+			Input = Container.Add.TextEntry( "" );
 			Input.AddEventListener( "onsubmit", () => Submit() );
-			Input.AddEventListener( "onblur", () => Close() );
 			Input.AcceptsFocus = true;
 			Input.AllowEmojiReplace = true;
 
-			Chat.OnOpenChat += Open;
+			Chat.OnOpenChat += FocusChat;
 		}
 
-		void Open()
+		void FocusChat()
 		{
-			AddClass( "open" );
 			Input.Focus();
-
-			foreach ( CustomChatEntry message in Canvas.Children )
-			{
-				if ( message.HasClass( "hide" ) )
-				{
-					message.AddClass( "show" );
-				}
-			}
-
-			Canvas.TryScrollToBottom();
-		}
-
-		void Close()
-		{
-			RemoveClass( "open" );
-			Input.Blur();
-
-			foreach ( CustomChatEntry message in Canvas.Children )
-			{
-				if ( message.HasClass( "show" ) )
-				{
-					message.RemoveClass( "show" );
-					message.AddClass( "expired" );
-				}
-			}
 
 			Canvas.TryScrollToBottom();
 		}
 
 		void Submit()
 		{
-			Close();
-
 			var msg = Input.Text.Trim();
 			Input.Text = "";
 
@@ -80,7 +55,7 @@ namespace Sketch
 
 		public void AddEntry( string name, string message, string avatar, string additionalClass = null )
 		{
-			var e = Canvas.AddChild<CustomChatEntry>();
+			var e = Canvas.AddChild<ChatEntry>();
 			e.Message.Text = message;
 			e.NameLabel.Text = name;
 			e.Avatar.SetTexture( avatar );
@@ -123,6 +98,20 @@ namespace Sketch
 
 			Log.Info( $"{ConsoleSystem.Caller}: {message}" );
 			AddChatEntry( To.Everyone, ConsoleSystem.Caller.Name, message, $"avatar:{ConsoleSystem.Caller.PlayerId}" );
+		}
+	}
+
+	public partial class ChatEntry : Panel
+	{
+		public Label NameLabel { get; internal set; }
+		public Label Message { get; internal set; }
+		public Image Avatar { get; internal set; }
+
+		public ChatEntry()
+		{
+			Avatar = Add.Image();
+			NameLabel = Add.Label( "Name", "name" );
+			Message = Add.Label( "Message", "message" );
 		}
 	}
 }

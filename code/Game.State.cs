@@ -146,7 +146,7 @@ namespace Sketch
 					Current.CurrentLetters[ranNum] = Current.CurrentWord[ranNum];
 
 					//Reset letter timer
-					newLetter = 5;
+					newLetter = Current.PlayTime / Current.CurrentWord.Length;
 				}
 
 				if(stateEnds < 0)
