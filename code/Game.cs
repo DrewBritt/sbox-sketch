@@ -18,10 +18,6 @@ namespace Sketch
 			if(IsServer)
 			{
 				Words.InitWordList();
-			}
-
-			if(IsClient)
-			{
 				Hud = new HUD();
 			}
 		}

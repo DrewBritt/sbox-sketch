@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace Sketch
 {
-	[UseTemplate]
-	public partial class HUD : RootPanel
+	public partial class HUD : HudEntity<RootPanel>
 	{
+		public HUD()
+		{
+			if ( IsClient )
+			{
+				RootPanel.SetTemplate( "/UI/HUD.html" );
+			}
+		}
 	}
 }

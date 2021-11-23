@@ -38,6 +38,10 @@ namespace Sketch
 		{
 			public override string StateName() => "Waiting for Players";
 
+			public WaitingForPlayersState() : base() 
+			{
+			}
+
 			public override void Tick()
 			{
 				if (Client.All.Count > 1)
@@ -58,13 +62,19 @@ namespace Sketch
 			private RealTimeUntil stateEnds;
 
 			public string[] wordpool;
-			public string selectedWord;
 
-			public SelectingWordState()
+			public SelectingWordState() : base()
 			{
+				//Send potential word pool to player.
 				wordpool = Words.RandomWords( Current.WordPoolSize );
 				var client = Client.All[Current.CurrentDrawerIndex];
 				Current.SendWordPool( To.Single( client ), wordpool );
+
+				//Set random word ahead of time. If player doesn't select a word, this word is used.
+				var random = new Random();
+				int ranNum = random.Next( wordpool.Length );
+				Current.CurrentWord = wordpool[ranNum];
+				Log.Info( wordpool[ranNum] );
 
 				stateEnds = Current.SelectWordTime;
 			}
@@ -77,8 +87,6 @@ namespace Sketch
 
 			public override void Tick()
 			{
-
-
 				if(stateEnds < 0)
 				{
 					SetState( new PlayingState() );
@@ -94,10 +102,23 @@ namespace Sketch
 		{
 			public override string StateName() => "Playing";
 			private RealTimeUntil stateEnds;
+			private RealTimeUntil newLetter;
 
-			public PlayingState()
+			public PlayingState() : base()
 			{
+				//Init CurrentLetters with empty spaces
+				var word = Current.CurrentWord;
+				var chars = new List<char>();
+				for(int i = 0; i < Current.CurrentWord.Length; i++ )
+				{
+					chars.Add( '_' );
+				}
+				Current.CurrentLetters = chars;
+
 				stateEnds = Current.PlayTime;
+				newLetter = Current.PlayTime / Current.CurrentWord.Length;
+
+				Current.SendWordToDrawer( To.Single( Client.All[Current.CurrentDrawerIndex] ), word);
 			}
 
 			public override string StateTime()
@@ -108,6 +129,17 @@ namespace Sketch
 
 			public override void Tick()
 			{
+				if(newLetter < 0)
+				{
+					//Select random letter and stick into char array
+					var random = new Random();
+					int ranNum = random.Next( Current.CurrentWord.Length );
+					Current.CurrentLetters[ranNum] = Current.CurrentWord[ranNum];
+
+					//Reset letter timer
+					newLetter = 5;
+				}
+
 				if(stateEnds < 0)
 				{
 					SetState( new PostPlayingState() );
@@ -125,7 +157,7 @@ namespace Sketch
 			public override string StateName() => "Post-Drawing";
 			private RealTimeUntil stateEnds;
 
-			public PostPlayingState()
+			public PostPlayingState() : base()
 			{
 				stateEnds = 8;
 			}
@@ -138,6 +170,17 @@ namespace Sketch
 
 			public override void Tick()
 			{
+				if(stateEnds < 0)
+				{
+					if(Current.CurrentDrawerIndex < Client.All.Count - 1)
+					{
+						Current.CurrentDrawerIndex++;
+						SetState( new SelectingWordState() );
+					} else
+					{
+						SetState( new PostRoundState() );
+					}
+				}
 			}
 		}
 
@@ -152,7 +195,7 @@ namespace Sketch
 			public override string StateName() => "Post-Round";
 			private RealTimeUntil stateEnds;
 
-			public PostRoundState()
+			public PostRoundState() : base()
 			{
 				stateEnds = 10;
 			}
@@ -189,7 +232,7 @@ namespace Sketch
 			public override string StateName() => "Post-Game";
 			private RealTimeUntil stateEnds;
 
-			public PostGameState()
+			public PostGameState() : base()
 			{
 				stateEnds = 10;
 			}
@@ -252,6 +295,20 @@ namespace Sketch
 		/// </summary>
 		public string CurrentWord { get; set; }
 
+		/// <summary>
+		/// Current letters displayed to non-drawers. Networked to ease accessing in UI, and no cheating potential arises.
+		/// </summary>
+		[Net] public List<char> CurrentLetters { get; set; }
+
+		public string CurrentLettersString()
+		{
+			var w = "";
+			foreach ( var c in CurrentLetters )
+				w += c;
+
+			return w;
+		}
+
 		[Event.Tick]
 		public void OnTick()
 		{
@@ -269,6 +326,12 @@ namespace Sketch
 
 		}
 
+		[ClientRpc]
+		public void SendWordToDrawer(string word)
+		{
+			Log.Info( word );
+		}
+
 		[ServerCmd]
 		public static void SelectWord(string word)
 		{
@@ -279,7 +342,7 @@ namespace Sketch
 			if (Current.CurrentState is SelectingWordState state && state.wordpool.Contains(word))
 			{
 				//Set word to draw
-				state.selectedWord = word;
+				Current.CurrentWord = word;
 				return;
 			}
 
