@@ -21,7 +21,7 @@ namespace Sketch
 		{
 			if(FileSystem.Mounted.FileExists(ListPath))
 			{
-				WordList = FileSystem.Mounted.ReadAllText( ListPath ).Split( '\n' ).ToList();
+				WordList = FileSystem.Mounted.ReadAllText( ListPath ).Split( '\n', StringSplitOptions.TrimEntries).ToList();
 				return;
 			}
 

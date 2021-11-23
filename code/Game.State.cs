@@ -351,14 +351,11 @@ namespace Sketch
 			{
 
 				//And if selected word is valid
-				//TODO: Revisit check
-				//Wrestled for 30 minutes with every other method of comparison and got errors. Check again.
-				foreach ( var w in state.wordpool )
-					if ( w.Contains(word) )
-					{
-						Current.CurrentWord = w;
-						return;
-					}
+				if ( state.wordpool.Contains( word ) )
+				{
+					Current.CurrentWord = word;
+					return;
+				}
 
 				Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Selected word is not in word pool." );
 				return;
