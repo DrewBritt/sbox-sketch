@@ -96,7 +96,13 @@ namespace Sketch
 
 			public override void Tick()
 			{
-				if(stateEnds < 0)
+				//Cancel game if only one player is left
+				if ( Client.All.Count == 1 )
+				{
+					SetState( new WaitingForPlayersState() );
+				}
+
+				if (stateEnds < 0)
 				{
 					SetState( new PlayingState() );
 				}
@@ -147,6 +153,12 @@ namespace Sketch
 
 					//Reset letter timer
 					newLetter = Current.PlayTime / Current.CurrentWord.Length;
+				}
+
+				//Cancel game if only one player is left
+				if(Client.All.Count == 1)
+				{
+					SetState( new WaitingForPlayersState() );
 				}
 
 				if(stateEnds < 0)

@@ -23,14 +23,14 @@ namespace Sketch
 		}
 		public override void ClientJoined( Client cl )
 		{
-			Sandbox.UI.ChatBox.AddInformation( To.Everyone, $"{cl.Name} has joined the game!", $"avatar:{cl.PlayerId}" );
+			ChatBox.AddInformation( To.Everyone, $"{cl.Name} has joined the game!", $"avatar:{cl.PlayerId}" );
 
 
 		}
 
 		public override void ClientDisconnect( Client cl, NetworkDisconnectionReason reason )
 		{
-			Sandbox.UI.ChatBox.AddInformation( To.Everyone, $"{cl.Name} has left ({reason})", $"avatar:{cl.PlayerId}" );
+			ChatBox.AddInformation( To.Everyone, $"{cl.Name} has left ({reason})", $"avatar:{cl.PlayerId}" );
 
 			if(cl.Pawn.IsValid())
 			{
