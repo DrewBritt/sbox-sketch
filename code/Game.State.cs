@@ -65,16 +65,15 @@ namespace Sketch
 
 			public SelectingWordState() : base()
 			{
-				//Send potential word pool to player.
+				//Send word pool to drawer.
 				wordpool = Words.RandomWords( Current.WordPoolSize );
 				var client = Client.All[Current.CurrentDrawerIndex];
-				Current.SendWordPool( To.Single( client ), wordpool );
+				Current.SendWordPool( To.Single( client ), wordpool.ToArray() );
 
-				//Set random word ahead of time. If player doesn't select a word, this word is used.
+				//Set random word ahead of time. If drawer doesn't select a word, this word is used.
 				var random = new Random();
 				int ranNum = random.Next( wordpool.Length );
 				Current.CurrentWord = wordpool[ranNum];
-				Log.Info( wordpool[ranNum] );
 
 				stateEnds = Current.SelectWordTime;
 			}
@@ -300,6 +299,9 @@ namespace Sketch
 		/// </summary>
 		[Net] public List<char> CurrentLetters { get; set; }
 
+		/// <summary>
+		/// Nicer way to turn CurrentLetters into a string instead of writing a loop every fucking time.
+		/// </summary>
 		public string CurrentLettersString()
 		{
 			var w = "";
@@ -323,7 +325,9 @@ namespace Sketch
 		public void SendWordPool(string[] pool)
 		{
 			//Popup UI shit on drawer client (display words as buttons to select)
-
+			Log.Info( "SendWordPool()" );
+			foreach ( var w in pool )
+				Log.Info( w );
 		}
 
 		[ClientRpc]
@@ -336,17 +340,32 @@ namespace Sketch
 		public static void SelectWord(string word)
 		{
 			//Verify if command caller is the current drawer
-			if ( ConsoleSystem.Caller != Client.All[Current.CurrentDrawerIndex] ) return;
-
-			//Verify if word is in wordpool
-			if (Current.CurrentState is SelectingWordState state && state.wordpool.Contains(word))
+			if ( ConsoleSystem.Caller != Client.All[Current.CurrentDrawerIndex] )
 			{
-				//Set word to draw
-				Current.CurrentWord = word;
+				Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: You're not the drawer!" );
 				return;
 			}
 
-			Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Selected word is not in word pool." );
+			//Verify if state is proper
+			if (Current.CurrentState is SelectingWordState state)
+			{
+
+				//And if selected word is valid
+				//TODO: Revisit check
+				//Wrestled for 30 minutes with every other method of comparison and got errors. Check again.
+				foreach ( var w in state.wordpool )
+					if ( w.Contains(word) )
+					{
+						Current.CurrentWord = w;
+						return;
+					}
+
+				Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Selected word is not in word pool." );
+				return;
+
+			}
+
+			Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Game is not in proper state!" );
 		}
 	}
 }
