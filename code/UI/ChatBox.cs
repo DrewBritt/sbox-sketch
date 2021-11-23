@@ -53,15 +53,13 @@ namespace Sketch
 			Canvas.TryScrollToBottom();
 		}
 
-		public void AddEntry( string name, string message, string avatar, string additionalClass = null )
+		public void AddEntry( string name, string message, string additionalClass = null )
 		{
 			var e = Canvas.AddChild<ChatEntry>();
 			e.Message.Text = message;
 			e.NameLabel.Text = name;
-			e.Avatar.SetTexture( avatar );
 
 			e.SetClass( "noname", string.IsNullOrEmpty( name ) );
-			e.SetClass( "noavatar", string.IsNullOrEmpty( avatar ) );
 
 			if ( !string.IsNullOrEmpty( additionalClass ) )
 				e.AddClass( additionalClass );
@@ -70,9 +68,9 @@ namespace Sketch
 		}
 
 		[ClientCmd( "chat_add", CanBeCalledFromServer = true )]
-		public static void AddChatEntry( string name, string message, string avatar = null )
+		public static void AddChatEntry( string name, string message)
 		{
-			Current?.AddEntry( name, message, avatar );
+			Current?.AddEntry( name, message );
 
 			// Only log clientside if we're not the listen server host
 			if ( !Global.IsListenServer )
@@ -82,9 +80,9 @@ namespace Sketch
 		}
 
 		[ClientCmd( "chat_addinfo", CanBeCalledFromServer = true )]
-		public static void AddInformation( string message, string avatar = null, bool important = false )
+		public static void AddInformation( string message, bool important = false )
 		{
-			Current?.AddEntry( null, message, avatar, important ? "information" : null );
+			Current?.AddEntry( null, message, important ? "information" : null );
 		}
 
 		[ServerCmd( "say" )]
@@ -97,7 +95,7 @@ namespace Sketch
 				return;
 
 			Log.Info( $"{ConsoleSystem.Caller}: {message}" );
-			AddChatEntry( To.Everyone, ConsoleSystem.Caller.Name, message, $"avatar:{ConsoleSystem.Caller.PlayerId}" );
+			AddChatEntry( To.Everyone, ConsoleSystem.Caller.Name, message);
 		}
 	}
 
@@ -105,11 +103,9 @@ namespace Sketch
 	{
 		public Label NameLabel { get; internal set; }
 		public Label Message { get; internal set; }
-		public Image Avatar { get; internal set; }
 
 		public ChatEntry()
 		{
-			Avatar = Add.Image();
 			NameLabel = Add.Label( "Name", "name" );
 			Message = Add.Label( "Message", "message" );
 		}

@@ -23,7 +23,6 @@ namespace Sketch
 
 		public override void Tick()
 		{
-
 			// Add newly joined cliets
 			foreach ( var client in Client.All.Except( Rows.Keys ) )
 			{
@@ -40,6 +39,10 @@ namespace Sketch
 					Rows.Remove( client );
 				}
 			}
+
+			//Hacky way to sort scoreboard by playerscore without rewriting the scoreboard
+			//TODO: Make this not hacky probably
+			Canvas.SortChildren( p => ((ScoreboardEntry)p).Client.GetInt("GameScore") * -1 );
 		}
 
 		protected virtual ScoreboardEntry AddClient( Client entry )
@@ -64,7 +67,9 @@ namespace Sketch
 
 			Avatar = Add.Image();
 			PlayerName = Add.Label( "PlayerName", "name" );
-			Score = Add.Label( "0000", "" );
+			Score = Add.Label( "0000", "score" );
+
+			AddClass( "first" );
 		}
 
 		RealTimeSince TimeSinceUpdate = 0;
@@ -88,8 +93,9 @@ namespace Sketch
 
 		public virtual void UpdateData()
 		{
+			Avatar.SetTexture( $"avatar:{Client.PlayerId}" );
 			PlayerName.Text = Client.Name;
-			//Score.Text = Client.GetInt("score"); DOESNT ACTUALLY WORK JUST WRITING FOR LATER ME
+			Score.Text = Client.GetInt("GameScore").ToString();
 		}
 
 		public virtual void UpdateFrom( Client client )

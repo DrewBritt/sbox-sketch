@@ -386,5 +386,11 @@ namespace Sketch
 
 			Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Game is not in proper state!" );
 		}
+
+		[ServerCmd]
+		public static void SetScore( int score )
+		{
+			ConsoleSystem.Caller.SetInt( "GameScore", score );
+		}
 	}
 }

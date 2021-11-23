@@ -21,7 +21,7 @@
         height: 24px;
         min-height: 24px;
         border-radius: 100px;
-        margin-right: 4px;
+        margin-right: 10px;
     }
 
     .name {
@@ -29,7 +29,6 @@
     }
 
     .score {
-        width: 90px;
         text-align: right;
     }
 
@@ -41,6 +40,18 @@
         .entry {
             margin-bottom: 2px;
             padding: 4px;
+
+            &.first {
+                background-color: rgba( 212, 175, 55, 0.9 );
+            }
+
+            &.second {
+                background-color: rgba( 192, 192,192, 0.9 );
+            }
+
+            &.third {
+                background-color: rgba( 148, 94, 40, 0.9 );
+            }
         }
     }
 }
