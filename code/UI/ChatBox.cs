@@ -57,7 +57,7 @@ namespace Sketch
 		{
 			var e = Canvas.AddChild<ChatEntry>();
 			e.Message.Text = message;
-			e.NameLabel.Text = name;
+			e.NameLabel.Text = name + ":";
 
 			e.SetClass( "noname", string.IsNullOrEmpty( name ) );
 

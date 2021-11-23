@@ -26,7 +26,7 @@ namespace Sketch
 			var game = Game.Current;
 			if ( game == null ) return;
 
-			StateName.Text = game.CurrentStateName;
+			StateName.Text = game.CurrentStateName.ToUpper();
 			StateTime.Text = game.CurrentStateTime;
 
 			BlankLetters.Text = game.CurrentLettersString();

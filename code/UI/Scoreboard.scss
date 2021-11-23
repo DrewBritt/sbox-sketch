@@ -7,13 +7,16 @@
 
 
     .container {
-        width: 80%;
+        width: 90%;
+        height: 60%;
         flex-direction: column;
         background-color: rgba( 0, 0, 0, 0.9 );
         font-family: Poppins;
         font-size: 18px;
         font-weight: 500;
         color: white;
+        border-radius: 10px;
+        border: 2px solid rgba( black, 0 );
     }
 
     image {
@@ -40,6 +43,8 @@
         .entry {
             margin-bottom: 2px;
             padding: 4px;
+            border-radius: 10px;
+            border: 2px solid rgba( black, 0 );
 
             &.first {
                 background-color: rgba( 212, 175, 55, 0.9 );

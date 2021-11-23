@@ -68,8 +68,6 @@ namespace Sketch
 			Avatar = Add.Image();
 			PlayerName = Add.Label( "PlayerName", "name" );
 			Score = Add.Label( "0000", "score" );
-
-			AddClass( "first" );
 		}
 
 		RealTimeSince TimeSinceUpdate = 0;

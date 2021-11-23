@@ -23,7 +23,7 @@ namespace Sketch
 
 			GamePanel = RootPanel.Add.Panel( "gamescreen" );
 			GamePanel.AddChild<StateInfo>();
-			//GamePanel.AddChild<DrawCanvas>();
+			GamePanel.AddChild<DrawCanvas>();
 
 			RootPanel.AddChild<ChatBox>();
 		}
