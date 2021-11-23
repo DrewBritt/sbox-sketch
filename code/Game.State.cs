@@ -75,6 +75,8 @@ namespace Sketch
 				int ranNum = random.Next( wordpool.Length );
 				Current.CurrentWord = wordpool[ranNum];
 
+				Current.CurrentLetters.Clear();
+
 				stateEnds = Current.SelectWordTime;
 			}
 
@@ -99,6 +101,7 @@ namespace Sketch
 				//Cancel game if only one player is left
 				if ( Client.All.Count == 1 )
 				{
+					Current.CurrentLetters.Clear();
 					SetState( new WaitingForPlayersState() );
 				}
 
@@ -158,6 +161,7 @@ namespace Sketch
 				//Cancel game if only one player is left
 				if(Client.All.Count == 1)
 				{
+					Current.CurrentLetters.Clear();
 					SetState( new WaitingForPlayersState() );
 				}
 
@@ -181,6 +185,7 @@ namespace Sketch
 			public PostPlayingState() : base()
 			{
 				stateEnds = 8;
+				Current.CurrentLetters = Current.CurrentWord.ToList();
 			}
 
 			public override string StateTime()
@@ -219,6 +224,7 @@ namespace Sketch
 			public PostRoundState() : base()
 			{
 				stateEnds = 10;
+				Current.CurrentLetters.Clear();
 			}
 
 			public override string StateTime()
@@ -274,14 +280,6 @@ namespace Sketch
 		}
 
 		/// <summary>
-		/// Only use on server, as only the properties are networked.
-		/// </summary>
-		public BaseState CurrentState { get; set; } = new WaitingForPlayersState();
-
-		[Net] public string CurrentStateName { get; set; }
-		[Net] public string CurrentStateTime { get; set; }
-
-		/// <summary>
 		/// How many rounds to play before returning to lobby.
 		/// Set by sketch_maxrounds command.
 		/// </summary>
@@ -332,6 +330,14 @@ namespace Sketch
 
 			return w;
 		}
+
+		/// <summary>
+		/// Only use on server, as only the properties are networked.
+		/// </summary>
+		public BaseState CurrentState { get; set; } = new WaitingForPlayersState();
+
+		[Net] public string CurrentStateName { get; set; }
+		[Net] public string CurrentStateTime { get; set; }
 
 		[Event.Tick]
 		public void OnTick()
