@@ -11,7 +11,7 @@ namespace Sketch
 	{
 		public class BaseState
 		{
-			protected RealTimeSince stateStart;
+			public RealTimeSince stateStart { get; }
 
 			public BaseState()
 			{
@@ -162,11 +162,13 @@ namespace Sketch
 				if(Client.All.Count == 1)
 				{
 					Current.CurrentLetters.Clear();
+					Current.ResetAllPlayersGuessed();
 					SetState( new WaitingForPlayersState() );
 				}
 
 				if(stateEnds < 0)
 				{
+					Current.ResetAllPlayersGuessed();
 					SetState( new PostPlayingState() );
 				}
 			}
@@ -307,7 +309,7 @@ namespace Sketch
 		/// <summary>
 		/// How long to draw/guess before selecting next drawer. Set by sketch_playtime command.
 		/// </summary>
-		public int PlayTime { get; set; } = 180;
+		public int PlayTime { get; set; } = 120;
 
 		/// <summary>
 		/// Current word to draw/guess. Not networked to avoid cheating, passed to drawer through ClientRPC.
@@ -358,14 +360,8 @@ namespace Sketch
 				Log.Info( w );
 		}
 
-		[ClientRpc]
-		public void SendWordToDrawer(string word)
-		{
-			Log.Info( word );
-		}
-
 		[ServerCmd]
-		public static void SelectWord(string word)
+		public static void SelectWord( string word )
 		{
 			//Verify if command caller is the current drawer
 			if ( ConsoleSystem.Caller != Client.All[Current.CurrentDrawerIndex] )
@@ -375,7 +371,7 @@ namespace Sketch
 			}
 
 			//Verify if state is proper
-			if (Current.CurrentState is SelectingWordState state)
+			if ( Current.CurrentState is SelectingWordState state )
 			{
 
 				//And if selected word is valid
@@ -393,10 +389,29 @@ namespace Sketch
 			Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Game is not in proper state!" );
 		}
 
-		[ServerCmd]
-		public static void SetScore( int score )
+		[ClientRpc]
+		public void SendWordToDrawer(string word)
 		{
-			ConsoleSystem.Caller.SetInt( "GameScore", score );
+			Log.Info( word );
+		}
+
+		public List<Client> GuessedPlayers { get; } = new();
+
+		public void SetPlayerGuessed(Client cl)
+		{
+			//Player score is calculated by lerping between 400 and 1000, 
+			//Delta is higher if player is faster
+			float delta = 1 - (CurrentState.stateStart / PlayTime);
+			float score = MathX.LerpTo( 400, 1000, delta );
+			int curScore = cl.GetInt( "GameScore" );
+			cl.SetInt( "GameScore", curScore + score.FloorToInt());
+
+			GuessedPlayers.Add( cl );
+		}
+
+		public void ResetAllPlayersGuessed()
+		{
+			GuessedPlayers.Clear();
 		}
 	}
 }

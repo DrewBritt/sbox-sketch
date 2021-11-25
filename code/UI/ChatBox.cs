@@ -57,7 +57,7 @@ namespace Sketch
 		{
 			var e = Canvas.AddChild<ChatEntry>();
 			e.Message.Text = message;
-			e.NameLabel.Text = name + ":";
+			e.NameLabel.Text = name;
 
 			e.SetClass( "noname", string.IsNullOrEmpty( name ) );
 
@@ -79,6 +79,12 @@ namespace Sketch
 			}
 		}
 
+		[ClientCmd("chat_guessedchat", CanBeCalledFromServer = true )]
+		public static void AddGuessedChatEntry(string name, string message)
+		{
+			Current?.AddEntry( name, message, "guessedchat" );
+		}
+
 		[ClientCmd( "chat_addinfo", CanBeCalledFromServer = true )]
 		public static void AddInformation( string message, bool important = false )
 		{
@@ -95,7 +101,25 @@ namespace Sketch
 				return;
 
 			Log.Info( $"{ConsoleSystem.Caller}: {message}" );
-			AddChatEntry( To.Everyone, ConsoleSystem.Caller.Name, message);
+
+			//If players' have already guessed, send to private chat
+			var guessed = Game.Current.GuessedPlayers;
+			if(guessed.Contains(ConsoleSystem.Caller))
+			{
+				AddGuessedChatEntry( To.Multiple(Game.Current.GuessedPlayers), $"{ConsoleSystem.Caller.Name}:", message );
+				return;
+			}
+
+			//Check first word from players' message to check if answer
+			var words = message.Split( ' ', System.StringSplitOptions.TrimEntries );
+			if(words[0].ToLower() == Game.Current.CurrentWord.ToLower())
+			{
+				AddInformation( To.Everyone, $"{ConsoleSystem.Caller.Name} has guessed the word!", false );
+				Game.Current.SetPlayerGuessed(ConsoleSystem.Caller);
+				return;
+			}
+			
+			AddChatEntry( To.Everyone, $"{ConsoleSystem.Caller.Name}:", message);
 		}
 	}
 
