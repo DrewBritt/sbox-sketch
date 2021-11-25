@@ -94,7 +94,13 @@ namespace Sketch
 		public virtual void UpdateData()
 		{
 			Avatar.SetTexture( $"avatar:{Client.PlayerId}" );
-			PlayerName.Text = Client.Name;
+
+			var name = Client.Name;
+			if ( Client.All[Game.Current.CurrentDrawerIndex] == Client )
+				name += "✏️";
+
+			PlayerName.Text = name;
+
 			Score.Text = Client.GetInt( "GameScore" ).ToString();
 
 			//Update stylings based on rank

@@ -69,7 +69,7 @@ namespace Sketch
 				//Send word pool to drawer.
 				wordpool = Words.RandomWords( Current.WordPoolSize );
 				var client = Client.All[Current.CurrentDrawerIndex];
-				Current.SendWordPool( To.Single( client ), wordpool.ToArray() );
+				Current.Hud.SendWordPool( To.Single( client ), wordpool.ToArray() );
 
 				var tosend = ClientUtil.ClientsExceptDrawer( Client.All, Current.CurrentDrawerIndex );
 				Current.Hud.DisplayCurrentDrawer( To.Multiple( tosend ) );
@@ -294,7 +294,7 @@ namespace Sketch
 		/// Keeps track of drawer in Client.All
 		/// TODO: See if switching to custom player list (pawns) is better.
 		/// </summary>
-		public int CurrentDrawerIndex = 0;
+		[Net] public int CurrentDrawerIndex { get; set; } = 0;
 
 		/// <summary>
 		/// How many words the drawer gets to choose from.
@@ -351,15 +351,6 @@ namespace Sketch
 			CurrentStateName = CurrentState.StateName();
 			CurrentStateTime = CurrentState.StateTime();
 			CurrentState.Tick();
-		}
-
-		[ClientRpc]
-		public void SendWordPool(string[] pool)
-		{
-			//Popup UI shit on drawer client (display words as buttons to select)
-			Log.Info( "SendWordPool()" );
-			foreach ( var w in pool )
-				Log.Info( w );
 		}
 
 		[ServerCmd]

@@ -27,6 +27,7 @@ namespace Sketch
 			Canvas.PreferScrollToBottom = true;
 
 			Input = Container.Add.TextEntry( "" );
+			Input.Placeholder = "Enter your guess here...";
 			Input.AddEventListener( "onsubmit", () => Submit() );
 			Input.AcceptsFocus = true;
 			Input.AllowEmojiReplace = true;
@@ -37,6 +38,8 @@ namespace Sketch
 		void FocusChat()
 		{
 			Input.Focus();
+			Input.Placeholder = "";
+			Input.CaretPosition = 0;
 
 			Canvas.TryScrollToBottom();
 		}
@@ -45,6 +48,7 @@ namespace Sketch
 		{
 			var msg = Input.Text.Trim();
 			Input.Text = "";
+			Input.Placeholder = "Enter your guess here...";
 
 			if ( string.IsNullOrWhiteSpace( msg ) )
 				return;

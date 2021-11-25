@@ -43,11 +43,11 @@
         .entry {
             margin-bottom: 2px;
             padding: 4px;
-            border-radius: 10px;
             border: 2px solid rgba( black, 0 );
 
             &.first {
                 background-color: rgba( 212, 175, 55, 0.9 );
+                border-radius: 10px 10px 0px 0px;
             }
 
             &.second {
@@ -56,6 +56,7 @@
 
             &.third {
                 background-color: rgba( 148, 94, 40, 0.9 );
+                border-radius: 0px 0px 10px 10px;
             }
         }
     }
