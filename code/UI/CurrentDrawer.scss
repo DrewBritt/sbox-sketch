@@ -1,4 +1,4 @@
-﻿selectword {
+﻿currentdrawer {
     position: absolute;
     height: 100%;
     width: 100%;
@@ -22,6 +22,20 @@
 
         &.closed {
             transition: opacity 0.5s ease-out;
+        }
+
+        .textbox {
+            width: 15%;
+            height: 15%;
+            border-radius: 10px;
+            border: 2px solid rgba( black, 0 );
+            background-color: rgba(10, 34, 57, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .drawertext {
+            font-size: 25px;
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Sketch
 		public Panel DrawCanvas { get; set; }
 		public Panel ChatBox { get; set; }
 		public Panel SelectWord { get; set; }
+		public Panel CurrentDrawer { get; set; }
 
 		public HUD()
 		{
@@ -33,13 +34,14 @@ namespace Sketch
 			ChatBox = RootPanel.AddChild<ChatBox>();
 
 			SelectWord = RootPanel.AddChild<SelectWord>();
+			CurrentDrawer = RootPanel.AddChild<CurrentDrawer>();
 		}
 
 		[ClientRpc]
-		public void OpenCurrentDrawerPopup()
+		public void DisplayCurrentDrawer()
 		{
-			var panel = SelectWord as SelectWord;
-			panel.OpenPanel();
+			var panel = CurrentDrawer as CurrentDrawer;
+			panel.DisplayCurrentDrawer();
 		}
 	}
 }

@@ -72,7 +72,7 @@ namespace Sketch
 				Current.SendWordPool( To.Single( client ), wordpool.ToArray() );
 
 				var tosend = ClientUtil.ClientsExceptDrawer( Client.All, Current.CurrentDrawerIndex );
-				Current.Hud.OpenCurrentDrawerPopup( To.Multiple( tosend ) );
+				Current.Hud.DisplayCurrentDrawer( To.Multiple( tosend ) );
 
 				//Set random word ahead of time. If drawer doesn't select a word, this word is used.
 				var random = new Random();

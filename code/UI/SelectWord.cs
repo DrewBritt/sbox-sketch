@@ -6,8 +6,7 @@ namespace Sketch
 {
 	public partial class SelectWord : Panel
 	{
-		public Panel Container, TextBox;
-		public Label DrawerText;
+		public Panel Container;
 		private RealTimeSince panelOpened;
 
 		public SelectWord()
@@ -15,8 +14,6 @@ namespace Sketch
 			StyleSheet.Load( "/ui/SelectWord.scss" );
 
 			Container = Add.Panel( "container" );
-			TextBox = Container.Add.Panel( "textbox" );
-			DrawerText = TextBox.Add.Label( "_ is selecting a word.", "drawertext" );
 		}
 
 		public override void Tick()
@@ -32,13 +29,9 @@ namespace Sketch
 
 		}
 
-		public void OpenPanel()
+		public void DisplayWordPool()
 		{
-			DrawerText.Text = $"{Client.All[Game.Current.CurrentDrawerIndex].Name} is selecting a word.";
 
-			Container.AddClass( "open" );
-			Container.RemoveClass( "closed" );
-			panelOpened = 0;
 		}
 	}
 }
