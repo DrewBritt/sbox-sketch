@@ -2,6 +2,7 @@
 using Sandbox.Hooks;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
+using static Sketch.Game;
 
 namespace Sketch
 {
@@ -110,28 +111,32 @@ namespace Sketch
 
 			var game = Game.Current;
 
-			//Highlight drawer's chat (also prevents them from guessing the word)
-			if(ConsoleSystem.Caller == Client.All[game.CurrentDrawerIndex])
+			//Checks should only be ran if currently playing game
+			if ( game.CurrentState is PlayingState )
 			{
-				AddDrawerChatEntry( To.Everyone, $"{ConsoleSystem.Caller.Name}:", message );
-				return;
-			}
+				//Highlight drawer's chat (also prevents them from guessing the word)
+				if ( ConsoleSystem.Caller == Client.All[game.CurrentDrawerIndex] )
+				{
+					AddDrawerChatEntry( To.Everyone, $"{ConsoleSystem.Caller.Name}:", message );
+					return;
+				}
 
-			//If players' have already guessed, send to private chat
-			var guessed = game.GuessedPlayers;
-			if(guessed.Contains(ConsoleSystem.Caller))
-			{
-				AddGuessedChatEntry( To.Multiple(Game.Current.GuessedPlayers), $"{ConsoleSystem.Caller.Name}:", message );
-				return;
-			}
+				//If players' have already guessed, send to private chat
+				var guessed = game.GuessedPlayers;
+				if ( guessed.Contains( ConsoleSystem.Caller ) )
+				{
+					AddGuessedChatEntry( To.Multiple( Game.Current.GuessedPlayers ), $"{ConsoleSystem.Caller.Name}:", message );
+					return;
+				}
 
-			//Check first word from players' message to check if answer
-			var words = message.Split( ' ', System.StringSplitOptions.TrimEntries );
-			if(words[0].ToLower() == Game.Current.CurrentWord.ToLower())
-			{
-				AddInformation( To.Everyone, $"{ConsoleSystem.Caller.Name} has guessed the word!", false );
-				Game.Current.SetPlayerGuessed(ConsoleSystem.Caller);
-				return;
+				//Check first word from players' message to check if answer
+				var words = message.Split( ' ', System.StringSplitOptions.TrimEntries );
+				if ( words[0].ToLower() == Game.Current.CurrentWord.ToLower() )
+				{
+					AddInformation( To.Everyone, $"{ConsoleSystem.Caller.Name} has guessed the word!", false );
+					Game.Current.SetPlayerGuessed( ConsoleSystem.Caller );
+					return;
+				}
 			}
 			
 			AddChatEntry( To.Everyone, $"{ConsoleSystem.Caller.Name}:", message);

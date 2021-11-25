@@ -16,6 +16,7 @@ namespace Sketch
 			public BaseState()
 			{
 				stateStart = 0;
+				Current.ResetAllPlayersGuessed();
 			}
 
 			public virtual string StateName() => GetType().ToString();
@@ -162,13 +163,11 @@ namespace Sketch
 				if(Client.All.Count == 1)
 				{
 					Current.CurrentLetters.Clear();
-					Current.ResetAllPlayersGuessed();
 					SetState( new WaitingForPlayersState() );
 				}
 
 				if(stateEnds < 0)
 				{
-					Current.ResetAllPlayersGuessed();
 					SetState( new PostPlayingState() );
 				}
 			}
@@ -412,6 +411,15 @@ namespace Sketch
 			Client drawer = Client.All[Current.CurrentDrawerIndex];
 			curScore = drawer.GetInt( "GameScore" );
 			drawer.SetInt("GameScore", curScore + (score.FloorToInt() / 3));
+
+			//Check if all players have guessed (rather than checking every tick in state code)
+			//TODO: Make this stupid shit not shit probably
+			List<Client> drawerlist = new();
+			drawerlist.Add( drawer );
+			if ( GuessedPlayers.SequenceEqual(Client.All.Except(drawerlist)))
+			{
+				Current.CurrentState = new PostPlayingState();
+			}
 		}
 
 		public void ResetAllPlayersGuessed()
