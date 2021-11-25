@@ -69,7 +69,11 @@ chatentry {
     }
 
     &.guessedchat {
-        background-color: rgba( #40c0ff, 0.1 );
+        background-color: rgba( 64, 192, 255, 0.1 );
+    }
+
+    &.drawerchat {
+        background-color: rgba(80, 145, 70, 0.2);
     }
 
     .name {

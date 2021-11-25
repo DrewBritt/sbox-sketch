@@ -407,6 +407,11 @@ namespace Sketch
 			cl.SetInt( "GameScore", curScore + score.FloorToInt());
 
 			GuessedPlayers.Add( cl );
+
+			//Drawer gets 1/3 of player score added to their own
+			Client drawer = Client.All[Current.CurrentDrawerIndex];
+			curScore = drawer.GetInt( "GameScore" );
+			drawer.SetInt("GameScore", curScore + (score.FloorToInt() / 3));
 		}
 
 		public void ResetAllPlayersGuessed()

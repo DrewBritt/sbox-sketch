@@ -85,6 +85,12 @@ namespace Sketch
 			Current?.AddEntry( name, message, "guessedchat" );
 		}
 
+		[ClientCmd( "chat_drawerchat", CanBeCalledFromServer = true )]
+		public static void AddDrawerChatEntry( string name, string message )
+		{
+			Current?.AddEntry( name, message, "drawerchat" );
+		}
+
 		[ClientCmd( "chat_addinfo", CanBeCalledFromServer = true )]
 		public static void AddInformation( string message, bool important = false )
 		{
@@ -102,8 +108,17 @@ namespace Sketch
 
 			Log.Info( $"{ConsoleSystem.Caller}: {message}" );
 
+			var game = Game.Current;
+
+			//Highlight drawer's chat (also prevents them from guessing the word)
+			if(ConsoleSystem.Caller == Client.All[game.CurrentDrawerIndex])
+			{
+				AddDrawerChatEntry( To.Everyone, $"{ConsoleSystem.Caller.Name}:", message );
+				return;
+			}
+
 			//If players' have already guessed, send to private chat
-			var guessed = Game.Current.GuessedPlayers;
+			var guessed = game.GuessedPlayers;
 			if(guessed.Contains(ConsoleSystem.Caller))
 			{
 				AddGuessedChatEntry( To.Multiple(Game.Current.GuessedPlayers), $"{ConsoleSystem.Caller.Name}:", message );
