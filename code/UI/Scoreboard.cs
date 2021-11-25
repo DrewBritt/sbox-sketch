@@ -61,6 +61,8 @@ namespace Sketch
 		public Label PlayerName { get; internal set; }
 		public Label Score { get; internal set; }
 
+		private int lastIndex;
+
 		public ScoreboardEntry()
 		{
 			AddClass( "entry" );
@@ -93,7 +95,23 @@ namespace Sketch
 		{
 			Avatar.SetTexture( $"avatar:{Client.PlayerId}" );
 			PlayerName.Text = Client.Name;
-			Score.Text = Client.GetInt("GameScore").ToString();
+			Score.Text = Client.GetInt( "GameScore" ).ToString();
+
+			//Update stylings based on rank
+			if(SiblingIndex != lastIndex)
+			{
+				lastIndex = SiblingIndex;
+				RemoveClass( "first" );
+				RemoveClass( "second" );
+				RemoveClass( "third" );
+
+				if ( SiblingIndex == 1 )
+					AddClass( "first" );
+				if ( SiblingIndex == 2 )
+					AddClass( "second" );
+				if ( SiblingIndex == 3 )
+					AddClass( "third" );
+			}
 		}
 
 		public virtual void UpdateFrom( Client client )

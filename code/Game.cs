@@ -14,13 +14,14 @@ namespace Sketch
 		{
 			Transmit = TransmitType.Always;
 			Current = this;
-
-			if(IsServer)
+			
+			if (IsServer)
 			{
 				Words.InitWordList();
 				Hud = new HUD();
 			}
 		}
+
 		public override void ClientJoined( Client cl )
 		{
 			ChatBox.AddInformation( To.Everyone, $"{cl.Name} has joined the game!");

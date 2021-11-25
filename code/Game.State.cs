@@ -71,6 +71,9 @@ namespace Sketch
 				var client = Client.All[Current.CurrentDrawerIndex];
 				Current.SendWordPool( To.Single( client ), wordpool.ToArray() );
 
+				var tosend = ClientUtil.ClientsExceptDrawer( Client.All, Current.CurrentDrawerIndex );
+				Current.Hud.OpenCurrentDrawerPopup( To.Multiple( tosend ) );
+
 				//Set random word ahead of time. If drawer doesn't select a word, this word is used.
 				var random = new Random();
 				int ranNum = random.Next( wordpool.Length );
@@ -414,9 +417,7 @@ namespace Sketch
 
 			//Check if all players have guessed (rather than checking every tick in state code)
 			//TODO: Make this stupid shit not shit probably
-			List<Client> drawerlist = new();
-			drawerlist.Add( drawer );
-			if ( GuessedPlayers.SequenceEqual(Client.All.Except(drawerlist)))
+			if ( ClientUtil.ClientsExceptDrawer(Client.All, CurrentDrawerIndex).SequenceEqual(GuessedPlayers))
 			{
 				Current.CurrentState = new PostPlayingState();
 			}

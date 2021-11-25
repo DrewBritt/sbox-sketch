@@ -1,0 +1,41 @@
+﻿selectword {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 3;
+
+
+    .container {
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(10, 10, 10, 0.5);
+        backdrop-filter: blur( 20px ) brightness( 0.5 );
+        opacity: 0;
+        color: white;
+
+        &.open {
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        &.closed {
+            transition: opacity 0.5s ease-out;
+        }
+
+        .textbox {
+            width: 15%;
+            height: 15%;
+            border-radius: 10px;
+            border: 2px solid rgba( black, 0 );
+            background-color: rgba(10, 34, 57, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .drawertext {
+            font-size: 25px;
+        }
+    }
+}
