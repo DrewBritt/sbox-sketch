@@ -133,7 +133,7 @@ namespace Sketch
 				var words = message.Split( ' ', System.StringSplitOptions.TrimEntries );
 				if ( words[0].ToLower() == Game.Current.CurrentWord.ToLower() )
 				{
-					AddInformation( To.Everyone, $"{ConsoleSystem.Caller.Name} has guessed the word!", false );
+					AddInformation( To.Everyone, $"{ConsoleSystem.Caller.Name} has guessed the word!", true );
 					Game.Current.SetPlayerGuessed( ConsoleSystem.Caller );
 					return;
 				}

@@ -16,7 +16,6 @@ namespace Sketch
 			public BaseState()
 			{
 				stateStart = 0;
-				Current.ResetAllPlayersGuessed();
 			}
 
 			public virtual string StateName() => GetType().ToString();
@@ -31,6 +30,7 @@ namespace Sketch
 
 			protected void SetState(BaseState state)
 			{
+				Current.ResetAllPlayersGuessed();
 				Current.CurrentState = state;
 			}
 		}
