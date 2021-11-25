@@ -26,7 +26,11 @@ namespace Sketch
 				return $"{time.Minutes:D2}:{time.Seconds:D2}";
 			}
 
-			public virtual void Tick() { }
+			public virtual void Tick()
+			{
+				if ( Client.All.Count == 1 )
+					SetState( new WaitingForPlayersState() );
+			}
 
 			protected void SetState(BaseState state)
 			{
@@ -47,7 +51,39 @@ namespace Sketch
 			{
 				if (Client.All.Count > 1)
 				{
-					SetState( new SelectingWordState());
+					SetState( new PreSelectingState());
+				}
+			}
+		}
+
+		/// <summary>
+		/// The current drawer is displayed on screen.
+		/// Used to ensure UI appears on screen without conflicting with game settings.
+		/// EX: Setting SelectWordTime to 0 for random words.
+		/// </summary>
+		public class PreSelectingState : BaseState
+		{
+			public override string StateName() => "Selecting Word";
+			private RealTimeUntil stateEnds = 3;
+
+			public PreSelectingState() : base()
+			{
+				Current.Hud.DisplayCurrentDrawer(To.Everyone);
+			}
+
+			public override string StateTime()
+			{
+				var time = TimeSpan.FromSeconds( stateEnds );
+				return $"{time.Minutes:D2}:{time.Seconds:D2}";
+			}
+
+			public override void Tick()
+			{
+				base.Tick();
+
+				if ( stateEnds < 0 )
+				{
+					SetState( new SelectingWordState() );
 				}
 			}
 		}
@@ -69,10 +105,7 @@ namespace Sketch
 				//Send word pool to drawer.
 				wordpool = Words.RandomWords( Current.WordPoolSize );
 				var client = Client.All[Current.CurrentDrawerIndex];
-				Current.Hud.SendWordPool( To.Single( client ), wordpool.ToArray() );
-
-				var tosend = ClientUtil.ClientsExceptDrawer( Client.All, Current.CurrentDrawerIndex );
-				Current.Hud.DisplayCurrentDrawer( To.Multiple( tosend ) );
+				Current.Hud.SendWordPool( To.Single( client ), wordpool.ToArray(), Current.SelectWordTime ) ;			
 
 				//Set random word ahead of time. If drawer doesn't select a word, this word is used.
 				var random = new Random();
@@ -102,12 +135,7 @@ namespace Sketch
 
 			public override void Tick()
 			{
-				//Cancel game if only one player is left
-				if ( Client.All.Count == 1 )
-				{
-					Current.CurrentLetters.Clear();
-					SetState( new WaitingForPlayersState() );
-				}
+				base.Tick();
 
 				if (stateEnds < 0)
 				{
@@ -162,12 +190,7 @@ namespace Sketch
 					newLetter = Current.PlayTime / Current.CurrentWord.Length;
 				}
 
-				//Cancel game if only one player is left
-				if(Client.All.Count == 1)
-				{
-					Current.CurrentLetters.Clear();
-					SetState( new WaitingForPlayersState() );
-				}
+				base.Tick();
 
 				if(stateEnds < 0)
 				{
