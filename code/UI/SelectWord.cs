@@ -1,37 +1,54 @@
 ﻿using Sandbox.UI;
 using Sandbox;
 using Sandbox.UI.Construct;
+using static Sketch.Game;
 
 namespace Sketch
 {
 	public partial class SelectWord : Panel
 	{
 		public Panel Container;
-		private RealTimeSince panelOpened;
+		public string[] Pool;
+		private RealTimeUntil stateEnd;
 
 		public SelectWord()
 		{
 			StyleSheet.Load( "/ui/SelectWord.scss" );
 
+			Add.Label( "SELECT A WORD", "title" );
 			Container = Add.Panel( "container" );
 		}
 
 		public override void Tick()
 		{
-			var game = Game.Current;
-			if ( game == null ) return;
+			if ( Current == null ) return;
 
-			if(panelOpened > 3)
+			if(stateEnd < 0)
 			{
-				Container.RemoveClass( "open" );
-				Container.AddClass( "closed" );
+				RemoveClass( "open" );
+				AddClass( "closed" );
 			}
 
 		}
 
-		public void DisplayWordPool()
+		public void DisplayWordPool(int time)
 		{
+			Container.DeleteChildren( true );
+			foreach (var w in Pool)
+			{
+				Container.Add.Button( w, "wordbutton", () => SelectedWord(w));
+			}
 
+			AddClass( "open" );
+			RemoveClass( "closed" );
+
+			stateEnd = time;
+		}
+
+		public void SelectedWord(string word)
+		{
+			Game.SelectWord( word );
+			stateEnd = -1;
 		}
 	}
 }

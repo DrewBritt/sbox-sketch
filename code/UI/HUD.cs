@@ -43,5 +43,13 @@ namespace Sketch
 			var panel = CurrentDrawer as CurrentDrawer;
 			panel.DisplayCurrentDrawer();
 		}
+
+		[ClientRpc]
+		public void SendWordPool( string[] pool, int time )
+		{
+			var p = SelectWord as SelectWord;
+			p.Pool = pool;
+			p.DisplayWordPool(time);
+		}
 	}
 }
