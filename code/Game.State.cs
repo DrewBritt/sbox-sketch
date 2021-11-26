@@ -168,7 +168,12 @@ namespace Sketch
 				stateEnds = Current.PlayTime;
 				newLetter = Current.PlayTime / Current.CurrentWord.Length;
 
-				Current.SendWordToDrawer( To.Single( Client.All[Current.CurrentDrawerIndex] ), word);
+				//Send entire word to drawer
+				Current.Hud.SendCurrentLetters( To.Single( Client.All[Current.CurrentDrawerIndex] ), word );
+
+				//Only send current letters (at this point, just _'s) to everyone else
+				var tosend = ClientUtil.ClientsExceptDrawer( Client.All, Current.CurrentDrawerIndex );
+				Current.Hud.SendCurrentLetters( To.Multiple( tosend ), Current.CurrentLettersString() );
 			}
 
 			public override string StateTime()
@@ -185,6 +190,12 @@ namespace Sketch
 					var random = new Random();
 					int ranNum = random.Next( Current.CurrentWord.Length );
 					Current.CurrentLetters[ranNum] = Current.CurrentWord[ranNum];
+
+					//Update only guesser's UI
+					//TODO: Probably remove this garbage function. Set bool on drawer client and only update if false,
+					//then send letters to everyone instead?
+					var tosend = ClientUtil.ClientsExceptDrawer( Client.All, Current.CurrentDrawerIndex );
+					Current.Hud.SendCurrentLetters( To.Multiple( tosend ), Current.CurrentLettersString() );
 
 					//Reset letter timer
 					newLetter = Current.PlayTime / Current.CurrentWord.Length;
@@ -213,6 +224,7 @@ namespace Sketch
 			{
 				stateEnds = 8;
 				Current.CurrentLetters = Current.CurrentWord.ToList();
+				Current.Hud.SendCurrentLetters( To.Everyone, Current.CurrentLettersString() );
 			}
 
 			public override string StateTime()
@@ -225,6 +237,7 @@ namespace Sketch
 			{
 				if(stateEnds < 0)
 				{
+					Current.Hud.SendCurrentLetters( To.Everyone, "" );
 					if(Current.CurrentDrawerIndex < Client.All.Count - 1)
 					{
 						Current.CurrentDrawerIndex++;
@@ -342,9 +355,9 @@ namespace Sketch
 		public string CurrentWord { get; set; }
 
 		/// <summary>
-		/// Current letters displayed to non-drawers. Networked to ease accessing in UI, and no cheating potential arises.
+		/// Current letters displayed to non-drawers.
 		/// </summary>
-		[Net] public List<char> CurrentLetters { get; set; }
+		public List<char> CurrentLetters { get; set; } = new List<char>();
 
 		/// <summary>
 		/// Nicer way to turn CurrentLetters into a string instead of writing a loop every fucking time.
@@ -403,12 +416,6 @@ namespace Sketch
 			}
 
 			Current.CommandError( To.Single( ConsoleSystem.Caller ), "Sketch: Game is not in proper state!" );
-		}
-
-		[ClientRpc]
-		public void SendWordToDrawer(string word)
-		{
-			Log.Info( word );
 		}
 
 		public List<Client> GuessedPlayers { get; } = new();

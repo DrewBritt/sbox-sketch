@@ -31,11 +31,8 @@ namespace Sketch
 			StateName.Text = game.CurrentStateName.ToUpper();
 			StateTime.Text = game.CurrentStateTime;
 
-			BlankLetters.Text = game.CurrentLettersString();
 			//TODO: Make this less shit
-			//Having an empty string as the .Text would still display the CSS class (border and background
-			//so remove it when string is empty
-			if ( string.IsNullOrWhiteSpace(game.CurrentLettersString()) )
+			if ( BlankLetters.Text == "" )
 			{
 				if(setLettersClass)
 				{

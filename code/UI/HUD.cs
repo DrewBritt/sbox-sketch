@@ -37,6 +37,9 @@ namespace Sketch
 			CurrentDrawer = RootPanel.AddChild<CurrentDrawer>();
 		}
 
+		/// <summary>
+		/// Popup to display current drawer pre-round.
+		/// </summary>
 		[ClientRpc]
 		public void DisplayCurrentDrawer()
 		{
@@ -44,12 +47,30 @@ namespace Sketch
 			panel.DisplayCurrentDrawer();
 		}
 
+		/// <summary>
+		/// Sends Word Pool to drawer to display elements on screen
+		/// </summary>
+		/// <param name="pool"></param>
+		/// <param name="time"></param>
 		[ClientRpc]
 		public void SendWordPool( string[] pool, int time )
 		{
 			var p = SelectWord as SelectWord;
 			p.Pool = pool;
 			p.DisplayWordPool(time);
+		}
+
+		/// <summary>
+		/// Sends current letters to client. 
+		/// If guessers receive this, it's the currentletters with underscores.
+		/// If drawer receives this, it's once at the beginning of the round with the word.
+		/// </summary>
+		/// <param name="currentletters"></param>
+		[ClientRpc]
+		public void SendCurrentLetters(string currentletters)
+		{
+			var p = StateInfo as StateInfo;
+			p.BlankLetters.Text = currentletters;
 		}
 	}
 }
