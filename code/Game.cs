@@ -1,5 +1,6 @@
 using Sandbox;
 using Sandbox.UI;
+using System;
 using System.Linq;
 
 namespace Sketch
@@ -25,57 +26,14 @@ namespace Sketch
 		public override void ClientJoined( Client cl )
 		{
 			ChatBox.AddInformation( To.Everyone, $"{cl.Name} has joined the game!");
-
-
 		}
 
 		public override void ClientDisconnect( Client cl, NetworkDisconnectionReason reason )
 		{
 			ChatBox.AddInformation( To.Everyone, $"{cl.Name} has left ({reason})" );
-
-			if(cl.Pawn.IsValid())
-			{
-				cl.Pawn.Delete();
-				cl.Pawn = null;
-			}
 		}
 
-		/// <summary>
-		/// Called each tick.
-		/// Serverside: Called for each client every tick
-		/// Clientside: Called for each tick for local client. Can be called multiple times per tick.
-		/// </summary>
-		public override void Simulate( Client cl )
-		{
-			if ( !cl.Pawn.IsValid() ) return;
-
-			// Block Simulate from running clientside
-			// if we're not predictable.
-			if ( !cl.Pawn.IsAuthority ) return;
-
-			cl.Pawn.Simulate( cl );
-		}
-
-		/// <summary>
-		/// Called each frame on the client only to simulate things that need to be updated every frame. An example
-		/// of this would be updating their local pawn's look rotation so it updates smoothly instead of at tick rate.
-		/// </summary>
-		public override void FrameSimulate( Client cl )
-		{
-			Host.AssertClient();
-
-			if ( !cl.Pawn.IsValid() ) return;
-
-			// Block Simulate from running clientside
-			// if we're not predictable.
-			if ( !cl.Pawn.IsAuthority ) return;
-
-			cl.Pawn?.FrameSimulate( cl );
-		}
-
-		public override void PostLevelLoaded()
-		{
-		}
+		public override void PostLevelLoaded() { }
 
 		public override void Shutdown()
 		{
@@ -89,63 +47,25 @@ namespace Sketch
 		{
 			base.OnDestroy();
 
-			/*
 			Hud?.Delete();
 			Hud = null;
-			*/
-		}
-
-		[Predicted]
-		public Camera LastCamera { get; set; }
-
-		/// <summary>
-		/// Which camera should we be rendering from?
-		/// </summary>
-		public virtual ICamera FindActiveCamera()
-		{
-			if ( Local.Client.DevCamera != null ) return Local.Client.DevCamera;
-			if ( Local.Client.Camera != null ) return Local.Client.Camera;
-			if ( Local.Pawn != null ) return Local.Pawn.Camera;
-
-			return null;
 		}
 
 		/// <summary>
 		/// Called to set the camera up, clientside only.
 		/// </summary>
+		Angles angles;
 		public override CameraSetup BuildCamera( CameraSetup camSetup )
 		{
-			var cam = FindActiveCamera();
+			angles += new Angles( 0, -1.0f, 0.0f ) * RealTime.Delta;
 
-			if ( LastCamera != cam )
-			{
-				LastCamera?.Deactivated();
-				LastCamera = cam as Camera;
-				LastCamera?.Activated();
-			}
-
-			cam?.Build( ref camSetup );
-
-			PostCameraSetup( ref camSetup );
+			camSetup.Rotation = Rotation.From( angles );
+			camSetup.Position = new Vector3( 0, 0, 130);
+			camSetup.FieldOfView = 80;
+			camSetup.Ortho = false;
+			camSetup.Viewer = null;
 
 			return camSetup;
-		}
-
-		/// <summary>
-		/// Clientside only. Called every frame to process the input.
-		/// The results of this input are encoded\ into a user command and
-		/// passed to the PlayerController both clientside and serverside.
-		/// This routine is mainly responsible for taking input from mouse/controller
-		/// and building look angles and move direction.
-		/// </summary>
-		public override void BuildInput( InputBuilder input )
-		{
-			Event.Run( "buildinput", input );
-
-			// the camera is the primary method here
-			LastCamera?.BuildInput( input );
-
-			Local.Pawn?.BuildInput( input );
 		}
 
 		/// <summary>
