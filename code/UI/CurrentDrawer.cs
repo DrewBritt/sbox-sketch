@@ -6,7 +6,8 @@ namespace Sketch
 {
 	public partial class CurrentDrawer : Panel
 	{
-		public Panel Container, TextBox;
+		public Panel Container;
+		public Image Avatar;
 		public Label DrawerText;
 		private RealTimeSince panelOpened;
 
@@ -15,8 +16,8 @@ namespace Sketch
 			StyleSheet.Load( "/ui/CurrentDrawer.scss" );
 
 			Container = Add.Panel( "container" );
-			TextBox = Container.Add.Panel( "textbox" );
-			DrawerText = TextBox.Add.Label( "_ is selecting a word.", "drawertext" );
+			Avatar = Container.Add.Image( );
+			DrawerText = Container.Add.Label( "_ is selecting a word.", "drawertext" );
 		}
 
 		public override void Tick()
@@ -26,18 +27,20 @@ namespace Sketch
 
 			if ( panelOpened > 3 )
 			{
-				Container.RemoveClass( "open" );
-				Container.AddClass( "closed" );
+				RemoveClass( "open" );
+				AddClass( "closed" );
 			}
 
 		}
 
 		public void DisplayCurrentDrawer()
 		{
-			DrawerText.Text = $"{Client.All[Game.Current.CurrentDrawerIndex].Name} is selecting a word.";
+			var drawer = Client.All[Game.Current.CurrentDrawerIndex];
+			Avatar.SetTexture( $"avatar:{drawer.PlayerId}" );
+			DrawerText.Text = $"{drawer.Name} is selecting a word.";
 
-			Container.AddClass( "open" );
-			Container.RemoveClass( "closed" );
+			AddClass( "open" );
+			RemoveClass( "closed" );
 			panelOpened = 0;
 		}
 	}

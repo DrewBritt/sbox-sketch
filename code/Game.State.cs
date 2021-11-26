@@ -228,7 +228,7 @@ namespace Sketch
 					if(Current.CurrentDrawerIndex < Client.All.Count - 1)
 					{
 						Current.CurrentDrawerIndex++;
-						SetState( new SelectingWordState() );
+						SetState( new PreSelectingState() );
 					} else
 					{
 						SetState( new PostRoundState() );
@@ -268,7 +268,7 @@ namespace Sketch
 					{
 						Current.CurRound++;
 						Current.CurrentDrawerIndex = 0;
-						SetState( new SelectingWordState() );
+						SetState( new PreSelectingState() );
 					} else
 					{
 						SetState( new PostGameState() );
