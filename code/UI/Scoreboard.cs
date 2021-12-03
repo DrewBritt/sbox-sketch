@@ -42,7 +42,7 @@ namespace Sketch
 
 			//Hacky way to sort scoreboard by playerscore without rewriting the scoreboard
 			//TODO: Make this not hacky probably
-			Canvas.SortChildren( p => ((ScoreboardEntry)p).Client.GetInt("GameScore") * -1 );
+			Canvas.SortChildren( p => (p as ScoreboardEntry).Client.GetInt("GameScore") * -1 );
 		}
 
 		protected virtual ScoreboardEntry AddClient( Client entry )

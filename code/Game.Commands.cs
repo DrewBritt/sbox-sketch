@@ -70,5 +70,12 @@ namespace Sketch
 
 			Current.WordPoolSize = size;
 		}
+
+		[AdminCmd( "sketch_setpixel", Help = "How many words the drawer gets to choose from." )]
+		public static void SetWordPoolSize( int index, int r, int g, int b )
+		{
+			int[] newPixel = new int[] { index, r, g, b };
+			Current.Hud.NetworkCanvasUpdate( newPixel );
+		}
 	}
 }
