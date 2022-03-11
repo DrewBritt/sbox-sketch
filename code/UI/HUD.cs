@@ -78,6 +78,16 @@ namespace Sketch
 		}
 
 		/// <summary>
+		/// Recreates a fresh canvas texture on the called client.
+		/// </summary>
+		[ClientRpc]
+		public void ClearCanvas()
+        {
+			var canvas = DrawCanvas as DrawCanvas;
+			canvas.InitializeCanvasTexture();
+        }
+
+		/// <summary>
 		/// Sends a list of pixels to update on the canvas.
 		/// Much more performant than sending all image data every call.
 		/// </summary>

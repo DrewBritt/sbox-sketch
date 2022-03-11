@@ -237,6 +237,7 @@ namespace Sketch
 			{
 				if(stateEnds < 0)
 				{
+					Current.Hud.ClearCanvas(To.Everyone);
 					Current.Hud.SendCurrentLetters( To.Everyone, "" );
 					if(Current.CurrentDrawerIndex < Client.All.Count - 1)
 					{
@@ -320,6 +321,24 @@ namespace Sketch
 		}
 
 		/// <summary>
+		/// Only use on server, as only the properties are networked.
+		/// </summary>
+		public BaseState CurrentState { get; set; } = new WaitingForPlayersState();
+
+		[Net] public string CurrentStateName { get; set; }
+		[Net] public string CurrentStateTime { get; set; }
+
+		[Event.Tick]
+		public void OnTick()
+		{
+			if (Host.IsClient) return;
+
+			CurrentStateName = CurrentState.StateName();
+			CurrentStateTime = CurrentState.StateTime();
+			CurrentState.Tick();
+		}
+
+		/// <summary>
 		/// How many rounds to play before returning to lobby.
 		/// Set by sketch_maxrounds command.
 		/// </summary>
@@ -369,24 +388,6 @@ namespace Sketch
 				w += c;
 
 			return w;
-		}
-
-		/// <summary>
-		/// Only use on server, as only the properties are networked.
-		/// </summary>
-		public BaseState CurrentState { get; set; } = new WaitingForPlayersState();
-
-		[Net] public string CurrentStateName { get; set; }
-		[Net] public string CurrentStateTime { get; set; }
-
-		[Event.Tick]
-		public void OnTick()
-		{
-			if ( Host.IsClient ) return;
-
-			CurrentStateName = CurrentState.StateName();
-			CurrentStateTime = CurrentState.StateTime();
-			CurrentState.Tick();
 		}
 
 		[ServerCmd]
