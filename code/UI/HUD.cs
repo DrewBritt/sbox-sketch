@@ -97,6 +97,7 @@ namespace Sketch
 		{
 			var p = DrawCanvas as DrawCanvas;
 			for(int i = 0; i < newPixels.Length; i+=4)
+			for(int i = 0; i < newPixels.Length-3; i+=4)
 				p.UpdateCanvasInfo(newPixels[i], newPixels[i+1], newPixels[i+2], newPixels[i+3]);
 			
 		}
