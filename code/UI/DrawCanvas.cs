@@ -6,13 +6,10 @@ using System.Collections.Generic;
 
 namespace Sketch
 {
-	public partial class DrawCanvas : Panel
+	public partial class DrawCanvas : Image
 	{
-		public Panel Container { get; set; }
-		public Image Canvas { get; set; }
-
 		int width = 800;
-		int height = 480;
+		int height = 600;
 
 		/// <summary>
 		/// RGBA data for Canvas texture.
@@ -22,9 +19,9 @@ namespace Sketch
 		{
 			StyleSheet.Load( "UI/DrawCanvas.scss" );
 
-			Container = Add.Panel( "container" );
-			Canvas = Container.Add.Image();
 			InitializeCanvasTexture();
+			Style.Height = height;
+			Style.Width = width;
 		}
 
 		public void InitializeCanvasTexture()
@@ -35,8 +32,10 @@ namespace Sketch
 
 			Texture2DBuilder build = Texture.Create( width, height );
 			build.WithData(CanvasInfo, CanvasInfo.Length);
-			Canvas.Texture = build.Finish();
+			Texture = build.Finish();
 		}
+
+		public void RedrawCanvas() => Texture.Update( CanvasInfo );
 
 		public void UpdateCanvasInfo(int index, int r, int g, int b)
 		{
@@ -44,7 +43,6 @@ namespace Sketch
 			CanvasInfo[index + 1] = (byte)g;
 			CanvasInfo[index + 2] = (byte)b;
 
-			Canvas.Texture.Update( CanvasInfo );
 		}
 	}
 }

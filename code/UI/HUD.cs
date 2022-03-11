@@ -10,10 +10,12 @@ namespace Sketch
 {
 	public partial class HUD : HudEntity<RootPanel>
 	{
-		public Panel Scoreboard { get; set; }
-		public Panel GamePanel { get; set; }
 		public Panel StateInfo { get; set; }
+		public Panel GamePanel { get; set; }
+		public Panel Scoreboard { get; set; }
+		public Panel DrawPanel { get; set; }
 		public Panel DrawCanvas { get; set; }
+		public Panel ToolsContainer { get; set; }
 		public Panel ChatBox { get; set; }
 		public Panel SelectWord { get; set; }
 		public Panel CurrentDrawer { get; set; }
@@ -24,14 +26,16 @@ namespace Sketch
 				return;
 
 			RootPanel.StyleSheet.Load( "/ui/HUD.scss" );
+			StateInfo = RootPanel.AddChild<StateInfo>();
 
-			Scoreboard = RootPanel.AddChild<Scoreboard>();
+			GamePanel = RootPanel.Add.Panel("gamepanel");
+			Scoreboard = GamePanel.AddChild<Scoreboard>();
 
-			GamePanel = RootPanel.Add.Panel( "gamescreen" );
-			StateInfo = GamePanel.AddChild<StateInfo>();
-			DrawCanvas = GamePanel.AddChild<DrawCanvas>();
+			DrawPanel = GamePanel.Add.Panel("drawpanel");
+			DrawCanvas = DrawPanel.AddChild<DrawCanvas>();
+			ToolsContainer = DrawPanel.AddChild<ToolsContainer>();
 
-			ChatBox = RootPanel.AddChild<ChatBox>();
+			ChatBox = GamePanel.AddChild<ChatBox>();
 
 			SelectWord = RootPanel.AddChild<SelectWord>();
 			CurrentDrawer = RootPanel.AddChild<CurrentDrawer>();
