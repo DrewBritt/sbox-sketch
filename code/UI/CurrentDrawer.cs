@@ -1,47 +1,47 @@
-﻿using Sandbox.UI;
-using Sandbox;
+﻿using Sandbox;
+using Sandbox.UI;
 using Sandbox.UI.Construct;
 
 namespace Sketch
 {
-	public partial class CurrentDrawer : Panel
-	{
-		public Panel Container;
-		public Image Avatar;
-		public Label DrawerText;
-		private RealTimeSince panelOpened;
+    public partial class CurrentDrawer : Panel
+    {
+        public Panel Container;
+        public Image Avatar;
+        public Label DrawerText;
+        private RealTimeSince panelOpened;
 
-		public CurrentDrawer()
-		{
-			StyleSheet.Load( "/ui/CurrentDrawer.scss" );
+        public CurrentDrawer()
+        {
+            StyleSheet.Load("/ui/CurrentDrawer.scss");
 
-			Container = Add.Panel( "container" );
-			Avatar = Container.Add.Image( );
-			DrawerText = Container.Add.Label( "_ is selecting a word.", "drawertext" );
-		}
+            Container = Add.Panel("container");
+            Avatar = Container.Add.Image();
+            DrawerText = Container.Add.Label("_ is selecting a word.", "drawertext");
+        }
 
-		public override void Tick()
-		{
-			var game = Game.Current;
-			if ( game == null ) return;
+        public override void Tick()
+        {
+            var game = Game.Current;
+            if (game == null) return;
 
-			if ( panelOpened > 3 )
-			{
-				RemoveClass( "open" );
-				AddClass( "closed" );
-			}
+            if (panelOpened > 3)
+            {
+                RemoveClass("open");
+                AddClass("closed");
+            }
 
-		}
+        }
 
-		public void DisplayCurrentDrawer()
-		{
-			var drawer = Client.All[Game.Current.CurrentDrawerIndex];
-			Avatar.SetTexture( $"avatar:{drawer.PlayerId}" );
-			DrawerText.Text = $"{drawer.Name} is selecting a word.";
+        public void DisplayCurrentDrawer()
+        {
+            var drawer = Client.All[Game.Current.CurrentDrawerIndex];
+            Avatar.SetTexture($"avatar:{drawer.PlayerId}");
+            DrawerText.Text = $"{drawer.Name} is selecting a word.";
 
-			AddClass( "open" );
-			RemoveClass( "closed" );
-			panelOpened = 0;
-		}
-	}
+            AddClass("open");
+            RemoveClass("closed");
+            panelOpened = 0;
+        }
+    }
 }

@@ -1,129 +1,129 @@
-﻿using Sandbox;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Sketch
 {
-	public partial class Scoreboard : Panel
-	{
-		public Panel Container { get; protected set; }
+    public partial class Scoreboard : Panel
+    {
+        public Panel Container { get; protected set; }
 
-		public Panel Canvas { get; protected set; }
-		Dictionary<Client, ScoreboardEntry> Rows = new();
+        public Panel Canvas { get; protected set; }
+        Dictionary<Client, ScoreboardEntry> Rows = new();
 
-		public Scoreboard()
-		{
-			Container = Add.Panel( "container" );
+        public Scoreboard()
+        {
+            Container = Add.Panel("container");
 
-			StyleSheet.Load( "UI/Scoreboard.scss" );
-			Canvas = Container.Add.Panel( "canvas" );
-		}
+            StyleSheet.Load("UI/Scoreboard.scss");
+            Canvas = Container.Add.Panel("canvas");
+        }
 
-		public override void Tick()
-		{
-			// Add newly joined cliets
-			foreach ( var client in Client.All.Except( Rows.Keys ) )
-			{
-				var entry = AddClient( client );
-				Rows[client] = entry;
-			}
+        public override void Tick()
+        {
+            // Add newly joined cliets
+            foreach (var client in Client.All.Except(Rows.Keys))
+            {
+                var entry = AddClient(client);
+                Rows[client] = entry;
+            }
 
-			// Remove disconnected clients
-			foreach ( var client in Rows.Keys.Except( Client.All ) )
-			{
-				if ( Rows.TryGetValue( client, out var row ) )
-				{
-					row?.Delete();
-					Rows.Remove( client );
-				}
-			}
+            // Remove disconnected clients
+            foreach (var client in Rows.Keys.Except(Client.All))
+            {
+                if (Rows.TryGetValue(client, out var row))
+                {
+                    row?.Delete();
+                    Rows.Remove(client);
+                }
+            }
 
-			//Hacky way to sort scoreboard by playerscore without rewriting the scoreboard
-			//TODO: Make this not hacky probably
-			Canvas.SortChildren( p => (p as ScoreboardEntry).Client.GetInt("GameScore") * -1 );
-		}
+            //Hacky way to sort scoreboard by playerscore without rewriting the scoreboard
+            //TODO: Make this not hacky probably
+            Canvas.SortChildren(p => (p as ScoreboardEntry).Client.GetInt("GameScore") * -1);
+        }
 
-		protected virtual ScoreboardEntry AddClient( Client entry )
-		{
-			var p = Canvas.AddChild<ScoreboardEntry>();
-			p.Client = entry;
-			return p;
-		}
-	}
+        protected virtual ScoreboardEntry AddClient(Client entry)
+        {
+            var p = Canvas.AddChild<ScoreboardEntry>();
+            p.Client = entry;
+            return p;
+        }
+    }
 
-	public partial class ScoreboardEntry : Panel
-	{
-		public Client Client;
+    public partial class ScoreboardEntry : Panel
+    {
+        public Client Client;
 
-		public Image Avatar { get; internal set; }
-		public Label PlayerName { get; internal set; }
-		public Label Score { get; internal set; }
+        public Image Avatar { get; internal set; }
+        public Label PlayerName { get; internal set; }
+        public Label Score { get; internal set; }
 
-		private int lastIndex;
+        private int lastIndex;
 
-		public ScoreboardEntry()
-		{
-			AddClass( "entry" );
+        public ScoreboardEntry()
+        {
+            AddClass("entry");
 
-			Avatar = Add.Image();
-			PlayerName = Add.Label( "PlayerName", "name" );
-			Score = Add.Label( "0000", "score" );
-		}
+            Avatar = Add.Image();
+            PlayerName = Add.Label("PlayerName", "name");
+            Score = Add.Label("0000", "score");
+        }
 
-		RealTimeSince TimeSinceUpdate = 0;
+        RealTimeSince TimeSinceUpdate = 0;
 
-		public override void Tick()
-		{
-			base.Tick();
+        public override void Tick()
+        {
+            base.Tick();
 
-			if ( !IsVisible )
-				return;
+            if (!IsVisible)
+                return;
 
-			if ( !Client.IsValid() )
-				return;
+            if (!Client.IsValid())
+                return;
 
-			if ( TimeSinceUpdate < 0.1f )
-				return;
+            if (TimeSinceUpdate < 0.1f)
+                return;
 
-			TimeSinceUpdate = 0;
-			UpdateData();
-		}
+            TimeSinceUpdate = 0;
+            UpdateData();
+        }
 
-		public virtual void UpdateData()
-		{
-			Avatar.SetTexture( $"avatar:{Client.PlayerId}" );
+        public virtual void UpdateData()
+        {
+            Avatar.SetTexture($"avatar:{Client.PlayerId}");
 
-			var name = Client.Name;
-			if ( Client.All[Game.Current.CurrentDrawerIndex] == Client )
-				name += "✏️";
+            var name = Client.Name;
+            if (Client.All[Game.Current.CurrentDrawerIndex] == Client)
+                name += "✏️";
 
-			PlayerName.Text = name;
+            PlayerName.Text = name;
 
-			Score.Text = Client.GetInt( "GameScore" ).ToString();
+            Score.Text = Client.GetInt("GameScore").ToString();
 
-			//Update stylings based on rank
-			if(SiblingIndex != lastIndex)
-			{
-				lastIndex = SiblingIndex;
-				RemoveClass( "first" );
-				RemoveClass( "second" );
-				RemoveClass( "third" );
+            //Update stylings based on rank
+            if (SiblingIndex != lastIndex)
+            {
+                lastIndex = SiblingIndex;
+                RemoveClass("first");
+                RemoveClass("second");
+                RemoveClass("third");
 
-				if ( SiblingIndex == 1 )
-					AddClass( "first" );
-				if ( SiblingIndex == 2 )
-					AddClass( "second" );
-				if ( SiblingIndex == 3 )
-					AddClass( "third" );
-			}
-		}
+                if (SiblingIndex == 1)
+                    AddClass("first");
+                if (SiblingIndex == 2)
+                    AddClass("second");
+                if (SiblingIndex == 3)
+                    AddClass("third");
+            }
+        }
 
-		public virtual void UpdateFrom( Client client )
-		{
-			Client = client;
-			UpdateData();
-		}
-	}
+        public virtual void UpdateFrom(Client client)
+        {
+            Client = client;
+            UpdateData();
+        }
+    }
 }
