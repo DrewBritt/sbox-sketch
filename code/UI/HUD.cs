@@ -81,5 +81,37 @@ namespace Sketch
             var canvas = DrawCanvas as DrawCanvas;
             canvas.InitializeCanvasTexture();
         }
+
+        /// <summary>
+        /// Grabs updated pixel data and sends to server
+        /// </summary>
+        [ClientRpc]
+        public void FetchDeltaCanvasData()
+        {
+            var canvas = DrawCanvas as DrawCanvas;
+            if (canvas.UpdatedPixels.Count == 0)
+                return;
+
+            string updatedPixels = "";           
+            foreach(var p in canvas.UpdatedPixels)
+            {
+                updatedPixels += p;
+            }
+
+            canvas.UpdatedPixels.Clear();
+            Game.ReceiveDeltaCanvasData(updatedPixels);
+        }
+
+        [ClientRpc]
+        public void UpdateGuessersCanvas(Pixel[] pixels)
+        {
+            var canvas = DrawCanvas as DrawCanvas;
+            foreach (var p in pixels)
+            {
+                canvas.UpdateCanvasInfo(p);
+            }
+
+            canvas.RedrawCanvas();
+        }
     }
 }

@@ -181,8 +181,17 @@ namespace Sketch
                 return $"{time.Minutes:D2}:{time.Seconds:D2}";
             }
 
+
+            TimeSince timeSinceCanvasUpdated = 0;
             public override void Tick()
             {
+                //Fetch delta canvas data
+                if(timeSinceCanvasUpdated > .1)
+                {
+                    timeSinceCanvasUpdated = 0;
+                    Current.Hud.FetchDeltaCanvasData(To.Single(Client.All[Current.CurrentDrawerIndex]));
+                }
+
                 if (newLetter < 0)
                 {
                     //Select random letter and stick into char array
@@ -452,6 +461,27 @@ namespace Sketch
         public void ResetAllPlayersGuessed()
         {
             GuessedPlayers.Clear();
+        }
+
+        [ServerCmd]
+        public static void ReceiveDeltaCanvasData(string pixelData)
+        {
+            var data = pixelData.Split(' ', StringSplitOptions.TrimEntries);
+            Pixel[] pixels = new Pixel[data.Length / 4];
+            for(int i = 0; i < data.Length-1; i+=4)
+            {
+                Pixel pixel = new Pixel()
+                {
+                    Index = data[i].ToInt(),
+                    Red = (byte)data[i + 1].ToInt(),
+                    Green = (byte)data[i + 2].ToInt(),
+                    Blue = (byte)data[i + 3].ToInt(),
+                };
+                pixels[i/4] = pixel;
+            }
+
+            var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawerIndex);
+            Current.Hud.UpdateGuessersCanvas(To.Multiple(tosend), pixels);
         }
     }
 }

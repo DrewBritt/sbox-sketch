@@ -54,15 +54,15 @@ namespace Sketch
 
         public void RedrawCanvas() => Texture.Update(CanvasInfo);
 
-        public void UpdateCanvasInfo(Pixel pixel)
+        public void UpdateCanvasInfo(Pixel newPixel)
         {
-            CanvasInfo[pixel.Index] = pixel.Red;
-            CanvasInfo[pixel.Index + 1] = pixel.Green;
-            CanvasInfo[pixel.Index + 2] = pixel.Blue;
+            CanvasInfo[newPixel.Index] = newPixel.Red;
+            CanvasInfo[newPixel.Index + 1] = newPixel.Green;
+            CanvasInfo[newPixel.Index + 2] = newPixel.Blue;
 
 
             if (Client.All[Game.Current.CurrentDrawerIndex] == Local.Client)
-                UpdatedPixels.Add(pixel);
+                UpdatedPixels.Add(newPixel);
         }
 
         //Left click down + dragging mouse
@@ -78,7 +78,7 @@ namespace Sketch
                 return;
             Log.Info($"MousePos: {Mouse.Position}, MousePosToPanelPos: {pos}");
 
-            var indexes = FindPixelsInDistance(pos, 1);
+            var indexes = FindPixelsInDistance(pos, 0);
             foreach (var index in indexes)
             {
                 var p = new Pixel
