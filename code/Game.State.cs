@@ -7,6 +7,7 @@ namespace Sketch
 {
     public partial class Game
     {
+        #region States
         public class BaseState
         {
             public RealTimeSince stateStart { get; }
@@ -185,7 +186,7 @@ namespace Sketch
             TimeSince timeSinceCanvasUpdated = 0;
             public override void Tick()
             {
-                //Fetch delta canvas data
+                //Fetch delta canvas data (1 / timeSinceCanvasUpdated) times a second
                 if(timeSinceCanvasUpdated > .1)
                 {
                     timeSinceCanvasUpdated = 0;
@@ -332,7 +333,9 @@ namespace Sketch
                 }
             }
         }
+        #endregion
 
+        #region State Management
         /// <summary>
         /// Only use on server, as only the properties are networked.
         /// </summary>
@@ -354,16 +357,24 @@ namespace Sketch
         /// <summary>
         /// How many rounds to play before returning to lobby.
         /// Set by sketch_maxrounds command.
+        /// Marked with [Net] to use in UI ("round 1/x")
         /// </summary>
         [Net] public int MaxRounds { get; set; } = 3;
         [Net] public int CurRound { get; set; } = 1;
+
+        /// <summary>
+        /// How long to draw/guess before selecting next drawer. Set by sketch_playtime command.
+        /// </summary>
+        public int PlayTime { get; set; } = 120;
 
         /// <summary>
         /// Keeps track of drawer in Client.All
         /// TODO: See if switching to custom player list (pawns) is better.
         /// </summary>
         [Net] public int CurrentDrawerIndex { get; set; } = 0;
+        #endregion
 
+        #region Word Management
         /// <summary>
         /// How many words the drawer gets to choose from.
         /// Set by sketch_wordpoolsize command. Must be greater than 0.
@@ -375,11 +386,6 @@ namespace Sketch
         /// Set by sketch_selectwordtime command. Set to 0 for random words.
         /// </summary>
         public int SelectWordTime { get; set; } = 20;
-
-        /// <summary>
-        /// How long to draw/guess before selecting next drawer. Set by sketch_playtime command.
-        /// </summary>
-        public int PlayTime { get; set; } = 120;
 
         /// <summary>
         /// Current word to draw/guess. Not networked to avoid cheating, passed to drawer through ClientRPC.
@@ -431,7 +437,9 @@ namespace Sketch
 
             Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Game is not in proper state!");
         }
+        #endregion
 
+        #region Drawing Management
         public List<Client> GuessedPlayers { get; } = new();
 
         public void SetPlayerGuessed(Client cl)
@@ -483,5 +491,6 @@ namespace Sketch
             var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawerIndex);
             Current.Hud.UpdateGuessersCanvas(To.Multiple(tosend), pixels);
         }
+        #endregion
     }
 }
