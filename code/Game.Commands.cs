@@ -71,11 +71,17 @@ namespace Sketch
 			Current.WordPoolSize = size;
 		}
 
-		[AdminCmd( "sketch_setpixel", Help = "How many words the drawer gets to choose from." )]
-		public static void SetWordPoolSize( int index, int r, int g, int b )
-		{
-			int[] newPixel = new int[] { index, r, g, b };
-			Current.Hud.NetworkCanvasUpdate( newPixel );
-		}
+		[AdminCmd("sketch_skipword", Help = "Skips current word/drawer.")]
+		public static void SkipWord()
+        {
+			//Not currently drawing, error out.
+			if(Current.CurrentState is not PlayingState)
+            {
+				Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Cannot skip word because nothing is being drawn (incorrect state).");
+				return;
+            }
+
+			(Current.CurrentState as PlayingState).Skip();
+        }
 	}
 }

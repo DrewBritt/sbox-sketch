@@ -208,6 +208,11 @@ namespace Sketch
 					SetState( new PostPlayingState() );
 				}
 			}
+
+			public void Skip()
+            {
+				stateEnds = 0;
+            }
 		}
 
 		/// <summary>
