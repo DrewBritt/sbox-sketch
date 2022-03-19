@@ -89,28 +89,38 @@ namespace Sketch
         public void FetchDeltaCanvasData()
         {
             var canvas = DrawCanvas as DrawCanvas;
-            if (canvas.UpdatedPixels.Count == 0)
+            if (canvas.NewPixelsPos.Count == 0)
                 return;
 
             string updatedPixels = "";           
-            foreach(var p in canvas.UpdatedPixels)
+            foreach(var p in canvas.NewPixelsPos)
             {
-                updatedPixels += p;
+                updatedPixels += $"{p},";
             }
 
-            canvas.UpdatedPixels.Clear();
+            canvas.NewPixelsPos.Clear();
             Game.ReceiveDeltaCanvasData(updatedPixels);
         }
 
         [ClientRpc]
-        public void UpdateGuessersCanvas(Pixel[] pixels)
+        public void UpdateGuessersCanvas(Vector2[] positions)
         {
             var canvas = DrawCanvas as DrawCanvas;
-            foreach (var p in pixels)
+            foreach (var p in positions)
             {
-                canvas.UpdateCanvasInfo(p);
+                var indexes = canvas.FindPixelsInDistance(p, 5);
+                foreach (var index in indexes)
+                {
+                    var pixel = new Pixel
+                    {
+                        Index = index,
+                        Red = 255,
+                        Green = 0,
+                        Blue = 0,
+                    };
+                    canvas.FillPixel(pixel);
+                }
             }
-
             canvas.RedrawCanvas();
         }
     }

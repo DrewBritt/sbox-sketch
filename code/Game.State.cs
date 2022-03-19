@@ -472,24 +472,18 @@ namespace Sketch
         }
 
         [ServerCmd]
-        public static void ReceiveDeltaCanvasData(string pixelData)
+        public static void ReceiveDeltaCanvasData(string posData)
         {
-            var data = pixelData.Split(' ', StringSplitOptions.TrimEntries);
-            Pixel[] pixels = new Pixel[data.Length / 4];
-            for(int i = 0; i < data.Length-1; i+=4)
+            var data = posData.Split(',', StringSplitOptions.TrimEntries);
+            Vector2[] positions = new Vector2[posData.Length / 2];
+            for(int i = 0; i < data.Length-1; i+=2)
             {
-                Pixel pixel = new Pixel()
-                {
-                    Index = data[i].ToInt(),
-                    Red = (byte)data[i + 1].ToInt(),
-                    Green = (byte)data[i + 2].ToInt(),
-                    Blue = (byte)data[i + 3].ToInt(),
-                };
-                pixels[i/4] = pixel;
+                positions[i / 2] = new Vector2(data[i].ToInt(), data[i + 1].ToInt());
+                Log.Info(positions[i / 2]);
             }
 
             var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawerIndex);
-            Current.Hud.UpdateGuessersCanvas(To.Multiple(tosend), pixels);
+            Current.Hud.UpdateGuessersCanvas(To.Multiple(tosend), positions);
         }
         #endregion
     }

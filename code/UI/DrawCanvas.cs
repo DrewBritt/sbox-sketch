@@ -31,7 +31,11 @@ namespace Sketch
         /// </summary>
         public byte[] CanvasInfo;
 
-        public IList<Pixel> UpdatedPixels { get; set; } = new List<Pixel>();
+        /// <summary>
+        /// Newly drawn pixels have their panel pos sent over the server and calculated per-client,
+        /// to optimize handling color/radius data (instead of sending it every pixel)
+        /// </summary>
+        public IList<Vector2> NewPixelsPos { get; set; } = new List<Vector2>();
         public DrawCanvas()
         {
             StyleSheet.Load("UI/DrawCanvas.scss");
@@ -54,15 +58,11 @@ namespace Sketch
 
         public void RedrawCanvas() => Texture.Update(CanvasInfo);
 
-        public void UpdateCanvasInfo(Pixel newPixel)
+        public void FillPixel(Pixel newPixel)
         {
             CanvasInfo[newPixel.Index] = newPixel.Red;
             CanvasInfo[newPixel.Index + 1] = newPixel.Green;
             CanvasInfo[newPixel.Index + 2] = newPixel.Blue;
-
-
-            if (Client.All[Game.Current.CurrentDrawerIndex] == Local.Client)
-                UpdatedPixels.Add(newPixel);
         }
 
         //Left click down + dragging mouse
@@ -70,15 +70,20 @@ namespace Sketch
         //how to check Attack1, UI is taking all the mouse events.
         protected override void OnDragSelect(SelectionEvent e)
         {
+            //Not current drawer, block drawing
             if (Client.All[Game.Current.CurrentDrawerIndex] != Local.Client)
                 return;
 
+            //Get panel pos
             var pos = ScreenPositionToPanelPosition(e.EndPoint);
             if (pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height)
                 return;
-            Log.Info($"MousePos: {Mouse.Position}, MousePosToPanelPos: {pos}");
 
-            var indexes = FindPixelsInDistance(pos, 0);
+            //Add panel position to send to other clients
+            NewPixelsPos.Add(pos);
+
+            //Calculate pixels in radius locally
+            var indexes = FindPixelsInDistance(pos, 5);
             foreach (var index in indexes)
             {
                 var p = new Pixel
@@ -88,7 +93,7 @@ namespace Sketch
                     Green = 0,
                     Blue = 0,
                 };
-                UpdateCanvasInfo(p);
+                FillPixel(p);
             }
             RedrawCanvas();
         }
