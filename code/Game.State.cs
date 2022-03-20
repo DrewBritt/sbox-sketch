@@ -428,6 +428,7 @@ namespace Sketch
                 if (state.wordpool.Contains(word))
                 {
                     state.SelectWord(word);
+                    Sound.FromScreen("bellshort");
                     return;
                 }
 
@@ -480,7 +481,6 @@ namespace Sketch
             for(int i = 0; i < data.Length-1; i+=2)
             {
                 positions[i / 2] = new Vector2(data[i].ToInt(), data[i + 1].ToInt());
-                Log.Info(positions[i / 2]);
             }
 
             var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawerIndex);

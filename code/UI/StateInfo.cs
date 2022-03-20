@@ -23,7 +23,7 @@ namespace Sketch
             BlankLetters = Container.Add.Label("");
         }
 
-        Sound countdownSound, endSound;
+        Sound warningSound, countdownSound, endSound;
         public override void Tick()
         {
             var game = Game.Current;
@@ -34,10 +34,15 @@ namespace Sketch
 
             if(game.CurrentStateName == "Playing")
             {
+                //30 second warning
+                if (game.CurrentStateTime == "00:30" && warningSound.Finished)
+                    warningSound = Sound.FromScreen("maracashort");
+
                 //3-2-1 countdown
                 if((game.CurrentStateTime == "00:03" || game.CurrentStateTime == "00:02" || game.CurrentStateTime == "00:01") && countdownSound.Finished)
                     countdownSound = Sound.FromScreen("pingshort");
 
+                //0 second bell
                 if (game.CurrentStateTime == "00:00" && endSound.Finished)
                     endSound = Sound.FromScreen("belllong");
             }

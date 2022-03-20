@@ -139,7 +139,7 @@ namespace Sketch
                 if (words[0].ToLower() == Game.Current.CurrentWord.ToLower())
                 {
                     AddInformation(To.Everyone, $"{ConsoleSystem.Caller.Name} has guessed the word!", true);
-                    Sound.FromScreen("bellshort");
+                    Sound.FromScreen("xylophonealert");
                     Game.Current.SetPlayerGuessed(ConsoleSystem.Caller);
                     return;
                 }
