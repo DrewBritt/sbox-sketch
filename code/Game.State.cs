@@ -184,6 +184,7 @@ namespace Sketch
 
 
             TimeSince timeSinceCanvasUpdated = 0;
+            bool isPlayingCountdownTimer = false;
             public override void Tick()
             {
                 //Fetch delta canvas data (1 / timeSinceCanvasUpdated) times a second

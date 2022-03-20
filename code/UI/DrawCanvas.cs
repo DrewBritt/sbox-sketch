@@ -74,8 +74,8 @@ namespace Sketch
             if (Client.All[Game.Current.CurrentDrawerIndex] != Local.Client)
                 return;
 
-            //Get panel pos
-            var pos = ScreenPositionToPanelPosition(e.EndPoint);
+                //Get panel pos
+                var pos = ScreenPositionToPanelPosition(e.EndPoint);
             if (pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height)
                 return;
 

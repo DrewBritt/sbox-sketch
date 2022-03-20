@@ -44,6 +44,10 @@
             transition: all 0.2s ease-out;
 
             &:hover {
+                sound-in: click1;
+            }
+
+            &:hover {
                 transform: scale(1.2);
                 transition: all 0.2s ease-out;
                 background-color: rgba(50, 100, 150, 0.8);

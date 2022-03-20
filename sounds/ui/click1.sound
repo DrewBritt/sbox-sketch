@@ -7,7 +7,7 @@
 			"sounds/ui/click1.vsnd",
 		]
 		ui = true
-		volume = 1.0
+		volume = 1.2
 		volumerandom = 0.0
 		pitch = 1.0
 		pitchrandom = 0.0

@@ -1,4 +1,5 @@
-﻿using Sandbox.UI;
+﻿using Sandbox;
+using Sandbox.UI;
 using Sandbox.UI.Construct;
 
 namespace Sketch
@@ -22,6 +23,7 @@ namespace Sketch
             BlankLetters = Container.Add.Label("");
         }
 
+        Sound countdownSound, endSound;
         public override void Tick()
         {
             var game = Game.Current;
@@ -29,6 +31,16 @@ namespace Sketch
 
             StateName.Text = game.CurrentStateName.ToUpper();
             StateTime.Text = game.CurrentStateTime;
+
+            if(game.CurrentStateName == "Playing")
+            {
+                //3-2-1 countdown
+                if((game.CurrentStateTime == "00:03" || game.CurrentStateTime == "00:02" || game.CurrentStateTime == "00:01") && countdownSound.Finished)
+                    countdownSound = Sound.FromScreen("pingshort");
+
+                if (game.CurrentStateTime == "00:00" && endSound.Finished)
+                    endSound = Sound.FromScreen("belllong");
+            }
 
             //TODO: Make this less shit
             if (BlankLetters.Text == "")

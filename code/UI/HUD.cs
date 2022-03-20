@@ -37,6 +37,16 @@ namespace Sketch
         }
 
         /// <summary>
+        /// Play generic .sound file on client
+        /// </summary>
+        /// <param name="soundname"></param>
+        [ClientRpc]
+        public new void PlaySound(string soundname)
+        {
+            Sound.FromScreen(soundname);
+        }
+
+        /// <summary>
         /// Popup to display current drawer pre-round.
         /// </summary>
         [ClientRpc]
