@@ -629,12 +629,10 @@ Tongue
 Tool
 Tooth
 Top
-Topic
 Town
 Trade
 Tradition
 Trainer
-Training
 Transportation
 Two
 Type
@@ -653,7 +651,6 @@ Village
 Virus
 Voice
 Volume
-Volume
 War
 Warning
 Water
@@ -664,7 +661,6 @@ Weather
 Web
 Wedding
 Week
-While
 Wife
 Wind
 Winner
@@ -672,9 +668,10 @@ Woman
 Wood
 Word
 Work
-Worker
 World
 Writer
 Writing
 Year
 Youth
+Zebra
+Zombie
