@@ -96,7 +96,7 @@ namespace Sketch
             Avatar.SetTexture($"avatar:{Client.PlayerId}");
 
             var name = Client.Name;
-            if (Client.All[Game.Current.CurrentDrawerIndex] == Client)
+            if (Game.Current.CurrentDrawer == Client)
                 name += "✏️";
 
             PlayerName.Text = name;

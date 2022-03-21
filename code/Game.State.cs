@@ -67,6 +67,8 @@ namespace Sketch
 
             public PreSelectingState() : base()
             {
+                Current.CurrentDrawer = Client.All[Current.CurrentDrawerIndex];
+                Log.Info(Current.CurrentDrawer);
                 Current.Hud.DisplayCurrentDrawer(To.Everyone);
             }
 
@@ -103,8 +105,7 @@ namespace Sketch
             {
                 //Send word pool to drawer.
                 wordpool = Words.RandomWords(Current.WordPoolSize);
-                var client = Client.All[Current.CurrentDrawerIndex];
-                Current.Hud.SendWordPool(To.Single(client), wordpool.ToArray(), Current.SelectWordTime);
+                Current.Hud.SendWordPool(To.Single(Current.CurrentDrawer), wordpool.ToArray(), Current.SelectWordTime);
 
                 //Set random word ahead of time. If drawer doesn't select a word, this word is used.
                 var random = new Random();
@@ -169,10 +170,10 @@ namespace Sketch
                 newLetter = Current.PlayTime / Current.CurrentWord.Length;
 
                 //Send entire word to drawer
-                Current.Hud.SendCurrentLetters(To.Single(Client.All[Current.CurrentDrawerIndex]), word);
+                Current.Hud.SendCurrentLetters(To.Single(Current.CurrentDrawer), word);
 
                 //Only send current letters (at this point, just _'s) to everyone else
-                toSend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawerIndex);
+                toSend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawer);
                 Current.Hud.SendCurrentLetters(To.Multiple(toSend), Current.CurrentLettersString());
             }
 
@@ -191,7 +192,7 @@ namespace Sketch
                 if(timeSinceCanvasUpdated > .1)
                 {
                     timeSinceCanvasUpdated = 0;
-                    Current.Hud.FetchDeltaCanvasData(To.Single(Client.All[Current.CurrentDrawerIndex]));
+                    Current.Hud.FetchDeltaCanvasData(To.Single(Current.CurrentDrawer));
                 }
 
                 if (newLetter < 0)
@@ -204,7 +205,7 @@ namespace Sketch
                     //Update only guesser's UI
                     //TODO: Probably remove this garbage function. Set bool on drawer client and only update if false,
                     //then send letters to everyone instead?
-                    var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawerIndex);
+                    var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawer);
                     Current.Hud.SendCurrentLetters(To.Multiple(tosend), Current.CurrentLettersString());
 
                     //Reset letter timer
@@ -252,7 +253,7 @@ namespace Sketch
                 {
                     Current.Hud.ClearCanvas(To.Everyone);
                     Current.Hud.SendCurrentLetters(To.Everyone, "");
-                    if (Current.CurrentDrawerIndex < Client.All.Count - 1)
+                    if (Current.CurrentDrawerIndex != Client.All.Count - 1)
                     {
                         Current.CurrentDrawerIndex++;
                         SetState(new PreSelectingState());
@@ -295,6 +296,7 @@ namespace Sketch
                     if (Current.CurRound < Current.MaxRounds)
                     {
                         Current.CurRound++;
+
                         Current.CurrentDrawerIndex = 0;
                         SetState(new PreSelectingState());
                     }
@@ -368,11 +370,8 @@ namespace Sketch
         /// </summary>
         public int PlayTime { get; set; } = 120;
 
-        /// <summary>
-        /// Keeps track of drawer in Client.All
-        /// TODO: See if switching to custom player list (pawns) is better.
-        /// </summary>
-        [Net] public int CurrentDrawerIndex { get; set; } = 0;
+        [Net] public Client CurrentDrawer { get; set; }
+        public int CurrentDrawerIndex = 0;
         #endregion
 
         #region Word Management
@@ -414,7 +413,7 @@ namespace Sketch
         public static void SelectWord(string word)
         {
             //Verify if command caller is the current drawer
-            if (ConsoleSystem.Caller != Client.All[Current.CurrentDrawerIndex])
+            if (ConsoleSystem.Caller != Current.CurrentDrawer)
             {
                 Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: You're not the drawer!");
                 return;
@@ -456,13 +455,13 @@ namespace Sketch
             GuessedPlayers.Add(cl);
 
             //Drawer gets 1/3 of player score added to their own
-            Client drawer = Client.All[Current.CurrentDrawerIndex];
+            var drawer = Current.CurrentDrawer;
             curScore = drawer.GetInt("GameScore");
             drawer.SetInt("GameScore", curScore + (score.FloorToInt() / 3));
 
             //Check if all players have guessed (rather than checking every tick in state code)
             //TODO: Make this stupid shit not shit probably
-            if (ClientUtil.ClientsExceptDrawer(Client.All, CurrentDrawerIndex).SequenceEqual(GuessedPlayers))
+            if (ClientUtil.ClientsExceptDrawer(Client.All, CurrentDrawer).SequenceEqual(GuessedPlayers))
             {
                 Current.CurrentState = new PostPlayingState();
             }
@@ -483,7 +482,7 @@ namespace Sketch
                 positions[i / 2] = new Vector2(data[i].ToInt(), data[i + 1].ToInt());
             }
 
-            var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawerIndex);
+            var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawer);
             Current.Hud.UpdateGuessersCanvas(To.Multiple(tosend), positions);
         }
         #endregion
