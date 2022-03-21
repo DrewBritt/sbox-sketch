@@ -7,6 +7,7 @@
     .colors {
         width: 70%;
         height: 100%;
+        justify-content: center;
         align-items: center;
 
         .colorbutton {
@@ -26,6 +27,7 @@
     .sizes {
         width: 20%;
         height: 100%;
+        justify-content: center;
         align-items: center;
 
         .sizebutton {
@@ -44,5 +46,22 @@
     .trashcan {
         width: 10%;
         height: 100%;
+        justify-content: center;
+        align-items: center;
+
+        .trashbutton {
+            width: 100px;
+            height: 100px;
+            background-image: url(/UI/trash-can.png);
+            background-size: 120%;
+            transform: scale(.8);
+            background-position: center;
+            background-repeat: no-repeat;
+
+            &:hover {
+                sound-in: click1;
+                transform: scale(.9);
+            }
+        }
     }
 }

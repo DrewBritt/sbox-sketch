@@ -50,6 +50,7 @@ namespace Sketch
             }
 
             TrashCan = Add.Panel("trashcan");
+            TrashCan.Add.Button("", "trashbutton", () => Game.ClearCanvas());
         }
 
         public void UpdateColor(Color newColor)

@@ -42,6 +42,15 @@ namespace Sketch
             Current.CurrentSize = size;
         }
 
+        [ServerCmd]
+        public static void ClearCanvas()
+        {
+            if (ConsoleSystem.Caller != Current.CurrentDrawer)
+                return;
+
+            Current.Hud.ClearCanvas(To.Everyone);
+        }
+
         [AdminCmd("sketch_maxrounds", Help = "How many rounds to play before returning to lobby.")]
         public static void SetMaxRounds(int maxrounds)
         {
