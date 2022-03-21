@@ -25,6 +25,7 @@ namespace Sketch
         public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
         {
             ChatBox.AddInformation(To.Everyone, $"{cl.Name} has left ({reason})");
+            Sound.FromScreen("doorshutting");
         }
 
         protected override void OnDestroy()

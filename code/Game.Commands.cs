@@ -45,9 +45,10 @@ namespace Sketch
         [ServerCmd]
         public static void ClearCanvas()
         {
-            if (ConsoleSystem.Caller != Current.CurrentDrawer)
+            if (!ClientUtil.CanDraw(ConsoleSystem.Caller))
                 return;
 
+            Sound.FromScreen("pagecrumbling");
             Current.Hud.ClearCanvas(To.Everyone);
         }
 

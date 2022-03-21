@@ -469,7 +469,7 @@ namespace Sketch
         /// <summary>
         /// Drawer's currently selected brush size.
         /// </summary>
-        [Net] public int CurrentSize { get; set; }
+        [Net] public int CurrentSize { get; set; } = 6;
 
         /// <summary>
         /// Holds players that have guessed the current word.
