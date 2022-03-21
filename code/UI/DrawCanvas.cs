@@ -75,9 +75,15 @@ namespace Sketch
                 return;
 
             //Get panel pos
-            var pos = ScreenPositionToPanelPosition(e.EndPoint);
+            //TODO: FIX FIX FIX FIX FIX
+            //MousePos -> PanelPos was so off before, ScaleFromScreen almost fixed it, and .95 is a random hack number.
+            //I think it's because of how the UI is internally handled (scales to 1920x1080 or some shit)
+            //Still doesn't work completely properly on other resolutions, just looks good enough for now :(
+            var pos = MousePosition * ScaleFromScreen * .95;
             if (pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height)
                 return;
+
+            Log.Info($"MousePos: {Mouse.Position}, PanelPos: {pos}");
 
             //Add panel position to send to other clients
             NewPixelsPos.Add(pos);
