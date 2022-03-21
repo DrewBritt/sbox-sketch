@@ -29,6 +29,13 @@ namespace Sketch
             {
                 if (Client.All.Count == 1)
                     SetState(new WaitingForPlayersState());
+
+                if(Current.CurrentDrawer != null && !Current.CurrentDrawer.IsValid())
+                {
+                    Current.CurrentDrawerIndex--;
+                    Current.CurrentDrawer = null;
+                    SetState(new PostPlayingState());
+                }
             }
 
             protected void SetState(BaseState state)
@@ -155,6 +162,7 @@ namespace Sketch
 
             public PlayingState() : base()
             {
+                //Begin play sound
                 Sound.FromScreen("bellshort");
 
                 //Init CurrentLetters with empty spaces
