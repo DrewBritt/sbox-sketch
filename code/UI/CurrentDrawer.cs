@@ -35,7 +35,7 @@ namespace Sketch
 
         public void DisplayCurrentDrawer()
         {
-            var drawer = Client.All[Game.Current.CurrentDrawerIndex];
+            var drawer = Game.Current.CurrentDrawer;
             Avatar.SetTexture($"avatar:{drawer.PlayerId}");
             DrawerText.Text = $"{drawer.Name} is selecting a word.";
 
