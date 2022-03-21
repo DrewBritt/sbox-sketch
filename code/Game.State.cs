@@ -155,6 +155,8 @@ namespace Sketch
 
             public PlayingState() : base()
             {
+                Sound.FromScreen("bellshort");
+
                 //Init CurrentLetters with empty spaces
                 var word = Current.CurrentWord;
                 var chars = new List<char>();
@@ -448,7 +450,6 @@ namespace Sketch
                 if (state.WordPool.Contains(word))
                 {
                     state.SelectWord(word);
-                    Sound.FromScreen("bellshort");
                     return;
                 }
 
