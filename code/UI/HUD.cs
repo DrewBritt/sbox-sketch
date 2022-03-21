@@ -116,17 +116,18 @@ namespace Sketch
         public void UpdateGuessersCanvas(Vector2[] positions)
         {
             var canvas = DrawCanvas as DrawCanvas;
+            Color32 color = Game.Current.CurrentColor;
             foreach (var p in positions)
             {
-                var indexes = canvas.FindPixelsInDistance(p, 5);
+                var indexes = canvas.FindPixelsInDistance(p, Game.Current.CurrentSize);
                 foreach (var index in indexes)
                 {
                     var pixel = new Pixel
                     {
                         Index = index,
-                        Red = 255,
-                        Green = 0,
-                        Blue = 0,
+                        Red = color.r,
+                        Green = color.g,
+                        Blue = color.b,
                     };
                     canvas.FillPixel(pixel);
                 }

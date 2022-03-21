@@ -83,21 +83,20 @@ namespace Sketch
             if (pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height)
                 return;
 
-            Log.Info($"MousePos: {Mouse.Position}, PanelPos: {pos}");
-
             //Add panel position to send to other clients
             NewPixelsPos.Add(pos);
 
             //Calculate pixels in radius locally
-            var indexes = FindPixelsInDistance(pos, 5);
+            var indexes = FindPixelsInDistance(pos, Game.Current.CurrentSize);
+            Color32 color = Game.Current.CurrentColor;
             foreach (var index in indexes)
             {
                 var p = new Pixel
                 {
                     Index = index,
-                    Red = 255,
-                    Green = 0,
-                    Blue = 0,
+                    Red = color.r,
+                    Green = color.g,
+                    Blue = color.b,
                 };
                 FillPixel(p);
             }

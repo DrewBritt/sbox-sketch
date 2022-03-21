@@ -186,7 +186,6 @@ namespace Sketch
 
             TimeSince timeSinceCanvasUpdated = 0;
             Sound countdownSound, endSound, warningSound;
-            bool isPlayingCountdownTimer = false;
             public override void Tick()
             {
                 base.Tick();
@@ -463,6 +462,15 @@ namespace Sketch
         #endregion
 
         #region Drawing Management
+        /// <summary>
+        /// Drawer's currently selected color.
+        /// </summary>
+        [Net] public Color32 CurrentColor { get; set; }
+        /// <summary>
+        /// Drawer's currently selected brush size.
+        /// </summary>
+        [Net] public int CurrentSize { get; set; }
+
         /// <summary>
         /// Holds players that have guessed the current word.
         /// </summary>

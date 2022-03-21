@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using System;
+using Sandbox;
 
 namespace Sketch
 {
@@ -12,6 +13,33 @@ namespace Sketch
         public void CommandError(string errormessage)
         {
             Log.Error(errormessage);
+        }
+
+        /// <summary>
+        /// Sends new color's RGBA data, deserializes, and sets on Game.Current
+        /// </summary>
+        /// <param name="rgba"></param>
+        [ServerCmd]
+        public static void SetCurrentColor(string rgba)
+        {
+            if (ConsoleSystem.Caller != Current.CurrentDrawer)
+                return;
+
+            //Split rgba string "rgba( r, g, b, a )" into [r, g, b, a]
+            //Substring cuts off "rgba( " and IndexOf gets the final parenthesis
+            string[] bytes = rgba.Substring(6, rgba.IndexOf(')') - 6).Split(',', StringSplitOptions.TrimEntries);
+
+            Color32 newColor = new Color32((byte)bytes[0].ToInt(), (byte)bytes[1].ToInt(), (byte)bytes[2].ToInt());
+            Current.CurrentColor = newColor;
+        }
+
+        [ServerCmd]
+        public static void SetCurrentSize(int size)
+        {
+            if (ConsoleSystem.Caller != Current.CurrentDrawer)
+                return;
+
+            Current.CurrentSize = size;
         }
 
         [AdminCmd("sketch_maxrounds", Help = "How many rounds to play before returning to lobby.")]

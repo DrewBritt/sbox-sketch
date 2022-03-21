@@ -3,4 +3,46 @@
     height: 10%;
     background-color: rgba( 0, 0, 0, 0.9 );
     border-radius: 10px;
+
+    .colors {
+        width: 70%;
+        height: 100%;
+        align-items: center;
+
+        .colorbutton {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-left: 10px;
+            margin-right: 10px;
+
+            &:hover {
+                sound-in: click1;
+                transform: scale(1.2);
+            }
+        }
+    }
+
+    .sizes {
+        width: 20%;
+        height: 100%;
+        align-items: center;
+
+        .sizebutton {
+            border-radius: 50%;
+            margin-left: 10px;
+            margin-right: 10px;
+            background-color: lightgrey;
+
+            &:hover {
+                sound-in: click1;
+                transform: scale(1.2);
+            }
+        }
+    }
+
+    .trashcan {
+        width: 10%;
+        height: 100%;
+    }
 }
