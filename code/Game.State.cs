@@ -33,7 +33,7 @@ namespace Sketch
 
             protected void SetState(BaseState state)
             {
-                Current.ResetAllPlayersGuessed();
+                Current.GuessedPlayers.Clear();
                 Current.CurrentState = state;
             }
         }
@@ -68,7 +68,6 @@ namespace Sketch
             public PreSelectingState() : base()
             {
                 Current.CurrentDrawer = Client.All[Current.CurrentDrawerIndex];
-                Log.Info(Current.CurrentDrawer);
                 Current.Hud.DisplayCurrentDrawer(To.Everyone);
             }
 
@@ -99,18 +98,18 @@ namespace Sketch
             public override string StateName() => "Selecting Word";
             private RealTimeUntil stateEnds;
 
-            public string[] wordpool;
+            public string[] WordPool;
 
             public SelectingWordState() : base()
             {
                 //Send word pool to drawer.
-                wordpool = Words.RandomWords(Current.WordPoolSize);
-                Current.Hud.SendWordPool(To.Single(Current.CurrentDrawer), wordpool.ToArray(), Current.SelectWordTime);
+                WordPool = Words.RandomWords(Current.WordPoolSize);
+                Current.Hud.SendWordPool(To.Single(Current.CurrentDrawer), WordPool.ToArray(), Current.SelectWordTime);
 
                 //Set random word ahead of time. If drawer doesn't select a word, this word is used.
                 var random = new Random();
-                int ranNum = random.Next(wordpool.Length);
-                Current.CurrentWord = wordpool[ranNum];
+                int ranNum = random.Next(WordPool.Length);
+                Current.CurrentWord = WordPool[ranNum];
 
                 Current.CurrentLetters.Clear();
 
@@ -154,7 +153,6 @@ namespace Sketch
             private RealTimeUntil stateEnds;
             private RealTimeUntil newLetter;
 
-            private IEnumerable<Client> toSend;
             public PlayingState() : base()
             {
                 //Init CurrentLetters with empty spaces
@@ -173,8 +171,8 @@ namespace Sketch
                 Current.Hud.SendCurrentLetters(To.Single(Current.CurrentDrawer), word);
 
                 //Only send current letters (at this point, just _'s) to everyone else
-                toSend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawer);
-                Current.Hud.SendCurrentLetters(To.Multiple(toSend), Current.CurrentLettersString());
+                var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawer);
+                Current.Hud.SendCurrentLetters(To.Multiple(tosend), Current.CurrentLettersString());
             }
 
             public override string StateTime()
@@ -266,8 +264,11 @@ namespace Sketch
 
                 if (stateEnds < 0)
                 {
+                    //Clear canvas/word data
                     Current.Hud.ClearCanvas(To.Everyone);
                     Current.Hud.SendCurrentLetters(To.Everyone, "");
+
+                    //New drawer
                     if (Current.CurrentDrawerIndex != Client.All.Count - 1)
                     {
                         Current.CurrentDrawerIndex++;
@@ -308,6 +309,7 @@ namespace Sketch
             {
                 if (stateEnds < 0)
                 {
+                    //Start new round
                     if (Current.CurRound < Current.MaxRounds)
                     {
                         Current.CurRound++;
@@ -424,6 +426,10 @@ namespace Sketch
             return w;
         }
 
+        /// <summary>
+        /// Drawer selects a word to draw.
+        /// </summary>
+        /// <param name="word">Word to draw/guess</param>
         [ServerCmd]
         public static void SelectWord(string word)
         {
@@ -439,7 +445,7 @@ namespace Sketch
             {
 
                 //And if selected word is valid
-                if (state.wordpool.Contains(word))
+                if (state.WordPool.Contains(word))
                 {
                     state.SelectWord(word);
                     Sound.FromScreen("bellshort");
@@ -456,8 +462,15 @@ namespace Sketch
         #endregion
 
         #region Drawing Management
+        /// <summary>
+        /// Holds players that have guessed the current word.
+        /// </summary>
         public List<Client> GuessedPlayers { get; } = new();
 
+        /// <summary>
+        /// Player successfully guessed the word.
+        /// </summary>
+        /// <param name="cl"></param>
         public void SetPlayerGuessed(Client cl)
         {
             //Player score is calculated by lerping between 400 and 1000, 
@@ -482,11 +495,10 @@ namespace Sketch
             }
         }
 
-        public void ResetAllPlayersGuessed()
-        {
-            GuessedPlayers.Clear();
-        }
-
+        /// <summary>
+        /// Drawing client sends delta pixel data to server to resend to other clients.
+        /// </summary>
+        /// <param name="posData">A string of comma delimited MousePos x and y coordinates.</param>
         [ServerCmd]
         public static void ReceiveDeltaCanvasData(string posData)
         {
