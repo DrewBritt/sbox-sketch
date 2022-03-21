@@ -189,6 +189,8 @@ namespace Sketch
             bool isPlayingCountdownTimer = false;
             public override void Tick()
             {
+                base.Tick();
+
                 //Fetch delta canvas data (1 / timeSinceCanvasUpdated) times a second
                 if(timeSinceCanvasUpdated > .1)
                 {
@@ -260,6 +262,8 @@ namespace Sketch
 
             public override void Tick()
             {
+                base.Tick();
+
                 if (stateEnds < 0)
                 {
                     Current.Hud.ClearCanvas(To.Everyone);
