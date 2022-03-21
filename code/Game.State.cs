@@ -185,6 +185,7 @@ namespace Sketch
 
 
             TimeSince timeSinceCanvasUpdated = 0;
+            Sound countdownSound, endSound, warningSound;
             bool isPlayingCountdownTimer = false;
             public override void Tick()
             {
@@ -195,6 +196,7 @@ namespace Sketch
                     Current.Hud.FetchDeltaCanvasData(To.Single(Current.CurrentDrawer));
                 }
 
+                //Send new hint to guessers
                 if (newLetter < 0)
                 {
                     //Select random letter and stick into char array
@@ -212,8 +214,17 @@ namespace Sketch
                     newLetter = Current.PlayTime / Current.CurrentWord.Length;
                 }
 
+                //Warning sound shit
+                if (stateEnds <= 30 && stateEnds >= 29 && warningSound.Finished)
+                    warningSound = Sound.FromScreen("maracashort");
+
+                //Countdown sound shit
+                if (stateEnds <= 3 && stateEnds > 0 && countdownSound.Finished)
+                    countdownSound = Sound.FromScreen("pingshort");
+
                 if (stateEnds < 0)
                 {
+                    endSound = Sound.FromScreen("belllong");
                     SetState(new PostPlayingState());
                 }
             }
