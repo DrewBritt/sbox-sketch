@@ -117,8 +117,6 @@ namespace Sketch
             if(message.Contains('\n') || message.Contains('\r'))
                 return;
 
-            //Log.Info($"{ConsoleSystem.Caller}: {message}");
-
             var game = Game.Current;
 
             //Checks should only be ran if currently playing game
@@ -152,7 +150,6 @@ namespace Sketch
                 }
             }
 
-            Log.Info(ConsoleSystem.Caller.PlayerId);
             AddChatEntry(To.Everyone, ConsoleSystem.Caller.PlayerId.ToString(), $"{ConsoleSystem.Caller.Name}:", message);
         }
     }
