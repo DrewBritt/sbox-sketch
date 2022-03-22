@@ -72,7 +72,7 @@ namespace Sketch
             Current.MaxRounds = maxrounds;
         }
 
-        [AdminCmd("sketch_selectwordtime", Help = "How long (SECONDS) the drawer has to select a word.")]
+        [ServerCmd("sketch_selectwordtime", Help = "How long (SECONDS) the drawer has to select a word.")]
         public static void SetSelectWordTime(int time)
         {
             //Invalid time, error out.
@@ -88,6 +88,8 @@ namespace Sketch
         [AdminCmd("sketch_playtime", Help = "How long (SECONDS) the drawer has to draw/players have to guess.")]
         public static void SetPlayTime(int time)
         {
+            Log.Info(ConsoleSystem.Caller);
+
             //Invalid time, error out.
             if (time <= 0)
             {
@@ -122,6 +124,19 @@ namespace Sketch
             }
 
             (Current.CurrentState as PlayingState).Skip();
+        }
+
+        [AdminCmd("sketch_resetgame", Help = "Resets game.")]
+        public static void ResetGame()
+        {
+            Current.CurrentDrawerIndex = 0;
+            Current.CurRound = 1;
+            Current.Hud.ClearCanvas(To.Everyone);
+            Current.CurrentLetters.Clear();
+            foreach (var c in Client.All)
+                c.SetInt("GameScore", 0);
+
+            Current.CurrentState = new WaitingForPlayersState();
         }
     }
 }
