@@ -14,6 +14,7 @@ namespace Sketch
         public ChatBox ChatBox { get; set; }
         public SelectWord SelectWord { get; set; }
         public CurrentDrawer CurrentDrawer { get; set; }
+        public Settings Settings { get; set; }
 
         public HUD()
         {
@@ -34,6 +35,7 @@ namespace Sketch
 
             SelectWord = RootPanel.AddChild<SelectWord>();
             CurrentDrawer = RootPanel.AddChild<CurrentDrawer>();
+            Settings = RootPanel.AddChild<Settings>();
         }
 
         /// <summary>
