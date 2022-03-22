@@ -27,8 +27,7 @@ namespace Sketch
 
             if (panelOpened > 3)
             {
-                RemoveClass("open");
-                AddClass("closed");
+                SetClass("open", false);
             }
 
         }
@@ -39,8 +38,7 @@ namespace Sketch
             Avatar.SetTexture($"avatar:{drawer.PlayerId}");
             DrawerText.Text = $"{drawer.Name} is selecting a word.";
 
-            AddClass("open");
-            RemoveClass("closed");
+            SetClass("open", true);
             panelOpened = 0;
         }
     }

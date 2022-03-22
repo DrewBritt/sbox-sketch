@@ -25,8 +25,7 @@ namespace Sketch
 
             if (stateEnd < 0)
             {
-                RemoveClass("open");
-                AddClass("closed");
+                SetClass("open", false);
             }
 
         }
@@ -39,8 +38,7 @@ namespace Sketch
                 Container.Add.Button(w, "wordbutton", () => SelectedWord(w));
             }
 
-            AddClass("open");
-            RemoveClass("closed");
+            SetClass("open", true);
 
             stateEnd = time;
         }

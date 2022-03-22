@@ -7,16 +7,12 @@
     backdrop-filter: blur( 20px ) brightness( 0.5 );
     pointer-events: none;
     opacity: 0;
+    transition: opacity 0.5s ease-out;
     justify-content: center;
     align-items: center;
 
     &.open {
         opacity: 1;
-        transition: opacity 0.5s ease-out;
-    }
-
-    &.closed {
-        transition: opacity 0.5s ease-out;
     }
 
     image {

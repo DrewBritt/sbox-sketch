@@ -8,16 +8,12 @@
     flex-direction: column;
     background-color: rgba(10, 10, 10, 0.5);
     backdrop-filter: blur( 20px ) brightness( 0.5 );
+    transition: opacity 0.5s ease-out;
     color: white;
     z-index: 3;
 
     &.open {
         opacity: 1;
-        transition: opacity 0.5s ease-out;
-    }
-
-    &.closed {
-        transition: opacity 0.5s ease-out;
     }
 
     .title {
