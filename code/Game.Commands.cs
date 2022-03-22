@@ -33,6 +33,10 @@ namespace Sketch
             Current.CurrentColor = newColor;
         }
 
+        /// <summary>
+        /// Sends new brush size and sets on Game.Current
+        /// </summary>
+        /// <param name="size"></param>
         [ServerCmd]
         public static void SetCurrentSize(int size)
         {
@@ -42,6 +46,9 @@ namespace Sketch
             Current.CurrentSize = size;
         }
 
+        /// <summary>
+        /// Drawer wants to wipe canvas.
+        /// </summary>
         [ServerCmd]
         public static void ClearCanvas()
         {

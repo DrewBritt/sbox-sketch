@@ -45,30 +45,38 @@ namespace Sketch
             Canvas.SortChildren(p => (p as ScoreboardEntry).Client.GetInt("GameScore") * -1);
         }
 
-        protected virtual ScoreboardEntry AddClient(Client entry)
+        protected virtual ScoreboardEntry AddClient(Client cl)
         {
-            var p = Canvas.AddChild<ScoreboardEntry>();
-            p.Client = entry;
-            return p;
+            var entry = new ScoreboardEntry(cl);
+            Canvas.AddChild(entry);
+            return entry;
+        }
+
+        public void OnVoicePlayed(long steamId, float level)
+        {
+            var playerEntry = ChildrenOfType<ScoreboardEntry>().FirstOrDefault(x => x.Client.PlayerId == steamId);
+            if (playerEntry == null) return;
+
+            playerEntry.UpdateVoice();
         }
     }
 
     public partial class ScoreboardEntry : Panel
     {
         public Client Client;
-
-        public Image Avatar { get; internal set; }
-        public Label PlayerName { get; internal set; }
+        readonly Image Avatar;
+        readonly Label PlayerName;
         public Label Score { get; internal set; }
 
         private int lastIndex;
 
-        public ScoreboardEntry()
+        public ScoreboardEntry(Client cl)
         {
+            Client = cl;
             AddClass("entry");
 
-            Avatar = Add.Image();
-            PlayerName = Add.Label("PlayerName", "name");
+            Avatar = Add.Image($"avatar:{Client.PlayerId}");
+            PlayerName = Add.Label(Client.Name, "name");
             Score = Add.Label("0000", "score");
         }
 
@@ -99,6 +107,9 @@ namespace Sketch
             if (Game.Current.CurrentDrawer == Client)
                 name += "✏️";
 
+            if (timeSinceVoicePlayed < 2)
+                name += " 🔊";
+
             PlayerName.Text = name;
 
             Score.Text = Client.GetInt("GameScore").ToString();
@@ -124,6 +135,12 @@ namespace Sketch
         {
             Client = client;
             UpdateData();
+        }
+
+        TimeSince timeSinceVoicePlayed = 5;
+        public void UpdateVoice()
+        {
+            timeSinceVoicePlayed = 0;
         }
     }
 }

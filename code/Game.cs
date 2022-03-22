@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using System.Linq;
+using Sandbox;
 
 namespace Sketch
 {
@@ -58,6 +59,23 @@ namespace Sketch
             Host.AssertServer();
 
             return true;
+        }
+
+        /// <summary>
+		/// Someone is speaking via voice chat. This might be someone in your game,
+		/// or in your party, or in your lobby.
+		/// </summary>
+		public override void OnVoicePlayed(long playerId, float level)
+        {
+            var client = Client.All.Where(x => x.PlayerId == playerId).FirstOrDefault();
+            if (client.IsValid())
+            {
+                client.VoiceLevel = level;
+                client.TimeSinceLastVoice = 0;
+            }
+
+            Log.Info(playerId);
+            (Current.Hud.Scoreboard as Scoreboard).OnVoicePlayed(playerId, level);
         }
     }
 }
