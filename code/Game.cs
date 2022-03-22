@@ -19,12 +19,12 @@ namespace Sketch
 
         public override void ClientJoined(Client cl)
         {
-            ChatBox.AddInformation(To.Everyone, $"{cl.Name} has joined the game!");
+            ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has joined the game!");
         }
 
         public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
         {
-            ChatBox.AddInformation(To.Everyone, $"{cl.Name} has left ({reason})");
+            ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has left ({reason})");
             Sound.FromScreen("doorshutting");
         }
 

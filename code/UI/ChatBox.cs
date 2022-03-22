@@ -59,11 +59,16 @@ namespace Sketch
             Canvas.TryScrollToBottom();
         }
 
-        public void AddEntry(string name, string message, string additionalClass = null)
+        public void AddEntry(ulong? id, string name, string message, string additionalClass = null)
         {
             var e = Canvas.AddChild<ChatEntry>();
-            e.Message.Text = message;
             e.NameLabel.Text = name;
+            e.Message.Text = message;
+
+            if(id != null)
+            {
+                e.Avatar.SetTexture($"avatar:{id}");
+            }
 
             e.SetClass("noname", string.IsNullOrEmpty(name));
 
@@ -74,9 +79,9 @@ namespace Sketch
         }
 
         [ClientCmd("chat_add", CanBeCalledFromServer = true)]
-        public static void AddChatEntry(string name, string message)
+        public static void AddChatEntry(string playerid, string name, string message)
         {
-            Current?.AddEntry(name, message);
+            Current?.AddEntry(playerid.ToULong(), name, message);
 
             // Only log clientside if we're not the listen server host
             if (!Global.IsListenServer)
@@ -86,21 +91,21 @@ namespace Sketch
         }
 
         [ClientCmd("chat_guessedchat", CanBeCalledFromServer = true)]
-        public static void AddGuessedChatEntry(string name, string message)
+        public static void AddGuessedChatEntry(ulong playerid, string name, string message)
         {
-            Current?.AddEntry(name, message, "guessedchat");
+            Current?.AddEntry(playerid, name, message, "guessedchat");
         }
 
         [ClientCmd("chat_drawerchat", CanBeCalledFromServer = true)]
-        public static void AddDrawerChatEntry(string name, string message)
+        public static void AddDrawerChatEntry(ulong playerid, string name, string message)
         {
-            Current?.AddEntry(name, message, "drawerchat");
+            Current?.AddEntry(playerid, name, message, "drawerchat");
         }
 
         [ClientCmd("chat_addinfo", CanBeCalledFromServer = true)]
-        public static void AddInformation(string message, bool important = false)
+        public static void AddInformation(ulong playerid, string message, bool important = false)
         {
-            Current?.AddEntry(null, message, important ? "information" : null);
+            Current?.AddEntry(playerid, null, message, important ? "information" : null);
         }
 
         [ServerCmd("say")]
@@ -112,7 +117,7 @@ namespace Sketch
             if (message.Contains('\n') || message.Contains('\r'))
                 return;
 
-            Log.Info($"{ConsoleSystem.Caller}: {message}");
+            //Log.Info($"{ConsoleSystem.Caller}: {message}");
 
             var game = Game.Current;
 
@@ -120,9 +125,9 @@ namespace Sketch
             if (game.CurrentState is PlayingState)
             {
                 //Highlight drawer's chat (also prevents them from guessing the word)
-                if (ConsoleSystem.Caller == Client.All[game.CurrentDrawerIndex])
+                if (ConsoleSystem.Caller == game.CurrentDrawer)
                 {
-                    AddDrawerChatEntry(To.Everyone, $"{ConsoleSystem.Caller.Name}:", message);
+                    AddDrawerChatEntry(To.Everyone, (ulong)ConsoleSystem.Caller.PlayerId, $"{ConsoleSystem.Caller.Name}:", message);
                     return;
                 }
 
@@ -130,32 +135,37 @@ namespace Sketch
                 var guessed = game.GuessedPlayers;
                 if (guessed.Contains(ConsoleSystem.Caller))
                 {
-                    AddGuessedChatEntry(To.Multiple(Game.Current.GuessedPlayers), $"{ConsoleSystem.Caller.Name}:", message);
+                    AddGuessedChatEntry(To.Multiple(game.GuessedPlayers), (ulong)ConsoleSystem.Caller.PlayerId, $"{ConsoleSystem.Caller.Name}:", message);
                     return;
                 }
 
                 //Check first word from players' message to check if answer
                 var words = message.Split(' ', System.StringSplitOptions.TrimEntries);
-                if (words[0].ToLower() == Game.Current.CurrentWord.ToLower())
+
+                //Found word
+                if (words[0].ToLower() == game.CurrentWord.ToLower())
                 {
-                    AddInformation(To.Everyone, $"{ConsoleSystem.Caller.Name} has guessed the word!", true);
+                    AddInformation(To.Everyone, (ulong)ConsoleSystem.Caller.PlayerId, $"{ConsoleSystem.Caller.Name} has guessed the word!", true);
                     Sound.FromScreen("xylophonealert");
-                    Game.Current.SetPlayerGuessed(ConsoleSystem.Caller);
+                    game.SetPlayerGuessed(ConsoleSystem.Caller);
                     return;
                 }
             }
 
-            AddChatEntry(To.Everyone, $"{ConsoleSystem.Caller.Name}:", message);
+            Log.Info(ConsoleSystem.Caller.PlayerId);
+            AddChatEntry(To.Everyone, ConsoleSystem.Caller.PlayerId.ToString(), $"{ConsoleSystem.Caller.Name}:", message);
         }
     }
 
     public partial class ChatEntry : Panel
     {
+        public Image Avatar { get; internal set; }
         public Label NameLabel { get; internal set; }
         public Label Message { get; internal set; }
 
         public ChatEntry()
         {
+            Avatar = Add.Image();
             NameLabel = Add.Label("Name", "name");
             Message = Add.Label("Message", "message");
         }
