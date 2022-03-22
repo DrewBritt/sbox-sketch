@@ -11,7 +11,7 @@ namespace Sketch
     public static class Words
     {
         public static List<string> WordList;
-        public static string ListPath = "Util/wordlist.txt";
+        public static string ListPath = "/data/wordlist.json";
 
         /// <summary>
         /// Initializes Words.WordList (duh dumbass) from local file.
@@ -21,7 +21,8 @@ namespace Sketch
         {
             if(FileSystem.Mounted.FileExists(ListPath))
             {
-                WordList = FileSystem.Mounted.ReadAllText(ListPath).Split('\n', StringSplitOptions.TrimEntries).ToList();
+                //WordList = FileSystem.Mounted.ReadAllText(ListPath)
+                WordList = FileSystem.Mounted.ReadJson<string[]>(ListPath).ToList();
                 return;
             }
 
