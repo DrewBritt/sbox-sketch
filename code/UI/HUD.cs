@@ -5,15 +5,15 @@ namespace Sketch
 {
     public partial class HUD : HudEntity<RootPanel>
     {
-        public Panel StateInfo { get; set; }
+        public StateInfo StateInfo { get; set; }
         public Panel GamePanel { get; set; }
-        public Panel Scoreboard { get; set; }
+        public Scoreboard Scoreboard { get; set; }
         public Panel DrawPanel { get; set; }
-        public Panel DrawCanvas { get; set; }
-        public Panel ToolsContainer { get; set; }
-        public Panel ChatBox { get; set; }
-        public Panel SelectWord { get; set; }
-        public Panel CurrentDrawer { get; set; }
+        public DrawCanvas DrawCanvas { get; set; }
+        public ToolsContainer ToolsContainer { get; set; }
+        public ChatBox ChatBox { get; set; }
+        public SelectWord SelectWord { get; set; }
+        public CurrentDrawer CurrentDrawer { get; set; }
 
         public HUD()
         {
@@ -52,8 +52,7 @@ namespace Sketch
         [ClientRpc]
         public void DisplayCurrentDrawer()
         {
-            var panel = CurrentDrawer as CurrentDrawer;
-            panel.DisplayCurrentDrawer();
+            CurrentDrawer.DisplayCurrentDrawer();
         }
 
         /// <summary>
@@ -64,9 +63,8 @@ namespace Sketch
         [ClientRpc]
         public void SendWordPool(string[] pool, int time)
         {
-            var p = SelectWord as SelectWord;
-            p.Pool = pool;
-            p.DisplayWordPool(time);
+            SelectWord.Pool = pool;
+            SelectWord.DisplayWordPool(time);
         }
 
         /// <summary>
@@ -78,8 +76,7 @@ namespace Sketch
         [ClientRpc]
         public void SendCurrentLetters(string currentletters)
         {
-            var p = StateInfo as StateInfo;
-            p.BlankLetters.Text = currentletters;
+            StateInfo.BlankLetters.Text = currentletters;
         }
 
         /// <summary>
@@ -88,8 +85,7 @@ namespace Sketch
         [ClientRpc]
         public void ClearCanvas()
         {
-            var canvas = DrawCanvas as DrawCanvas;
-            canvas.InitializeCanvasTexture();
+            DrawCanvas.InitializeCanvasTexture();
         }
 
         /// <summary>
@@ -98,28 +94,26 @@ namespace Sketch
         [ClientRpc]
         public void FetchDeltaCanvasData()
         {
-            var canvas = DrawCanvas as DrawCanvas;
-            if (canvas.NewPixelsPos.Count == 0)
+            if (DrawCanvas.NewPixelsPos.Count == 0)
                 return;
 
             string updatedPixels = "";           
-            foreach(var p in canvas.NewPixelsPos)
+            foreach(var p in DrawCanvas.NewPixelsPos)
             {
                 updatedPixels += $"{p},";
             }
 
-            canvas.NewPixelsPos.Clear();
+            DrawCanvas.NewPixelsPos.Clear();
             Game.ReceiveDeltaCanvasData(updatedPixels);
         }
 
         [ClientRpc]
         public void UpdateGuessersCanvas(Vector2[] positions)
         {
-            var canvas = DrawCanvas as DrawCanvas;
             Color32 color = Game.Current.CurrentColor;
             foreach (var p in positions)
             {
-                var indexes = canvas.FindPixelsInDistance(p, Game.Current.CurrentSize);
+                var indexes = DrawCanvas.FindPixelsInDistance(p, Game.Current.CurrentSize);
                 foreach (var index in indexes)
                 {
                     var pixel = new Pixel
@@ -129,10 +123,10 @@ namespace Sketch
                         Green = color.g,
                         Blue = color.b,
                     };
-                    canvas.FillPixel(pixel);
+                    DrawCanvas.FillPixel(pixel);
                 }
             }
-            canvas.RedrawCanvas();
+            DrawCanvas.RedrawCanvas();
         }
     }
 }

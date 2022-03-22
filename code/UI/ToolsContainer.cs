@@ -62,10 +62,5 @@ namespace Sketch
         {
             Game.SetCurrentSize(size);
         }
-
-        public void ClearCanvas()
-        {
-            Log.Info(true);
-        }
     }
 }
