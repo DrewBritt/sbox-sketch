@@ -51,7 +51,7 @@ namespace Sketch
             Input.Text = "";
             Input.Placeholder = "Enter your guess here...";
 
-            if (string.IsNullOrWhiteSpace(msg))
+            if(string.IsNullOrWhiteSpace(msg))
                 return;
 
             Say(msg);
@@ -72,7 +72,7 @@ namespace Sketch
 
             e.SetClass("noname", string.IsNullOrEmpty(name));
 
-            if (!string.IsNullOrEmpty(additionalClass))
+            if(!string.IsNullOrEmpty(additionalClass))
                 e.AddClass(additionalClass);
 
             Canvas.TryScrollToBottom();
@@ -84,7 +84,7 @@ namespace Sketch
             Current?.AddEntry(playerid.ToULong(), name, message);
 
             // Only log clientside if we're not the listen server host
-            if (!Global.IsListenServer)
+            if(!Global.IsListenServer)
             {
                 Log.Info($"{name}: {message}");
             }
@@ -114,7 +114,7 @@ namespace Sketch
             Assert.NotNull(ConsoleSystem.Caller);
 
             // todo - reject more stuff
-            if (message.Contains('\n') || message.Contains('\r'))
+            if(message.Contains('\n') || message.Contains('\r'))
                 return;
 
             //Log.Info($"{ConsoleSystem.Caller}: {message}");
@@ -122,10 +122,10 @@ namespace Sketch
             var game = Game.Current;
 
             //Checks should only be ran if currently playing game
-            if (game.CurrentState is PlayingState)
+            if(game.CurrentState is PlayingState)
             {
                 //Highlight drawer's chat (also prevents them from guessing the word)
-                if (ConsoleSystem.Caller == game.CurrentDrawer)
+                if(ConsoleSystem.Caller == game.CurrentDrawer)
                 {
                     AddDrawerChatEntry(To.Everyone, (ulong)ConsoleSystem.Caller.PlayerId, $"{ConsoleSystem.Caller.Name}:", message);
                     return;
@@ -133,7 +133,7 @@ namespace Sketch
 
                 //If players' have already guessed, send to private chat
                 var guessed = game.GuessedPlayers;
-                if (guessed.Contains(ConsoleSystem.Caller))
+                if(guessed.Contains(ConsoleSystem.Caller))
                 {
                     AddGuessedChatEntry(To.Multiple(game.GuessedPlayers), (ulong)ConsoleSystem.Caller.PlayerId, $"{ConsoleSystem.Caller.Name}:", message);
                     return;
@@ -143,7 +143,7 @@ namespace Sketch
                 var words = message.Split(' ', System.StringSplitOptions.TrimEntries);
 
                 //Found word
-                if (words[0].ToLower() == game.CurrentWord.ToLower())
+                if(words[0].ToLower() == game.CurrentWord.ToLower())
                 {
                     AddInformation(To.Everyone, (ulong)ConsoleSystem.Caller.PlayerId, $"{ConsoleSystem.Caller.Name} has guessed the word!", true);
                     Sound.FromScreen("xylophonealert");

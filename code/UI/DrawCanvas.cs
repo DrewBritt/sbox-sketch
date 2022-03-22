@@ -48,7 +48,7 @@ namespace Sketch
         public void InitializeCanvasTexture()
         {
             CanvasInfo = new byte[width * height * 4];
-            for (int i = 0; i < CanvasInfo.Length; i++)
+            for(int i = 0; i < CanvasInfo.Length; i++)
                 CanvasInfo[i] = 255;
 
             Texture2DBuilder build = Texture.Create(width, height);
@@ -71,7 +71,7 @@ namespace Sketch
         protected override void OnDragSelect(SelectionEvent e)
         {
             //Not current drawer, block drawing
-            if (!ClientUtil.CanDraw(Local.Client))
+            if(!ClientUtil.CanDraw(Local.Client))
                 return;
 
             //Get panel pos
@@ -80,7 +80,7 @@ namespace Sketch
             //I think it's because of how the UI is internally handled (scales to 1920x1080 or some shit)
             //Still doesn't work completely properly on other resolutions, just looks good enough for now :(
             var pos = MousePosition * ScaleFromScreen * .95;
-            if (pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height)
+            if(pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height)
                 return;
 
             //Add panel position to send to other clients
@@ -89,7 +89,7 @@ namespace Sketch
             //Calculate pixels in radius locally
             var indexes = FindPixelsInDistance(pos, Game.Current.CurrentSize);
             Color32 color = Game.Current.CurrentColor;
-            foreach (var index in indexes)
+            foreach(var index in indexes)
             {
                 var p = new Pixel
                 {
@@ -109,16 +109,16 @@ namespace Sketch
             int xpos = (int)pos.x;
             int ypos = (int)pos.y;
 
-            for (int x = xpos - radius; x <= xpos + radius; x++)
+            for(int x = xpos - radius; x <= xpos + radius; x++)
             {
                 //Check for wrapping
-                if (x < 0 || x >= width)
+                if(x < 0 || x >= width)
                     continue;
 
-                for (int y = ypos - radius; y <= ypos + radius; y++)
+                for(int y = ypos - radius; y <= ypos + radius; y++)
                 {
                     //Check for wrapping
-                    if (y < 0 || y >= height)
+                    if(y < 0 || y >= height)
                         continue;
 
                     //Pixel found, calculate and add index

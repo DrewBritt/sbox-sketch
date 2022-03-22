@@ -19,7 +19,7 @@ namespace Sketch
         /// </summary>
         public static void InitWordList()
         {
-            if (FileSystem.Mounted.FileExists(ListPath))
+            if(FileSystem.Mounted.FileExists(ListPath))
             {
                 WordList = FileSystem.Mounted.ReadAllText(ListPath).Split('\n', StringSplitOptions.TrimEntries).ToList();
                 return;
@@ -38,7 +38,7 @@ namespace Sketch
             string[] words = new string[count];
             var random = new Random();
 
-            for (int i = 0; i < count; i++)
+            for(int i = 0; i < count; i++)
             {
                 int randomIndex = random.Next(WordList.Count);
                 words[i] = WordList[randomIndex];

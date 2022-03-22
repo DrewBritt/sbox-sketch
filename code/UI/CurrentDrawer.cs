@@ -23,9 +23,9 @@ namespace Sketch
         public override void Tick()
         {
             var game = Game.Current;
-            if (game == null) return;
+            if(game == null) return;
 
-            if (panelOpened > 3)
+            if(panelOpened > 3)
             {
                 SetClass("open", false);
             }

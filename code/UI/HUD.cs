@@ -3,7 +3,7 @@ using Sandbox.UI;
 
 namespace Sketch
 {
-    public partial class HUD : HudEntity<RootPanel>
+    public partial class Hud : HudEntity<RootPanel>
     {
         public StateInfo StateInfo { get; set; }
         public Panel GamePanel { get; set; }
@@ -16,12 +16,12 @@ namespace Sketch
         public CurrentDrawer CurrentDrawer { get; set; }
         public Settings Settings { get; set; }
 
-        public HUD()
+        public Hud()
         {
-            if (!IsClient)
+            if(!IsClient)
                 return;
 
-            RootPanel.StyleSheet.Load("/ui/HUD.scss");
+            RootPanel.StyleSheet.Load("/ui/Hud.scss");
             StateInfo = RootPanel.AddChild<StateInfo>();
 
             GamePanel = RootPanel.Add.Panel("gamepanel");
@@ -96,10 +96,10 @@ namespace Sketch
         [ClientRpc]
         public void FetchDeltaCanvasData()
         {
-            if (DrawCanvas.NewPixelsPos.Count == 0)
+            if(DrawCanvas.NewPixelsPos.Count == 0)
                 return;
 
-            string updatedPixels = "";           
+            string updatedPixels = "";
             foreach(var p in DrawCanvas.NewPixelsPos)
             {
                 updatedPixels += $"{p},";
@@ -113,10 +113,10 @@ namespace Sketch
         public void UpdateGuessersCanvas(Vector2[] positions)
         {
             Color32 color = Game.Current.CurrentColor;
-            foreach (var p in positions)
+            foreach(var p in positions)
             {
                 var indexes = DrawCanvas.FindPixelsInDistance(p, Game.Current.CurrentSize);
-                foreach (var index in indexes)
+                foreach(var index in indexes)
                 {
                     var pixel = new Pixel
                     {

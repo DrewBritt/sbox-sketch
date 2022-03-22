@@ -1,5 +1,4 @@
-﻿using Sandbox;
-using Sandbox.UI;
+﻿using Sandbox.UI;
 using Sandbox.UI.Construct;
 
 namespace Sketch
@@ -26,15 +25,15 @@ namespace Sketch
         public override void Tick()
         {
             var game = Game.Current;
-            if (game == null) return;
+            if(game == null) return;
 
             StateName.Text = game.CurrentStateName.ToUpper();
             StateTime.Text = game.CurrentStateTime;
 
             //TODO: Make this less shit
-            if (BlankLetters.Text == "")
+            if(BlankLetters.Text == "")
             {
-                if (setLettersClass)
+                if(setLettersClass)
                 {
                     BlankLetters.RemoveClass("blankletters");
                     setLettersClass = false;
@@ -43,7 +42,7 @@ namespace Sketch
                 return;
             }
 
-            if (!setLettersClass)
+            if(!setLettersClass)
             {
                 BlankLetters.AddClass("blankletters");
                 setLettersClass = true;

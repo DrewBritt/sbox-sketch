@@ -25,10 +25,10 @@ namespace Sketch
         /// <returns></returns>
         public static bool CanDraw(Client cl)
         {
-            if (Current.CurrentDrawer != cl)
+            if(Current.CurrentDrawer != cl)
                 return false;
 
-            if (Current.CurrentStateName != "Playing")
+            if(Current.CurrentStateName != "Playing")
                 return false;
 
             return true;

@@ -27,7 +27,7 @@ namespace Sketch
 
             public virtual void Tick()
             {
-                if (Client.All.Count == 1)
+                if(Client.All.Count == 1)
                     SetState(new WaitingForPlayersState());
 
                 if(Current.CurrentDrawer != null && !Current.CurrentDrawer.IsValid())
@@ -55,7 +55,7 @@ namespace Sketch
 
             public override void Tick()
             {
-                if (Client.All.Count > 1)
+                if(Client.All.Count > 1)
                 {
                     SetState(new PreSelectingState());
                 }
@@ -88,7 +88,7 @@ namespace Sketch
             {
                 base.Tick();
 
-                if (stateEnds < 0)
+                if(stateEnds < 0)
                 {
                     SetState(new SelectingWordState());
                 }
@@ -143,7 +143,7 @@ namespace Sketch
             {
                 base.Tick();
 
-                if (stateEnds < 0)
+                if(stateEnds < 0)
                 {
                     SetState(new PlayingState());
                 }
@@ -168,7 +168,7 @@ namespace Sketch
                 //Init CurrentLetters with empty spaces
                 var word = Current.CurrentWord;
                 var chars = new List<char>();
-                for (int i = 0; i < Current.CurrentWord.Length; i++)
+                for(int i = 0; i < Current.CurrentWord.Length; i++)
                 {
                     chars.Add('_');
                 }
@@ -206,7 +206,7 @@ namespace Sketch
                 }
 
                 //Send new hint to guessers
-                if (newLetter < 0)
+                if(newLetter < 0)
                 {
                     //Select random letter and stick into char array
                     var random = new Random();
@@ -224,14 +224,14 @@ namespace Sketch
                 }
 
                 //Warning sound shit
-                if (stateEnds <= 30 && stateEnds >= 29 && warningSound.Finished)
+                if(stateEnds <= 30 && stateEnds >= 29 && warningSound.Finished)
                     warningSound = Sound.FromScreen("maracashort");
 
                 //Countdown sound shit
-                if (stateEnds <= 3 && stateEnds > 0 && countdownSound.Finished)
+                if(stateEnds <= 3 && stateEnds > 0 && countdownSound.Finished)
                     countdownSound = Sound.FromScreen("pingshort");
 
-                if (stateEnds < 0)
+                if(stateEnds < 0)
                 {
                     endSound = Sound.FromScreen("belllong");
                     SetState(new PostPlayingState());
@@ -271,14 +271,14 @@ namespace Sketch
             {
                 base.Tick();
 
-                if (stateEnds < 0)
+                if(stateEnds < 0)
                 {
                     //Clear canvas/word data
                     Current.Hud.ClearCanvas(To.Everyone);
                     Current.Hud.SendCurrentLetters(To.Everyone, "");
 
                     //New drawer
-                    if (Current.CurrentDrawerIndex != Client.All.Count - 1)
+                    if(Current.CurrentDrawerIndex != Client.All.Count - 1)
                     {
                         Current.CurrentDrawerIndex++;
                         SetState(new PreSelectingState());
@@ -316,10 +316,10 @@ namespace Sketch
 
             public override void Tick()
             {
-                if (stateEnds < 0)
+                if(stateEnds < 0)
                 {
                     //Start new round
-                    if (Current.CurRound < Current.MaxRounds)
+                    if(Current.CurRound < Current.MaxRounds)
                     {
                         Current.CurRound++;
 
@@ -356,7 +356,7 @@ namespace Sketch
 
             public override void Tick()
             {
-                if (stateEnds < 0)
+                if(stateEnds < 0)
                 {
                     Client.All.ToList().ForEach(cl => cl.Kick());
                 }
@@ -376,7 +376,7 @@ namespace Sketch
         [Event.Tick]
         public void OnTick()
         {
-            if (Host.IsClient) return;
+            if(Host.IsClient) return;
 
             CurrentStateName = CurrentState.StateName();
             CurrentStateTime = CurrentState.StateTime();
@@ -429,7 +429,7 @@ namespace Sketch
         public string CurrentLettersString()
         {
             var w = "";
-            foreach (var c in CurrentLetters)
+            foreach(var c in CurrentLetters)
                 w += c;
 
             return w;
@@ -443,18 +443,18 @@ namespace Sketch
         public static void SelectWord(string word)
         {
             //Verify if command caller is the current drawer
-            if (ConsoleSystem.Caller != Current.CurrentDrawer)
+            if(ConsoleSystem.Caller != Current.CurrentDrawer)
             {
                 Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: You're not the drawer!");
                 return;
             }
 
             //Verify if state is proper
-            if (Current.CurrentState is SelectingWordState state)
+            if(Current.CurrentState is SelectingWordState state)
             {
 
                 //And if selected word is valid
-                if (state.WordPool.Contains(word))
+                if(state.WordPool.Contains(word))
                 {
                     state.SelectWord(word);
                     return;
@@ -506,7 +506,7 @@ namespace Sketch
 
             //Check if all players have guessed (rather than checking every tick in state code)
             //TODO: Make this stupid shit not shit probably
-            if (ClientUtil.ClientsExceptDrawer(Client.All, CurrentDrawer).SequenceEqual(GuessedPlayers))
+            if(ClientUtil.ClientsExceptDrawer(Client.All, CurrentDrawer).SequenceEqual(GuessedPlayers))
             {
                 Current.CurrentState = new PostPlayingState();
             }
@@ -521,7 +521,7 @@ namespace Sketch
         {
             var data = posData.Split(',', StringSplitOptions.TrimEntries);
             Vector2[] positions = new Vector2[posData.Length / 2];
-            for(int i = 0; i < data.Length-1; i+=2)
+            for(int i = 0; i < data.Length - 1; i += 2)
             {
                 positions[i / 2] = new Vector2(data[i].ToInt(), data[i + 1].ToInt());
             }

@@ -22,7 +22,7 @@ namespace Sketch
         [ServerCmd]
         public static void SetCurrentColor(string rgba)
         {
-            if (ConsoleSystem.Caller != Current.CurrentDrawer)
+            if(ConsoleSystem.Caller != Current.CurrentDrawer)
                 return;
 
             //Split rgba string "rgba( r, g, b, a )" into [r, g, b, a]
@@ -40,7 +40,7 @@ namespace Sketch
         [ServerCmd]
         public static void SetCurrentSize(int size)
         {
-            if (ConsoleSystem.Caller != Current.CurrentDrawer)
+            if(ConsoleSystem.Caller != Current.CurrentDrawer)
                 return;
 
             Current.CurrentSize = size;
@@ -52,7 +52,7 @@ namespace Sketch
         [ServerCmd]
         public static void ClearCanvas()
         {
-            if (!ClientUtil.CanDraw(ConsoleSystem.Caller))
+            if(!ClientUtil.CanDraw(ConsoleSystem.Caller))
                 return;
 
             Sound.FromScreen("pagecrumbling");
@@ -63,7 +63,7 @@ namespace Sketch
         public static void SetMaxRounds(int maxrounds)
         {
             //Invalid maxrounds number, error out.
-            if (maxrounds <= 0)
+            if(maxrounds <= 0)
             {
                 Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Invalid MaxRounds value (must be greater than 0).");
                 return;
@@ -76,7 +76,7 @@ namespace Sketch
         public static void SetSelectWordTime(int time)
         {
             //Invalid time, error out.
-            if (time < 0)
+            if(time < 0)
             {
                 Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Invalid SelectWordTime value (must be non-negative).");
                 return;
@@ -91,7 +91,7 @@ namespace Sketch
             Log.Info(ConsoleSystem.Caller);
 
             //Invalid time, error out.
-            if (time <= 0)
+            if(time <= 0)
             {
                 Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Invalid PlayTime value (must be greater than 0).");
                 return;
@@ -104,7 +104,7 @@ namespace Sketch
         public static void SetWordPoolSize(int size)
         {
             //Invalid time, error out.
-            if (size <= 0)
+            if(size <= 0)
             {
                 Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Invalid WordPoolSize value (must be greater than 0).");
                 return;
@@ -117,7 +117,7 @@ namespace Sketch
         public static void SkipWord()
         {
             //Not currently drawing, error out.
-            if (Current.CurrentState is not PlayingState)
+            if(Current.CurrentState is not PlayingState)
             {
                 Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Cannot skip word because nothing is being drawn (incorrect state).");
                 return;
@@ -133,7 +133,7 @@ namespace Sketch
             Current.CurRound = 1;
             Current.Hud.ClearCanvas(To.Everyone);
             Current.CurrentLetters.Clear();
-            foreach (var c in Client.All)
+            foreach(var c in Client.All)
                 c.SetInt("GameScore", 0);
 
             Current.CurrentState = new WaitingForPlayersState();

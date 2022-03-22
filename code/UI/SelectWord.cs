@@ -21,9 +21,9 @@ namespace Sketch
 
         public override void Tick()
         {
-            if (Current == null) return;
+            if(Current == null) return;
 
-            if (stateEnd < 0)
+            if(stateEnd < 0)
             {
                 SetClass("open", false);
             }
@@ -33,7 +33,7 @@ namespace Sketch
         public void DisplayWordPool(int time)
         {
             Container.DeleteChildren(true);
-            foreach (var w in Pool)
+            foreach(var w in Pool)
             {
                 Container.Add.Button(w, "wordbutton", () => SelectedWord(w));
             }

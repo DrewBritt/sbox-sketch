@@ -7,14 +7,14 @@ namespace Sketch
     {
         public static new Game Current => Sandbox.Game.Current as Game;
 
-        public HUD Hud { get; set; }
+        public Hud Hud { get; set; }
 
         public Game()
         {
-            if (IsServer)
+            if(IsServer)
             {
                 Words.InitWordList();
-                Hud = new HUD();
+                Hud = new Hud();
             }
         }
 
@@ -68,7 +68,7 @@ namespace Sketch
 		public override void OnVoicePlayed(long playerId, float level)
         {
             var client = Client.All.Where(x => x.PlayerId == playerId).FirstOrDefault();
-            if (client.IsValid())
+            if(client.IsValid())
             {
                 client.VoiceLevel = level;
                 client.TimeSinceLastVoice = 0;

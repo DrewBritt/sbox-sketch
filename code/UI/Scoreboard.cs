@@ -24,16 +24,16 @@ namespace Sketch
         public override void Tick()
         {
             // Add newly joined cliets
-            foreach (var client in Client.All.Except(Rows.Keys))
+            foreach(var client in Client.All.Except(Rows.Keys))
             {
                 var entry = AddClient(client);
                 Rows[client] = entry;
             }
 
             // Remove disconnected clients
-            foreach (var client in Rows.Keys.Except(Client.All))
+            foreach(var client in Rows.Keys.Except(Client.All))
             {
-                if (Rows.TryGetValue(client, out var row))
+                if(Rows.TryGetValue(client, out var row))
                 {
                     row?.Delete();
                     Rows.Remove(client);
@@ -55,7 +55,7 @@ namespace Sketch
         public void OnVoicePlayed(long steamId, float level)
         {
             var playerEntry = ChildrenOfType<ScoreboardEntry>().FirstOrDefault(x => x.Client.PlayerId == steamId);
-            if (playerEntry == null) return;
+            if(playerEntry == null) return;
 
             playerEntry.UpdateVoice();
         }
@@ -86,13 +86,13 @@ namespace Sketch
         {
             base.Tick();
 
-            if (!IsVisible)
+            if(!IsVisible)
                 return;
 
-            if (!Client.IsValid())
+            if(!Client.IsValid())
                 return;
 
-            if (TimeSinceUpdate < 0.1f)
+            if(TimeSinceUpdate < 0.1f)
                 return;
 
             TimeSinceUpdate = 0;
@@ -104,10 +104,10 @@ namespace Sketch
             Avatar.SetTexture($"avatar:{Client.PlayerId}");
 
             var name = Client.Name;
-            if (Game.Current.CurrentDrawer == Client)
+            if(Game.Current.CurrentDrawer == Client)
                 name += "✏️";
 
-            if (timeSinceVoicePlayed < 2)
+            if(timeSinceVoicePlayed < 2)
                 name += " 🔊";
 
             PlayerName.Text = name;
@@ -115,18 +115,18 @@ namespace Sketch
             Score.Text = Client.GetInt("GameScore").ToString();
 
             //Update stylings based on rank
-            if (SiblingIndex != lastIndex)
+            if(SiblingIndex != lastIndex)
             {
                 lastIndex = SiblingIndex;
                 RemoveClass("first");
                 RemoveClass("second");
                 RemoveClass("third");
 
-                if (SiblingIndex == 1)
+                if(SiblingIndex == 1)
                     AddClass("first");
-                if (SiblingIndex == 2)
+                if(SiblingIndex == 2)
                     AddClass("second");
-                if (SiblingIndex == 3)
+                if(SiblingIndex == 3)
                     AddClass("third");
             }
         }

@@ -16,10 +16,7 @@ namespace Sketch
 
         public Settings()
         {
-            PlayTime = Game.Current.PlayTime;
-            MaxRounds = Game.Current.MaxRounds;
-            SelectTime = Game.Current.SelectWordTime;
-            WordPoolSize = Game.Current.WordPoolSize;
+
         }
 
         public void SetPlayTime() => ConsoleSystem.Run($"sketch_playtime {PlayTime}");
@@ -32,9 +29,13 @@ namespace Sketch
         [Event.BuildInput]
         public void BuildInput(InputBuilder b)
         {
-            if (b.Pressed(InputButton.Menu) && ConsoleSystem.GetValue("sv_cheats") == "1")
+            if(b.Pressed(InputButton.Menu) && ConsoleSystem.GetValue("sv_cheats") == "1")
             {
                 SetClass("open", !HasClass("open"));
+                PlayTime = Game.Current.PlayTime;
+                MaxRounds = Game.Current.MaxRounds;
+                SelectTime = Game.Current.SelectWordTime;
+                WordPoolSize = Game.Current.WordPoolSize;
             }
         }
     }
