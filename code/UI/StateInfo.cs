@@ -5,21 +5,21 @@ namespace Sketch
 {
     public partial class StateInfo : Panel
     {
-        public Panel Container, InfoContainer;
+        public Panel StateContainer, WordContainer;
         public Label StateName, StateTime;
-
-        public Label BlankLetters;
+        public Label Letters;
         private bool setLettersClass = false;
 
         public StateInfo()
         {
             StyleSheet.Load("/ui/StateInfo.scss");
 
-            Container = Add.Panel("container");
-            InfoContainer = Container.Add.Panel("infocontainer");
-            StateName = InfoContainer.Add.Label("State", "statename");
-            StateTime = InfoContainer.Add.Label("00:00", "statetime");
-            BlankLetters = Container.Add.Label("");
+            StateContainer = Add.Panel("statecontainer");
+            StateName = StateContainer.Add.Label("State", "statename");
+            StateTime = StateContainer.Add.Label("00:00", "statetime");
+
+            WordContainer = Add.Panel("wordcontainer");
+            Letters = WordContainer.Add.Label("");
         }
 
         public override void Tick()
@@ -30,23 +30,15 @@ namespace Sketch
             StateName.Text = game.CurrentStateName.ToUpper();
             StateTime.Text = game.CurrentStateTime;
 
-            //TODO: Make this less shit
-            if(BlankLetters.Text == "")
+            if(Letters.Text == "")
             {
-                if(setLettersClass)
-                {
-                    BlankLetters.RemoveClass("blankletters");
-                    setLettersClass = false;
-                }
-
+                if(!WordContainer.HasClass("empty"))
+                    WordContainer.SetClass("empty", true);
                 return;
             }
 
-            if(!setLettersClass)
-            {
-                BlankLetters.AddClass("blankletters");
-                setLettersClass = true;
-            }
+            if(WordContainer.HasClass("empty"))
+                WordContainer.RemoveClass("empty");
         }
     }
 }

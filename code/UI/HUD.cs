@@ -78,7 +78,7 @@ namespace Sketch
         [ClientRpc]
         public void SendCurrentLetters(string currentletters)
         {
-            StateInfo.BlankLetters.Text = currentletters;
+            StateInfo.Letters.Text = currentletters;
         }
 
         /// <summary>
