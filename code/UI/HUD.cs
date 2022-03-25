@@ -130,5 +130,11 @@ namespace Sketch
             }
             DrawCanvas.RedrawCanvas();
         }
+
+        [ClientRpc]
+        public void EnableGameOverPanel()
+        {
+            RootPanel.AddChild<GameOver>();
+        }
     }
 }
