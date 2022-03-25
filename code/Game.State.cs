@@ -199,7 +199,7 @@ namespace Sketch
                 base.Tick();
 
                 //Fetch delta canvas data (1 / timeSinceCanvasUpdated) times a second
-                if(timeSinceCanvasUpdated > .1)
+                if(timeSinceCanvasUpdated > .05)
                 {
                     timeSinceCanvasUpdated = 0;
                     Current.Hud.FetchDeltaCanvasData(To.Single(Current.CurrentDrawer));
