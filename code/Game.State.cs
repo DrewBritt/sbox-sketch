@@ -346,6 +346,8 @@ namespace Sketch
             public PostGameState() : base()
             {
                 stateEnds = 10;
+                Current.Hud.EnableGameOverPanel(To.Everyone);
+                Current.CurrentDrawer = null;
             }
 
             public override string StateTime()
