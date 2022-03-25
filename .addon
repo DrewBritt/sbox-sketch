@@ -12,5 +12,11 @@
   ],
   "HasCode": true,
   "CodePath": "code",
-  "RootNamespace": "Sketch"
+  "RootNamespace": "Sketch",
+  "Metadata": {
+    "MapList": [
+      "empty.map"
+    ],
+    "MinPlayers": 2
+  }
 }
