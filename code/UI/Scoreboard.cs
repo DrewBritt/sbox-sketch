@@ -10,27 +10,32 @@ namespace Sketch
     {
         public Panel Container { get; protected set; }
 
-        public Panel Canvas { get; protected set; }
+        public Panel EntryList { get; protected set; }
         Dictionary<Client, ScoreboardEntry> Rows = new();
+
+        public bool Dirty = true;
 
         public Scoreboard()
         {
             Container = Add.Panel("container");
 
             StyleSheet.Load("UI/Scoreboard.scss");
-            Canvas = Container.Add.Panel("canvas");
+            EntryList = Container.Add.Panel("entrylist");
         }
 
         public override void Tick()
         {
-            // Add newly joined cliets
+            if(!Dirty)
+                return;
+
+            //Add newly joined clients
             foreach(var client in Client.All.Except(Rows.Keys))
             {
                 var entry = AddClient(client);
                 Rows[client] = entry;
             }
 
-            // Remove disconnected clients
+            //Remove disconnected clients
             foreach(var client in Rows.Keys.Except(Client.All))
             {
                 if(Rows.TryGetValue(client, out var row))
@@ -40,107 +45,41 @@ namespace Sketch
                 }
             }
 
-            //Hacky way to sort scoreboard by playerscore without rewriting the scoreboard
-            //TODO: Make this not hacky probably
-            Canvas.SortChildren(p => (p as ScoreboardEntry).Client.GetInt("GameScore") * -1);
+            EntryList.SortChildren(p => (p as ScoreboardEntry).Client.GetInt("GameScore") * -1);
+            Dirty = false;
         }
 
         protected virtual ScoreboardEntry AddClient(Client cl)
         {
             var entry = new ScoreboardEntry(cl);
-            Canvas.AddChild(entry);
+            EntryList.AddChild(entry);
             return entry;
-        }
-
-        public void OnVoicePlayed(long steamId, float level)
-        {
-            var playerEntry = ChildrenOfType<ScoreboardEntry>().FirstOrDefault(x => x.Client.PlayerId == steamId);
-            if(playerEntry == null) return;
-
-            playerEntry.UpdateVoice();
         }
     }
 
     public partial class ScoreboardEntry : Panel
     {
         public Client Client;
-        readonly Image Avatar;
-        readonly Label PlayerName;
+        readonly Label IsDrawing;
         public Label Score { get; internal set; }
-
-        private int lastIndex;
 
         public ScoreboardEntry(Client cl)
         {
             Client = cl;
             AddClass("entry");
 
-            Avatar = Add.Image($"avatar:{Client.PlayerId}");
-            PlayerName = Add.Label(Client.Name, "name");
-            Score = Add.Label("0000", "score");
-        }
+            Add.Image($"avatar:{Client.PlayerId}");
+            Add.Label(Client.Name);
 
-        RealTimeSince TimeSinceUpdate = 0;
+            IsDrawing = Add.Label("✏️", "isdrawing");
+            IsDrawing.BindClass("enable", () => Game.Current.CurrentDrawer == Client);
 
-        public override void Tick()
-        {
-            base.Tick();
+            Score = Add.Label("0", "score");
+            Score.Bind("text", () => Client.GetInt("GameScore").ToString());
 
-            if(!IsVisible)
-                return;
-
-            if(!Client.IsValid())
-                return;
-
-            if(TimeSinceUpdate < 0.1f)
-                return;
-
-            TimeSinceUpdate = 0;
-            UpdateData();
-        }
-
-        public virtual void UpdateData()
-        {
-            Avatar.SetTexture($"avatar:{Client.PlayerId}");
-
-            var name = Client.Name;
-            if(Game.Current.CurrentDrawer == Client)
-                name += "✏️";
-
-            if(timeSinceVoicePlayed < 2)
-                name += " 🔊";
-
-            PlayerName.Text = name;
-
-            Score.Text = Client.GetInt("GameScore").ToString();
-
-            //Update stylings based on rank
-            if(SiblingIndex != lastIndex)
-            {
-                lastIndex = SiblingIndex;
-                RemoveClass("first");
-                RemoveClass("second");
-                RemoveClass("third");
-
-                if(SiblingIndex == 1)
-                    AddClass("first");
-                if(SiblingIndex == 2)
-                    AddClass("second");
-                if(SiblingIndex == 3)
-                    AddClass("third");
-            }
-        }
-
-        public virtual void UpdateFrom(Client client)
-        {
-            Client = client;
-            UpdateData();
-        }
-
-        TimeSince timeSinceVoicePlayed = 5;
-        public void UpdateVoice()
-        {
-            timeSinceVoicePlayed = 0;
+            BindClass("first", () => SiblingIndex == 1);
+            BindClass("second", () => SiblingIndex == 2);
+            BindClass("third", () => SiblingIndex == 3);
         }
     }
 }

@@ -8,6 +8,9 @@ using Sandbox.Internal;
 
 namespace Sketch
 {
+    /// <summary>
+    /// Popup at end of game that displays top 3 as well as a general scoreboard
+    /// </summary>
     public partial class GameOver : Panel
     {
         public Panel Top3Container { get; set; }

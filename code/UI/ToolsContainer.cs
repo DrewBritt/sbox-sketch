@@ -3,6 +3,9 @@ using Sandbox.UI.Construct;
 
 namespace Sketch
 {
+    /// <summary>
+    /// Holds drawer's different tools (colors, radius, reset)
+    /// </summary>
     public partial class ToolsContainer : Panel
     {
         public static readonly Color[] Palette = new Color[]

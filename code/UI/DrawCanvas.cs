@@ -21,6 +21,9 @@ namespace Sketch
         }
     }
 
+    /// <summary>
+    /// Canvas for drawer to paint their image onto
+    /// </summary>
     public partial class DrawCanvas : Image
     {
         int width = 800;

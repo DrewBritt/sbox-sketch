@@ -45,6 +45,8 @@ namespace Sketch
         [ClientRpc]
         public new void PlaySound(string soundname)
         {
+            Host.AssertClient();
+
             Sound.FromScreen(soundname);
         }
 
@@ -54,7 +56,19 @@ namespace Sketch
         [ClientRpc]
         public void DisplayCurrentDrawer()
         {
+            Host.AssertClient();
+
             CurrentDrawer.DisplayCurrentDrawer();
+        }
+
+
+        /// <summary>
+        /// Used to update scoreboard when needed rather than once a frame
+        /// </summary>
+        [ClientRpc]
+        public void SetScoreboardDirty()
+        {
+            Scoreboard.Dirty = true;
         }
 
         /// <summary>
@@ -65,6 +79,8 @@ namespace Sketch
         [ClientRpc]
         public void SendWordPool(string[] pool, int time)
         {
+            Host.AssertClient();
+
             SelectWord.Pool = pool;
             SelectWord.DisplayWordPool(time);
         }
@@ -78,6 +94,8 @@ namespace Sketch
         [ClientRpc]
         public void SendCurrentLetters(string currentletters)
         {
+            Host.AssertClient();
+
             StateInfo.Letters.Text = currentletters;
         }
 
@@ -87,6 +105,8 @@ namespace Sketch
         [ClientRpc]
         public void ClearCanvas()
         {
+            Host.AssertClient();
+
             DrawCanvas.InitializeCanvasTexture();
         }
 
@@ -96,6 +116,8 @@ namespace Sketch
         [ClientRpc]
         public void FetchDeltaCanvasData()
         {
+            Host.AssertClient();
+
             if(DrawCanvas.NewPixelsPos.Count == 0)
                 return;
 
@@ -112,6 +134,8 @@ namespace Sketch
         [ClientRpc]
         public void UpdateGuessersCanvas(Vector2[] positions)
         {
+            Host.AssertClient();
+
             Color32 color = Game.Current.CurrentColor;
             foreach(var p in positions)
             {
@@ -134,6 +158,8 @@ namespace Sketch
         [ClientRpc]
         public void EnableGameOverPanel()
         {
+            Host.AssertClient();
+
             RootPanel.AddChild<GameOver>();
         }
     }

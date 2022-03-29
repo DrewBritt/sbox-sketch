@@ -3,12 +3,14 @@ using Sandbox.UI.Construct;
 
 namespace Sketch
 {
+    /// <summary>
+    /// Holds state information and current word information
+    /// </summary>
     public partial class StateInfo : Panel
     {
         public Panel StateContainer, WordContainer;
         public Label StateName, StateTime;
         public Label Letters;
-        private bool setLettersClass = false;
 
         public StateInfo()
         {
@@ -30,6 +32,7 @@ namespace Sketch
             StateName.Text = game.CurrentStateName.ToUpper();
             StateTime.Text = game.CurrentStateTime;
 
+            //Hide container if no letters to display
             if(Letters.Text == "")
             {
                 if(!WordContainer.HasClass("empty"))
@@ -37,6 +40,7 @@ namespace Sketch
                 return;
             }
 
+            //Otherwise display
             if(WordContainer.HasClass("empty"))
                 WordContainer.RemoveClass("empty");
         }

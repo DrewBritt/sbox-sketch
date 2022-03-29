@@ -5,6 +5,9 @@ using static Sketch.Game;
 
 namespace Sketch
 {
+    /// <summary>
+    /// Popup on current drawers screen to select word to draw
+    /// </summary>
     public partial class SelectWord : Panel
     {
         public Panel Container;

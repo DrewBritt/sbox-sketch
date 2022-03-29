@@ -4,6 +4,9 @@ using Sandbox.UI.Construct;
 
 namespace Sketch
 {
+    /// <summary>
+    /// Popup that displays the current (new) drawer to all players
+    /// </summary>
     public partial class CurrentDrawer : Panel
     {
         public Panel Container;

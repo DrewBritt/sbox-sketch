@@ -30,11 +30,13 @@ namespace Sketch
         public override void ClientJoined(Client cl)
         {
             ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has joined the game!");
+            Hud.SetScoreboardDirty(To.Everyone);
         }
 
         public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
         {
             ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has left ({reason})");
+            Hud.SetScoreboardDirty(To.Everyone);
             Sound.FromScreen("doorshutting");
         }
 
@@ -82,9 +84,6 @@ namespace Sketch
                 client.VoiceLevel = level;
                 client.TimeSinceLastVoice = 0;
             }
-
-            Log.Info(playerId);
-            (Current.Hud.Scoreboard as Scoreboard).OnVoicePlayed(playerId, level);
         }
     }
 }
