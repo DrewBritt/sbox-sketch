@@ -54,7 +54,7 @@ namespace Sketch
             for(int i = 0; i < CanvasInfo.Length; i++)
                 CanvasInfo[i] = 255;
 
-            Texture2DBuilder build = Texture.Create(width, height);
+            Texture2DBuilder build = Texture.Create(width, height).WithDynamicUsage();
             build.WithData(CanvasInfo, CanvasInfo.Length);
             Texture = build.Finish();
         }
