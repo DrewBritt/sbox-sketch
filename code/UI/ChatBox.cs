@@ -53,7 +53,7 @@ namespace Sketch
             if(string.IsNullOrWhiteSpace(msg))
                 return;
 
-            Say(msg);
+            ChatSay(msg);
 
             Canvas.TryScrollToBottom();
         }
@@ -77,7 +77,7 @@ namespace Sketch
             Canvas.TryScrollToBottom();
         }
 
-        [ClientCmd("chat_add", CanBeCalledFromServer = true)]
+        [ClientCmd("chatadd", CanBeCalledFromServer = true)]
         public static void AddChatEntry(string playerid, string name, string message)
         {
             Current?.AddEntry(playerid.ToULong(), name, message);
@@ -89,26 +89,26 @@ namespace Sketch
             }
         }
 
-        [ClientCmd("chat_guessedchat", CanBeCalledFromServer = true)]
+        [ClientCmd("chatguessedchat", CanBeCalledFromServer = true)]
         public static void AddGuessedChatEntry(ulong playerid, string name, string message)
         {
             Current?.AddEntry(playerid, name, message, "guessedchat");
         }
 
-        [ClientCmd("chat_drawerchat", CanBeCalledFromServer = true)]
+        [ClientCmd("chatdrawerchat", CanBeCalledFromServer = true)]
         public static void AddDrawerChatEntry(ulong playerid, string name, string message)
         {
             Current?.AddEntry(playerid, name, message, "drawerchat");
         }
 
-        [ClientCmd("chat_addinfo", CanBeCalledFromServer = true)]
+        [ClientCmd("chataddinfo", CanBeCalledFromServer = true)]
         public static void AddInformation(ulong playerid, string message, bool important = false)
         {
             Current?.AddEntry(playerid, null, message, important ? "information" : null);
         }
 
-        [ServerCmd("say")]
-        public static void Say(string message)
+        [ServerCmd("chatsay")]
+        public static void ChatSay(string message)
         {
             Assert.NotNull(ConsoleSystem.Caller);
 
