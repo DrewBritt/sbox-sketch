@@ -1,4 +1,5 @@
-﻿using Sandbox.UI;
+﻿using Sandbox;
+using Sandbox.UI;
 using Sandbox.UI.Construct;
 
 namespace Sketch
@@ -54,6 +55,8 @@ namespace Sketch
 
             TrashCan = Add.Panel("trashcan");
             TrashCan.Add.Button("", "trashbutton", () => Game.ClearCanvas());
+
+            BindClass("enable", () => Game.Current.CurrentDrawer == Local.Client);
         }
 
         public void UpdateColor(Color newColor)
