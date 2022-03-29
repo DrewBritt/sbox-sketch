@@ -8,8 +8,15 @@
     align-items: center;
     z-index: 1;
 
+    .title {
+        height: 20%;
+        color: white;
+        font-size: 65px;
+        align-items: center;
+    }
+
     .top3container {
-        height: 50%;
+        height: 30%;
         width: 70%;
         justify-content: center;
         align-items: flex-end;

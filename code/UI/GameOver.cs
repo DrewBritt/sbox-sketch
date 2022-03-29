@@ -18,6 +18,7 @@ namespace Sketch
         public GameOver()
         {
             StyleSheet.Load("/ui/GameOver.scss");
+            Add.Label("GAME OVER", "title");
 
             Top3Container = Add.Panel("top3container");
             Top3Init();
@@ -30,11 +31,14 @@ namespace Sketch
         {
             //Sorted 1st 2nd 3rd (we need 2nd 1st 3rd)
             Client[] top3 = Client.All.OrderByDescending(c => c.GetInt("GameScore")).Take(3).ToArray();
-            
+
             //Swapsies
-            var temp = top3[0];
-            top3[0] = top3[1];
-            top3[1] = temp;
+            if(top3.Length > 1)
+            {
+                var temp = top3[0];
+                top3[0] = top3[1];
+                top3[1] = temp;
+            }
 
             //Add top 3 panels
             for(int i = 0; i < top3.Length; i++)
