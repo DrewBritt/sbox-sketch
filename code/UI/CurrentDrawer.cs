@@ -21,6 +21,7 @@ namespace Sketch
             Container = Add.Panel("container");
             Avatar = Container.Add.Image();
             DrawerText = Container.Add.Label("_ is selecting a word.", "drawertext");
+            DrawerText.Multiline = true;
         }
 
         public override void Tick()

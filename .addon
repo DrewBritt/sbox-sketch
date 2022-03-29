@@ -17,6 +17,7 @@
     "MapList": [
       "empty.map"
     ],
-    "MinPlayers": 2
+    "MinPlayers": 2,
+    "MaxPlayers": 16
   }
 }
