@@ -6,7 +6,6 @@ using static Sketch.Game;
 
 namespace Sketch
 {
-    [UseTemplate]
     public partial class ChatBox : Panel
     {
         public static ChatBox Current;

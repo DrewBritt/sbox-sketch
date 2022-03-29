@@ -193,7 +193,7 @@ namespace Sketch
 
 
             TimeSince timeSinceCanvasUpdated = 0;
-            Sound countdownSound, endSound, warningSound;
+            Sound countdownSound, warningSound;
             public override void Tick()
             {
                 base.Tick();
@@ -233,7 +233,7 @@ namespace Sketch
 
                 if(stateEnds < 0)
                 {
-                    endSound = Sound.FromScreen("belllong");
+                    Sound.FromScreen("belllong");
                     SetState(new PostPlayingState());
                 }
             }
