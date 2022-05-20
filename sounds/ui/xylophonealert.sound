@@ -2,16 +2,17 @@
 {
 	data = 
 	{
-		sounds = 
+		UI = true
+		Volume = 1
+		VolumeRandom = 0
+		Pitch = 1
+		PitchRandom = 0
+		DistanceMax = 2000
+		Sounds = 
 		[
-			"sounds/ui/xylophonealert.vsnd",
+			resource:"sounds/ui/xylophonealert.vsnd",
 		]
-		ui = true
-		volume = 1.0
-		volumerandom = 0.0
-		pitch = 1.0
-		pitchrandom = 0.0
-		distancemax = 2000.0
-		selectionmode = "3"
+		SelectionMode = 3
+		ResourceId = 0
 	}
 }

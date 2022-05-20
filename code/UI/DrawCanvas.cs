@@ -70,7 +70,7 @@ namespace Sketch
 
         //Left click down + dragging mouse
         //TODO: Proper input probably? Too much of a dumbfuck to figure out
-        //how to check Attack1, UI is taking all the mouse events.
+        //how to check AttackPrimary, UI is taking all the mouse events.
         protected override void OnDragSelect(SelectionEvent e)
         {
             //Not current drawer, block drawing

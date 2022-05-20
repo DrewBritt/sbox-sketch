@@ -441,7 +441,7 @@ namespace Sketch
         /// Drawer selects a word to draw.
         /// </summary>
         /// <param name="word">Word to draw/guess</param>
-        [ServerCmd]
+        [ConCmd.Server]
         public static void SelectWord(string word)
         {
             //Verify if command caller is the current drawer
@@ -520,7 +520,7 @@ namespace Sketch
         /// Drawing client sends delta pixel data to server to resend to other clients.
         /// </summary>
         /// <param name="posData">A string of comma delimited MousePos x and y coordinates.</param>
-        [ServerCmd]
+        [ConCmd.Server]
         public static void ReceiveDeltaCanvasData(string posData)
         {
             var data = posData.Split(',', StringSplitOptions.TrimEntries);

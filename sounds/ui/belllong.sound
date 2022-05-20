@@ -2,16 +2,16 @@
 {
 	data = 
 	{
-		sounds = 
+		UI = true
+		Volume = 0.7
+		VolumeRandom = 0
+		Pitch = 1
+		PitchRandom = 0
+		DistanceMax = 2000
+		Sounds = 
 		[
-			"sounds/ui/belllong.vsnd",
+			resource:"sounds/ui/belllong.vsnd",
 		]
-		ui = true
-		volume = 0.7
-		volumerandom = 0.0
-		pitch = 1.0
-		pitchrandom = 0.0
-		distancemax = 2000.0
-		selectionmode = "3"
+		SelectionMode = 3
 	}
 }

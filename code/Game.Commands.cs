@@ -19,7 +19,7 @@ namespace Sketch
         /// Sends new color's RGBA data, deserializes, and sets on Game.Current
         /// </summary>
         /// <param name="rgba"></param>
-        [ServerCmd]
+        [ConCmd.Server]
         public static void SetCurrentColor(string rgba)
         {
             if(ConsoleSystem.Caller != Current.CurrentDrawer)
@@ -37,7 +37,7 @@ namespace Sketch
         /// Sends new brush size and sets on Game.Current
         /// </summary>
         /// <param name="size"></param>
-        [ServerCmd]
+        [ConCmd.Server]
         public static void SetCurrentSize(int size)
         {
             if(ConsoleSystem.Caller != Current.CurrentDrawer)
@@ -49,7 +49,7 @@ namespace Sketch
         /// <summary>
         /// Drawer wants to wipe canvas.
         /// </summary>
-        [ServerCmd]
+        [ConCmd.Server]
         public static void ClearCanvas()
         {
             if(!ClientUtil.CanDraw(ConsoleSystem.Caller))
@@ -59,7 +59,7 @@ namespace Sketch
             Current.Hud.ClearCanvas(To.Everyone);
         }
 
-        [AdminCmd("sketch_maxrounds", Help = "How many rounds to play before returning to lobby.")]
+        [ConCmd.Admin("sketch_maxrounds", Help = "How many rounds to play before returning to lobby.")]
         public static void SetMaxRounds(int maxrounds)
         {
             //Invalid maxrounds number, error out.
@@ -72,7 +72,7 @@ namespace Sketch
             Current.MaxRounds = maxrounds;
         }
 
-        [ServerCmd("sketch_selectwordtime", Help = "How long (SECONDS) the drawer has to select a word.")]
+        [ConCmd.Server("sketch_selectwordtime", Help = "How long (SECONDS) the drawer has to select a word.")]
         public static void SetSelectWordTime(int time)
         {
             //Invalid time, error out.
@@ -85,7 +85,7 @@ namespace Sketch
             Current.SelectWordTime = time;
         }
 
-        [AdminCmd("sketch_playtime", Help = "How long (SECONDS) the drawer has to draw/players have to guess.")]
+        [ConCmd.Admin("sketch_playtime", Help = "How long (SECONDS) the drawer has to draw/players have to guess.")]
         public static void SetPlayTime(int time)
         {
             Log.Info(ConsoleSystem.Caller);
@@ -100,7 +100,7 @@ namespace Sketch
             Current.PlayTime = time;
         }
 
-        [AdminCmd("sketch_wordpoolsize", Help = "How many words the drawer gets to choose from.")]
+        [ConCmd.Admin("sketch_wordpoolsize", Help = "How many words the drawer gets to choose from.")]
         public static void SetWordPoolSize(int size)
         {
             //Invalid time, error out.
@@ -113,7 +113,7 @@ namespace Sketch
             Current.WordPoolSize = size;
         }
 
-        [AdminCmd("sketch_skipword", Help = "Skips current word/drawer.")]
+        [ConCmd.Admin("sketch_skipword", Help = "Skips current word/drawer.")]
         public static void SkipWord()
         {
             //Not currently drawing, error out.
@@ -126,7 +126,7 @@ namespace Sketch
             (Current.CurrentState as PlayingState).Skip();
         }
 
-        [AdminCmd("sketch_resetgame", Help = "Resets game.")]
+        [ConCmd.Admin("sketch_resetgame", Help = "Resets game.")]
         public static void ResetGame()
         {
             Current.CurrentDrawerIndex = 0;
