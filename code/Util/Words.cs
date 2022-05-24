@@ -9,12 +9,12 @@ namespace Sketch;
 /// </summary>
 public static class Words
 {
-    public static List<WordList> PlayableLists;
+    public static List<WordList> PlayableLists = new List<WordList>();
     public const string ListPath = "/data/wordlist.json";
 
     /// <summary>
-    /// Initializes Words.WordList (duh dumbass) from local file.
-    /// Errors out if file does not exist.
+    /// Initializes Words.PlayableLists (duh dumbass) from base wordlist file.
+    /// Errors out if file does not exist (installed with game so ideally should never throw?)
     /// </summary>
     public static void InitWordList()
     {
@@ -30,7 +30,7 @@ public static class Words
             return;
         }
 
-        Log.Error("Sketch: WordList not loaded.");
+        Log.Error("Sketch: Base WordList not found.");
     }
 
     /// <summary>
