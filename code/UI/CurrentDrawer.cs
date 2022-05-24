@@ -2,48 +2,47 @@
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
-namespace Sketch
+namespace Sketch;
+
+/// <summary>
+/// Popup that displays the current (new) drawer to all players
+/// </summary>
+public partial class CurrentDrawer : Panel
 {
-    /// <summary>
-    /// Popup that displays the current (new) drawer to all players
-    /// </summary>
-    public partial class CurrentDrawer : Panel
+    public Panel Container;
+    public Image Avatar;
+    public Label DrawerText;
+    private RealTimeSince panelOpened;
+
+    public CurrentDrawer()
     {
-        public Panel Container;
-        public Image Avatar;
-        public Label DrawerText;
-        private RealTimeSince panelOpened;
+        StyleSheet.Load("/ui/CurrentDrawer.scss");
 
-        public CurrentDrawer()
+        Container = Add.Panel("container");
+        Avatar = Container.Add.Image();
+        DrawerText = Container.Add.Label("_ is selecting a word.", "drawertext");
+        DrawerText.Multiline = true;
+    }
+
+    public override void Tick()
+    {
+        var game = Game.Current;
+        if(game == null) return;
+
+        if(panelOpened > 3)
         {
-            StyleSheet.Load("/ui/CurrentDrawer.scss");
-
-            Container = Add.Panel("container");
-            Avatar = Container.Add.Image();
-            DrawerText = Container.Add.Label("_ is selecting a word.", "drawertext");
-            DrawerText.Multiline = true;
+            SetClass("open", false);
         }
 
-        public override void Tick()
-        {
-            var game = Game.Current;
-            if(game == null) return;
+    }
 
-            if(panelOpened > 3)
-            {
-                SetClass("open", false);
-            }
+    public void DisplayCurrentDrawer()
+    {
+        var drawer = Game.Current.CurrentDrawer;
+        Avatar.SetTexture($"avatar:{drawer.PlayerId}");
+        DrawerText.Text = $"{drawer.Name} is selecting a word.";
 
-        }
-
-        public void DisplayCurrentDrawer()
-        {
-            var drawer = Game.Current.CurrentDrawer;
-            Avatar.SetTexture($"avatar:{drawer.PlayerId}");
-            DrawerText.Text = $"{drawer.Name} is selecting a word.";
-
-            SetClass("open", true);
-            panelOpened = 0;
-        }
+        SetClass("open", true);
+        panelOpened = 0;
     }
 }
