@@ -39,18 +39,6 @@ namespace Sketch
         }
 
         /// <summary>
-        /// Play generic .sound file on client
-        /// </summary>
-        /// <param name="soundname"></param>
-        [ClientRpc]
-        public new void PlaySound(string soundname)
-        {
-            Host.AssertClient();
-
-            Sound.FromScreen(soundname);
-        }
-
-        /// <summary>
         /// Popup to display current drawer pre-round.
         /// </summary>
         [ClientRpc]
@@ -131,6 +119,10 @@ namespace Sketch
             Game.ReceiveDeltaCanvasData(updatedPixels);
         }
 
+        /// <summary>
+        /// Ran on local clients to update canvas with new pixel data
+        /// </summary>
+        /// <param name="positions">XY of drawer's mouse positions</param>
         [ClientRpc]
         public void UpdateGuessersCanvas(Vector2[] positions)
         {
@@ -155,6 +147,9 @@ namespace Sketch
             DrawCanvas.RedrawCanvas();
         }
 
+        /// <summary>
+        /// Add GameOver panel to UI for end-of-game display
+        /// </summary>
         [ClientRpc]
         public void EnableGameOverPanel()
         {
