@@ -12,8 +12,14 @@ public class NavButton : Button
 
     public NavButton()
     {
-        Nav = Ancestors.OfType<NavPanel>().FirstOrDefault();
         BindClass("active", () => Nav.ContentURL == HRef);
+    }
+
+    public override void OnParentChanged()
+    {
+        base.OnParentChanged();
+
+        Nav = Ancestors.OfType<NavPanel>().FirstOrDefault();
     }
 
     public override void SetProperty(string name, string value)
