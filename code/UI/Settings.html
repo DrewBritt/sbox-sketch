@@ -1,7 +1,23 @@
 ﻿<link rel="stylesheet" href="Settings.scss" />
 
 <settings>
+    <div class="header">
+        <navbutton href="settings/gamesettings" class="navbutton">
+            <label>Game Settings</label>
+        </navbutton>
+        <navbutton href="settings/localwordlists" class="navbutton">
+            <label>Local Wordlists</label>
+        </navbutton>
+        <navbutton href="settings/onlinewordlists" class="navbutton">
+            <label>Online Wordlists</label>
+        </navbutton>
+    </div>
+
     <div class="container">
+        <div @ref="NavContent"></div>
+    </div>
+
+    <!--<div class="container">
         <label class="title">Admin Settings</label>
         <div class="inputfields">
             <div class="field">
@@ -25,5 +41,5 @@
             <button onclick="ResetGame()">Reset Game</button>
             <button onclick="SkipWord()">Skip Word</button>
         </div>
-    </div>
+    </div>-->
 </settings>
