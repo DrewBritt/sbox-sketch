@@ -17,7 +17,8 @@ public partial class NavPanel : Panel
         }
 
         var panel = TypeLibrary.Create<Panel>(attribute.TargetType);
-        NavContent = panel;
+        NavContent.DeleteChildren(true);
+        panel.Parent = NavContent;
         ContentURL = url;
     }
 
