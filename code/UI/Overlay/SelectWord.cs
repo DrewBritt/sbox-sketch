@@ -16,7 +16,7 @@ public partial class SelectWord : Panel
 
     public SelectWord()
     {
-        StyleSheet.Load("/ui/SelectWord.scss");
+        StyleSheet.Load("/ui/Overlay/SelectWord.scss");
 
         Add.Label("SELECT A WORD", "title");
         Container = Add.Panel("container");

@@ -16,7 +16,7 @@ public partial class CurrentDrawer : Panel
 
     public CurrentDrawer()
     {
-        StyleSheet.Load("/ui/CurrentDrawer.scss");
+        StyleSheet.Load("/ui/Overlay/CurrentDrawer.scss");
 
         Container = Add.Panel("container");
         Avatar = Container.Add.Image();
