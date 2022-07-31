@@ -18,6 +18,20 @@
       "empty.map"
     ],
     "MinPlayers": 2,
-    "MaxPlayers": 16
+    "MaxPlayers": 16,
+    "PerMapRanking": false,
+    "LeaderboardType": "None",
+    "RankType": "None",
+    "MapSelect": "Unrestricted",
+    "GameNetworkType": "Multiplayer",
+    "Compiler": {
+      "RootNamespace": "Sketch",
+      "DefineConstants": "SANDBOX;ADDON;DEBUG",
+      "NoWarn": "1701;1702;1591;"
+    },
+    "GameCategory": "Art",
+    "ControlModes": {
+      "Keyboard": true
+    }
   }
 }
