@@ -9,7 +9,7 @@ namespace Sketch
     public partial class StateInfo : Panel
     {
         public Panel StateContainer, WordContainer;
-        public Label StateName, StateTime;
+        public Label RoundInfo, StateName, StateTime;
         public Label Letters;
 
         public StateInfo()
@@ -17,6 +17,9 @@ namespace Sketch
             StyleSheet.Load("/ui/StateInfo.scss");
 
             StateContainer = Add.Panel("statecontainer");
+
+            RoundInfo = StateContainer.Add.Label("Round x/x", "roundinfo");
+            RoundInfo.Bind("text", () => $"ROUND {Game.Current.CurRound}/{Game.Current.MaxRounds}");
 
             StateName = StateContainer.Add.Label("State", "statename");
             StateName.Bind("text", () => Game.Current.CurrentStateName.ToUpper());
