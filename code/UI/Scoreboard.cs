@@ -69,7 +69,7 @@ namespace Sketch
             AddClass("entry");
 
             Add.Image($"avatar:{Client.PlayerId}");
-            Add.Label(Client.Name);
+            Add.Label(Client.Name.Truncate(23, "..."));
 
             IsDrawing = Add.Label("✏️", "isdrawing");
             IsDrawing.BindClass("enable", () => Game.Current.CurrentDrawer == Client);

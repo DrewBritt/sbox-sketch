@@ -61,7 +61,7 @@ namespace Sketch
         public void AddEntry(ulong? id, string name, string message, string additionalClass = null)
         {
             var e = Canvas.AddChild<ChatEntry>();
-            e.NameLabel.Text = name;
+            e.NameLabel.Text = name.Truncate(17, "...");
             e.Message.Text = message;
 
             if(id != null)
