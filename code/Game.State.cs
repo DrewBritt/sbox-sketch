@@ -501,10 +501,10 @@ namespace Sketch
 
             GuessedPlayers.Add(cl);
 
-            //Drawer gets 1/3 of player score added to their own
+            //Drawer gets 2/3 of player score added to their own
             var drawer = Current.CurrentDrawer;
             curScore = drawer.GetInt("GameScore");
-            drawer.SetInt("GameScore", curScore + (score.FloorToInt() / 3));
+            drawer.SetInt("GameScore", curScore + (score.FloorToInt() / 3) * 2);
 
             Hud.SetScoreboardDirty(To.Everyone);
 
