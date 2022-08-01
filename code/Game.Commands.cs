@@ -88,8 +88,6 @@ namespace Sketch
         [ConCmd.Admin("sketch_playtime", Help = "How long (SECONDS) the drawer has to draw/players have to guess.")]
         public static void SetPlayTime(int time)
         {
-            Log.Info(ConsoleSystem.Caller);
-
             //Invalid time, error out.
             if(time <= 0)
             {
