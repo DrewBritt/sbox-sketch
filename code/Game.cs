@@ -28,8 +28,8 @@ namespace Sketch
         public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
         {
             ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has left ({reason})");
-            Hud.SetScoreboardDirty(To.Everyone);
             Sound.FromScreen("doorshutting");
+            Hud.RemovePlayerFromScoreboard(To.Everyone, cl);
         }
 
         protected override void OnDestroy()

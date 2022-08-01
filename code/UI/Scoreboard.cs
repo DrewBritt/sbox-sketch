@@ -36,6 +36,8 @@ namespace Sketch
             }
 
             //Remove disconnected clients
+            //This shouldn't be necessary anymore as RemoveEntry is called in ClientDisconnect, 
+            //however I'm keeping it here as a failsafe. Can never be too careful about cosmic bitflipping ¯\_(ツ)_/¯
             foreach(var client in Rows.Keys.Except(Client.All))
             {
                 if(Rows.TryGetValue(client, out var row))
@@ -47,6 +49,15 @@ namespace Sketch
 
             EntryList.SortChildren(p => (p as ScoreboardEntry).Client.GetInt("GameScore") * -1);
             Dirty = false;
+        }
+
+        public void RemoveEntry(Client cl)
+        {
+            if(Rows.TryGetValue(cl, out var row))
+            {
+                row?.Delete();
+                Rows.Remove(cl);
+            }
         }
 
         protected virtual ScoreboardEntry AddClient(Client cl)

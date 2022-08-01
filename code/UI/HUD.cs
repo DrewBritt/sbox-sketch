@@ -72,6 +72,17 @@ namespace Sketch
         }
 
         /// <summary>
+        /// Used to remove disconnected player from scoreboard.
+        /// Previously this was in Tick() on the Scoreboard, but didn't work correctly with a "dirty" pattern
+        /// as Client.All still contained the disconnected player when Dirty would be set.
+        /// </summary>
+        [ClientRpc]
+        public void RemovePlayerFromScoreboard(Client cl)
+        {
+            Scoreboard.RemoveEntry(cl);
+        }
+
+        /// <summary>
         /// Sends Word Pool to drawer to display elements on screen
         /// </summary>
         /// <param name="pool"></param>
