@@ -8,6 +8,8 @@ namespace Sketch
 {
     public partial class Scoreboard : Panel
     {
+        public static Scoreboard Current { get; internal set; }
+
         public Panel Container { get; protected set; }
 
         public Panel EntryList { get; protected set; }
@@ -17,6 +19,7 @@ namespace Sketch
 
         public Scoreboard()
         {
+            Current = this;
             Container = Add.Panel("container");
 
             StyleSheet.Load("UI/Scoreboard.scss");
@@ -51,7 +54,7 @@ namespace Sketch
             Dirty = false;
         }
 
-        public void RemoveEntry(Client cl)
+        public void RemoveClient(Client cl)
         {
             if(Rows.TryGetValue(cl, out var row))
             {
@@ -71,8 +74,9 @@ namespace Sketch
     public partial class ScoreboardEntry : Panel
     {
         public Client Client;
-        readonly Label IsDrawing, HasGuessed;
+        readonly Label IsDrawing, IsSpeaking, HasGuessed;
         public Label Score { get; internal set; }
+        private RealTimeSince timeSinceSpoke;
 
         public ScoreboardEntry(Client cl)
         {
@@ -84,6 +88,10 @@ namespace Sketch
 
             IsDrawing = Add.Label("✏️", "isdrawing");
             IsDrawing.BindClass("enable", () => Game.Current.CurrentDrawer == Client);
+
+            IsSpeaking = Add.Label("🎙️", "isspeaking");
+            IsSpeaking.BindClass("enable", () => Client.TimeSinceLastVoice < 1);
+            IsSpeaking.BindClass("enable", () => Client == Local.Client && Voice.IsRecording);
 
             HasGuessed = Add.Label("✔️", "hasguessed");
             HasGuessed.BindClass("enable", () => Game.Current.GuessedPlayers.Contains(Client));

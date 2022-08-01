@@ -33,6 +33,15 @@
 
                 .isdrawing {
                     font-size: 20px;
+                    opacity: 0;
+
+                    &.enable {
+                        opacity: 1;
+                    }
+                }
+
+                .isspeaking {
+                    font-size: 20px;
                     flex-grow: 1;
                     opacity: 0;
 
@@ -43,7 +52,6 @@
 
                 .hasguessed {
                     font-size: 20px;
-                    flex-grow: 0;
                     opacity: 0;
 
                     &.enable {
@@ -52,7 +60,7 @@
                 }
 
                 .score {
-                    text-align: right;
+                    order: 5;
                 }
 
                 &.first {

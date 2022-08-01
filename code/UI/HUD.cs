@@ -79,7 +79,7 @@ namespace Sketch
         [ClientRpc]
         public void RemovePlayerFromScoreboard(Client cl)
         {
-            Scoreboard.RemoveEntry(cl);
+            Scoreboard.RemoveClient(cl);
         }
 
         /// <summary>

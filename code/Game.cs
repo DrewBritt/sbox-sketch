@@ -70,6 +70,8 @@ namespace Sketch
 		/// </summary>
 		public override void OnVoicePlayed(long playerId, float level)
         {
+            Host.AssertClient();
+
             var client = Client.All.Where(x => x.PlayerId == playerId).FirstOrDefault();
             if(client.IsValid())
             {
