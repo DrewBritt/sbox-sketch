@@ -9,7 +9,7 @@ namespace Sketch
 
         public Hud Hud { get; set; }
 
-        public Game()
+        public Game() : base()
         {
             if(IsServer)
             {
