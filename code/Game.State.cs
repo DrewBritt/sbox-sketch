@@ -484,7 +484,7 @@ namespace Sketch
         /// <summary>
         /// Holds players that have guessed the current word.
         /// </summary>
-        public List<Client> GuessedPlayers { get; } = new();
+        [Net] public List<Client> GuessedPlayers { get; set; } = new List<Client>();
 
         /// <summary>
         /// Player successfully guessed the word.

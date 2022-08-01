@@ -60,7 +60,7 @@ namespace Sketch
     public partial class ScoreboardEntry : Panel
     {
         public Client Client;
-        readonly Label IsDrawing;
+        readonly Label IsDrawing, HasGuessed;
         public Label Score { get; internal set; }
 
         public ScoreboardEntry(Client cl)
@@ -73,6 +73,9 @@ namespace Sketch
 
             IsDrawing = Add.Label("✏️", "isdrawing");
             IsDrawing.BindClass("enable", () => Game.Current.CurrentDrawer == Client);
+
+            HasGuessed = Add.Label("✔️", "hasguessed");
+            HasGuessed.BindClass("enable", () => Game.Current.GuessedPlayers.Contains(Client));
 
             Score = Add.Label("0", "score");
             Score.Bind("text", () => Client.GetInt("GameScore").ToString());
