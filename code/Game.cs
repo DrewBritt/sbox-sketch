@@ -23,6 +23,9 @@ namespace Sketch
         {
             ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has joined the game!");
             Hud.SetScoreboardDirty(To.Everyone);
+
+            // Set voice to 2D
+            cl.VoiceStereo = false;
         }
 
         public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
@@ -62,22 +65,6 @@ namespace Sketch
             Host.AssertServer();
 
             return true;
-        }
-
-        /// <summary>
-		/// Someone is speaking via voice chat. This might be someone in your game,
-		/// or in your party, or in your lobby.
-		/// </summary>
-		public override void OnVoicePlayed(long playerId, float level)
-        {
-            Host.AssertClient();
-
-            var client = Client.All.Where(x => x.PlayerId == playerId).FirstOrDefault();
-            if(client.IsValid())
-            {
-                client.VoiceLevel = level;
-                client.TimeSinceLastVoice = 0;
-            }
         }
     }
 }
