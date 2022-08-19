@@ -32,6 +32,43 @@
     "GameCategory": "Art",
     "ControlModes": {
       "Keyboard": true
+    },
+    "GameSettings": {
+      "sketch_maxrounds": {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sketch_maxrounds",
+        "DisplayName": "Max Rounds",
+        "DefaultValue": "3",
+        "Minimum": 1,
+        "Maximum": 10
+      },
+      "sketch_drawtime": {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sketch_drawtime",
+        "DisplayName": "Draw Time (s)",
+        "DefaultValue": "120",
+        "Minimum": 5,
+        "Maximum": 180
+      },
+      "sketch_wordpoolsize": {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sketch_wordpoolsize",
+        "DisplayName": "Word Pool Size",
+        "DefaultValue": "3",
+        "Minimum": 1,
+        "Maximum": 5
+      },
+      "sketch_selectwordtime": {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sketch_selectwordtime",
+        "DisplayName": "Word Selection Time (s)",
+        "DefaultValue": "15",
+        "Maximum": 60
+      }
     }
   }
 }

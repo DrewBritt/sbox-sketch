@@ -19,7 +19,7 @@ namespace Sketch
             StateContainer = Add.Panel("statecontainer");
 
             RoundInfo = StateContainer.Add.Label("Round x/x", "roundinfo");
-            RoundInfo.Bind("text", () => $"ROUND {Game.Current.CurRound}/{Game.Current.MaxRounds}");
+            RoundInfo.Bind("text", () => $"ROUND {Game.Current.CurRound}/{Game.MaxRounds}");
 
             StateName = StateContainer.Add.Label("State", "statename");
             StateName.Bind("text", () => Game.Current.CurrentStateName.ToUpper());

@@ -110,8 +110,8 @@ namespace Sketch
             public SelectingWordState() : base()
             {
                 //Send word pool to drawer.
-                WordPool = Words.RandomWords(Current.WordPoolSize);
-                Current.Hud.SendWordPool(To.Single(Current.CurrentDrawer), WordPool.ToArray(), Current.SelectWordTime);
+                WordPool = Words.RandomWords(WordPoolSize);
+                Current.Hud.SendWordPool(To.Single(Current.CurrentDrawer), WordPool.ToArray(), SelectWordTime);
 
                 //Set random word ahead of time. If drawer doesn't select a word, this word is used.
                 var random = new Random();
@@ -120,7 +120,7 @@ namespace Sketch
 
                 Current.CurrentLetters.Clear();
 
-                stateEnds = Current.SelectWordTime;
+                stateEnds = SelectWordTime;
             }
 
             public override string StateTime()
@@ -174,8 +174,8 @@ namespace Sketch
                 }
                 Current.CurrentLetters = chars;
 
-                stateEnds = Current.PlayTime;
-                newLetter = Current.PlayTime / Current.CurrentWord.Length;
+                stateEnds = DrawTime;
+                newLetter = DrawTime / Current.CurrentWord.Length;
 
                 //Send entire word to drawer
                 Current.Hud.SendCurrentLetters(To.Single(Current.CurrentDrawer), word);
@@ -220,7 +220,7 @@ namespace Sketch
                     Current.Hud.SendCurrentLetters(To.Multiple(tosend), Current.CurrentLettersString());
 
                     //Reset letter timer
-                    newLetter = Current.PlayTime / Current.CurrentWord.Length;
+                    newLetter = DrawTime / Current.CurrentWord.Length;
                 }
 
                 //Warning sound shit
@@ -319,7 +319,7 @@ namespace Sketch
                 if(stateEnds < 0)
                 {
                     //Start new round
-                    if(Current.CurRound < Current.MaxRounds)
+                    if(Current.CurRound < MaxRounds)
                     {
                         Current.CurRound++;
 
@@ -387,16 +387,16 @@ namespace Sketch
 
         /// <summary>
         /// How many rounds to play before returning to lobby.
-        /// Set by sketch_maxrounds command.
-        /// Marked with [Net] to use in UI ("round 1/x")
         /// </summary>
-        [Net] public int MaxRounds { get; set; } = 3;
+        [ConVar.Replicated("sketch_maxrounds", Help = "How many rounds to play before returning to lobby.", Min = 1, Max = 10)]
+        public static int MaxRounds { get; set; }
         [Net] public int CurRound { get; set; } = 1;
 
         /// <summary>
-        /// How long to draw/guess before selecting next drawer. Set by sketch_playtime command.
+        /// How long to draw/guess before selecting next drawer.
         /// </summary>
-        public int PlayTime { get; set; } = 120;
+        [ConVar.Replicated("sketch_drawtime", Help = "How long players have to draw/guess.", Min = 5, Max = 180)]
+        public static int DrawTime { get; set; }
 
         [Net] public Client CurrentDrawer { get; set; }
         public int CurrentDrawerIndex = 0;
@@ -405,15 +405,15 @@ namespace Sketch
         #region Word Management
         /// <summary>
         /// How many words the drawer gets to choose from.
-        /// Set by sketch_wordpoolsize command. Must be greater than 0.
         /// </summary>
-        public int WordPoolSize { get; set; } = 3;
+        [ConVar.Replicated("sketch_wordpoolsize", Help = "How many words the drawer can choose from.", Min = 1, Max = 5)]
+        public static int WordPoolSize { get; set; }
 
         /// <summary>
         /// How long the drawer has to pick a word. 
-        /// Set by sketch_selectwordtime command. Set to 0 for random words.
         /// </summary>
-        public int SelectWordTime { get; set; } = 20;
+        [ConVar.Replicated("sketch_selectwordtime", Help = "How much time the drawer has to choose a word", Min = 0, Max = 60)]
+        public static int SelectWordTime { get; set; }
 
         /// <summary>
         /// Current word to draw/guess. Not networked to avoid cheating, passed to drawer through ClientRPC.
@@ -494,7 +494,7 @@ namespace Sketch
         {
             //Player score is calculated by lerping between 400 and 1000, 
             //Delta is higher if player is faster
-            float delta = 1 - (CurrentState.stateStart / PlayTime);
+            float delta = 1 - (CurrentState.stateStart / DrawTime);
             float score = MathX.LerpTo(400, 1000, delta);
             int curScore = cl.GetInt("GameScore");
             cl.SetInt("GameScore", curScore + score.FloorToInt());
