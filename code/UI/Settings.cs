@@ -13,13 +13,17 @@ namespace Sketch
         public TextEntry DrawTime { get; set; }
         public TextEntry WordPoolSize { get; set; }
         public TextEntry SelectTime { get; set; }
+        public string MaxRoundsString => Game.MaxRounds.ToString();
+        public string DrawTimeString => Game.DrawTime.ToString();
+        public string WordPoolSizeString => Game.WordPoolSize.ToString();
+        public string SelectTimeString => Game.SelectWordTime.ToString();
 
         public Settings()
         {
-            MaxRounds.Bind("text", () => Game.MaxRounds);
-            DrawTime.Bind("text", () => Game.DrawTime);
-            WordPoolSize.Bind("text", () => Game.WordPoolSize);
-            SelectTime.Bind("text", () => Game.SelectWordTime);
+            MaxRounds.Bind("text", this, "MaxRoundsString");
+            DrawTime.Bind("text", this, "DrawTimeString");
+            WordPoolSize.Bind("text", this, "WordPoolSizeString");
+            SelectTime.Bind("text", this, "SelectTimeString");
         }
 
         public void SetMaxRounds() => ConsoleSystem.Run($"sketch_maxrounds {MaxRounds.Text}");

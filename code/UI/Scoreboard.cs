@@ -76,7 +76,7 @@ namespace Sketch
         public Client Client;
         readonly Label IsDrawing, IsSpeaking, HasGuessed;
         public Label Score { get; internal set; }
-        private RealTimeSince timeSinceSpoke;
+        public string ScoreString => Client.GetInt("GameScore").ToString();
 
         public ScoreboardEntry(Client cl)
         {
@@ -97,7 +97,7 @@ namespace Sketch
             HasGuessed.BindClass("enable", () => Game.Current.GuessedPlayers.Contains(Client));
 
             Score = Add.Label("0", "score");
-            Score.Bind("text", () => Client.GetInt("GameScore").ToString());
+            Score.Bind("text", this, "ScoreString");
 
             BindClass("first", () => SiblingIndex == 1);
             BindClass("second", () => SiblingIndex == 2);
