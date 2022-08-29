@@ -31,8 +31,13 @@ namespace Sketch
             Input.AddEventListener("onclick", () => FocusChat());
             Input.AcceptsFocus = true;
             Input.AllowEmojiReplace = true;
+        }
 
-            Chat.OnOpenChat += FocusChat;
+        [Event.BuildInput]
+        public void BuildInput(InputBuilder b)
+        {
+            if(b.Pressed(InputButton.Chat))
+                FocusChat();
         }
 
         void FocusChat()
