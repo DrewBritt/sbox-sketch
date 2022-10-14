@@ -1,11 +1,20 @@
-﻿using Sandbox.UI;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Sandbox.UI;
 
 namespace Sketch;
 
 public partial class NavPanel : Panel
 {
     public Panel NavContent { get; set; }
-    public string ContentURL { get; set; }
+    public string ContentURL { get; private set; }
+    private List<HistoryItem> Cache { get; set; } = new List<HistoryItem>();
+
+    protected class HistoryItem
+    {
+        public string Url;
+        public Panel Panel;
+    }
 
     public void Navigate(string url)
     {
@@ -16,9 +25,25 @@ public partial class NavPanel : Panel
             return;
         }
 
-        var panel = TypeLibrary.Create<Panel>(attribute.TargetType);
-        NavContent.DeleteChildren(true);
-        panel.Parent = NavContent;
+        HistoryItem cached = Cache.Where(hi => hi.Url == url).FirstOrDefault();
+        Panel toLoad;
+        if(cached != null)
+            toLoad = cached.Panel;
+        else
+        {
+            toLoad = TypeLibrary.Create<Panel>(attribute.TargetType);
+            HistoryItem hi = new HistoryItem()
+            {
+                Url = url,
+                Panel = toLoad
+            };
+            Cache.Add(hi);
+            Log.Info(Cache);
+        }
+
+        if(NavContent.HasChildren)
+            NavContent.GetChild(0).Parent = null;
+        toLoad.Parent = NavContent;
         ContentURL = url;
     }
 
