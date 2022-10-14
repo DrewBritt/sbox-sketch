@@ -31,8 +31,13 @@ public partial class ChatBox : Panel
         Input.AddEventListener("onclick", () => FocusChat());
         Input.AcceptsFocus = true;
         Input.AllowEmojiReplace = true;
+    }
 
-        Chat.OnOpenChat += FocusChat;
+    [Event.BuildInput]
+    public void BuildInput(InputBuilder b)
+    {
+        if(b.Pressed(InputButton.Chat))
+            FocusChat();
     }
 
     void FocusChat()
@@ -61,7 +66,7 @@ public partial class ChatBox : Panel
     public void AddEntry(ulong? id, string name, string message, string additionalClass = null)
     {
         var e = Canvas.AddChild<ChatEntry>();
-        e.NameLabel.Text = name;
+        e.NameLabel.Text = name.Truncate(17, "...");
         e.Message.Text = message;
 
         if(id != null)

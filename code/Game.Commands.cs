@@ -59,60 +59,6 @@ public partial class Game
         Current.Hud.ClearCanvas(To.Everyone);
     }
 
-    [ConCmd.Admin("sketch_maxrounds", Help = "How many rounds to play before returning to lobby.")]
-    public static void SetMaxRounds(int maxrounds)
-    {
-        //Invalid maxrounds number, error out.
-        if(maxrounds <= 0)
-        {
-            Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Invalid MaxRounds value (must be greater than 0).");
-            return;
-        }
-
-        Current.MaxRounds = maxrounds;
-    }
-
-    [ConCmd.Server("sketch_selectwordtime", Help = "How long (SECONDS) the drawer has to select a word.")]
-    public static void SetSelectWordTime(int time)
-    {
-        //Invalid time, error out.
-        if(time < 0)
-        {
-            Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Invalid SelectWordTime value (must be non-negative).");
-            return;
-        }
-
-        Current.SelectWordTime = time;
-    }
-
-    [ConCmd.Admin("sketch_playtime", Help = "How long (SECONDS) the drawer has to draw/players have to guess.")]
-    public static void SetPlayTime(int time)
-    {
-        Log.Info(ConsoleSystem.Caller);
-
-        //Invalid time, error out.
-        if(time <= 0)
-        {
-            Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Invalid PlayTime value (must be greater than 0).");
-            return;
-        }
-
-        Current.PlayTime = time;
-    }
-
-    [ConCmd.Admin("sketch_wordpoolsize", Help = "How many words the drawer gets to choose from.")]
-    public static void SetWordPoolSize(int size)
-    {
-        //Invalid time, error out.
-        if(size <= 0)
-        {
-            Current.CommandError(To.Single(ConsoleSystem.Caller), "Sketch: Invalid WordPoolSize value (must be greater than 0).");
-            return;
-        }
-
-        Current.WordPoolSize = size;
-    }
-
     [ConCmd.Admin("sketch_skipword", Help = "Skips current word/drawer.")]
     public static void SkipWord()
     {

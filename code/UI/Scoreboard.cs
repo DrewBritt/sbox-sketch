@@ -7,6 +7,8 @@ using Sandbox.UI.Construct;
 namespace Sketch;
 public partial class Scoreboard : Panel
 {
+    public static Scoreboard Current { get; internal set; }
+
     public Panel Container { get; protected set; }
 
     public Panel EntryList { get; protected set; }
@@ -16,6 +18,7 @@ public partial class Scoreboard : Panel
 
     public Scoreboard()
     {
+        Current = this;
         Container = Add.Panel("container");
 
         StyleSheet.Load("UI/Scoreboard.scss");
@@ -35,6 +38,8 @@ public partial class Scoreboard : Panel
         }
 
         //Remove disconnected clients
+        //This shouldn't be necessary anymore as RemoveEntry is called in ClientDisconnect, 
+        //however I'm keeping it here as a failsafe. Can never be too careful about cosmic bitflipping ¯\_(ツ)_/¯
         foreach(var client in Rows.Keys.Except(Client.All))
         {
             if(Rows.TryGetValue(client, out var row))
@@ -48,6 +53,15 @@ public partial class Scoreboard : Panel
         Dirty = false;
     }
 
+    public void RemoveClient(Client cl)
+    {
+        if(Rows.TryGetValue(cl, out var row))
+        {
+            row?.Delete();
+            Rows.Remove(cl);
+        }
+    }
+
     protected virtual ScoreboardEntry AddClient(Client cl)
     {
         var entry = new ScoreboardEntry(cl);
@@ -59,8 +73,9 @@ public partial class Scoreboard : Panel
 public partial class ScoreboardEntry : Panel
 {
     public Client Client;
-    readonly Label IsDrawing;
+    readonly Label IsDrawing, IsSpeaking, HasGuessed;
     public Label Score { get; internal set; }
+    public string ScoreString => Client.GetInt("GameScore").ToString();
 
     public ScoreboardEntry(Client cl)
     {
@@ -68,13 +83,20 @@ public partial class ScoreboardEntry : Panel
         AddClass("entry");
 
         Add.Image($"avatar:{Client.PlayerId}");
-        Add.Label(Client.Name);
+        Add.Label(Client.Name.Truncate(23, "..."));
 
         IsDrawing = Add.Label("✏️", "isdrawing");
         IsDrawing.BindClass("enable", () => Game.Current.CurrentDrawer == Client);
 
+        IsSpeaking = Add.Label("🎙", "isspeaking");
+        IsSpeaking.BindClass("enable", () => Client.TimeSinceLastVoice < 1);
+        IsSpeaking.BindClass("enable", () => Client == Local.Client && Voice.IsRecording);
+
+        HasGuessed = Add.Label("✔️", "hasguessed");
+        HasGuessed.BindClass("enable", () => Game.Current.GuessedPlayers.Contains(Client));
+
         Score = Add.Label("0", "score");
-        Score.Bind("text", () => Client.GetInt("GameScore").ToString());
+        Score.Bind("text", this, "ScoreString");
 
         BindClass("first", () => SiblingIndex == 1);
         BindClass("second", () => SiblingIndex == 2);
