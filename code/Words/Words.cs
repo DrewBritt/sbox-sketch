@@ -9,38 +9,42 @@ namespace Sketch;
 /// </summary>
 public static class Words
 {
-    public static List<WordList> PlayableLists = new List<WordList>();
-    public const string ListPath = "/data/wordlist.json";
+    private static List<WordList> LoadedLists = new List<WordList>();
+    private const string BaseListPath = "/data/wordlists/basewordlist.json";
 
     /// <summary>
-    /// Initializes Words.PlayableLists (duh dumbass) from base wordlist file.
-    /// Errors out if file does not exist (installed with game so ideally should never throw?)
+    /// Loads a Sketch Wordlist JSON file.
     /// </summary>
-    public static void InitWordList()
+    /// <param name="path">Path of .JSON Sketch Wordlist.</param>
+    public static void LoadWordList(string path)
     {
-        if(FileSystem.Mounted.FileExists(ListPath))
+        if(FileSystem.Mounted.FileExists(BaseListPath))
         {
-            //WordList = FileSystem.Mounted.ReadAllText(ListPath)
-            var words = FileSystem.Mounted.ReadJson<string[]>(ListPath);
-            var newList = new WordList()
-            {
-                Words = words
-            };
-            PlayableLists.Add(newList);
+            WordList list = FileSystem.Mounted.ReadJson<WordList>(path);
+            LoadedLists.Add(list);
             return;
         }
 
         Log.Error("Sketch: Base WordList not found.");
     }
 
+    public static void RemoveWordList(WordList list) => LoadedLists.Remove(list);
+
+    /// <summary>
+    /// Loads Base Wordlist into LoadedLists.
+    /// </summary>
+    public static void InitBaseList()
+    {
+        LoadWordList(BaseListPath);
+    }
+
     /// <summary>
     /// Returns all words from all locally loaded word lists.
     /// </summary>
-    /// <returns></returns>
     public static List<string> GetAllWords()
     {
         List<string> allWords = new List<string>();
-        foreach(var list in PlayableLists)
+        foreach(var list in LoadedLists)
             foreach(var word in list.Words)
                 allWords.Add(word);
 
@@ -51,7 +55,6 @@ public static class Words
     /// Returns array containing "count" random words from all word lists. 
     /// </summary>
     /// <param name="count">Number of words to return.</param>
-    /// <returns></returns>
     public static string[] RandomWords(int count)
     {
         string[] words = new string[count];

@@ -3,7 +3,7 @@
 /// <summary>
 /// Encapsulates a Sketch word list and it's associated metadata (name, creator, votes, etc.)
 /// </summary>
-public class WordList
+public struct WordList
 {
     public string Name { get; set; }
     public string CreatorName { get; set; }

@@ -14,7 +14,7 @@ public partial class Game : Sandbox.Game
         if(IsServer)
         {
             PrecacheInit();
-            Words.InitWordList();
+            Words.InitBaseList();
             Hud = new Hud();
         }
     }
