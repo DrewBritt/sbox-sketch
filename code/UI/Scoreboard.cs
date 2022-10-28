@@ -4,7 +4,7 @@ using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 
-namespace Sketch
+namespace Sketch.UI
 {
     public partial class Scoreboard : Panel
     {
