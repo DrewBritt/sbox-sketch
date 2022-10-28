@@ -99,9 +99,9 @@ namespace Sketch
             Score = Add.Label("0", "score");
             Score.Bind("text", this, "ScoreString");
 
-            BindClass("first", () => SiblingIndex == 1);
-            BindClass("second", () => SiblingIndex == 2);
-            BindClass("third", () => SiblingIndex == 3);
+            BindClass("first", () => SiblingIndex == 0);
+            BindClass("second", () => SiblingIndex == 1);
+            BindClass("third", () => SiblingIndex == 2);
         }
     }
 }

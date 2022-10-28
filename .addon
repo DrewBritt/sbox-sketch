@@ -3,6 +3,7 @@
   "Type": "game",
   "Org": "pmg",
   "Ident": "sketch",
+  "Tags": "",
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
@@ -20,19 +21,11 @@
     "MinPlayers": 2,
     "MaxPlayers": 16,
     "PerMapRanking": false,
-    "LeaderboardType": "None",
-    "RankType": "None",
-    "MapSelect": "Unrestricted",
-    "GameNetworkType": "Multiplayer",
-    "Compiler": {
-      "RootNamespace": "Sketch",
-      "DefineConstants": "SANDBOX;ADDON;DEBUG",
-      "NoWarn": "1701;1702;1591;"
-    },
+    "LeaderboardType": 0,
+    "RankType": 0,
+    "MapSelect": 0,
+    "GameNetworkType": 0,
     "GameCategory": "Art",
-    "ControlModes": {
-      "Keyboard": true
-    },
     "GameSettings": {
       "sketch_maxrounds": {
         "DisplayType": "Integer",
@@ -40,6 +33,7 @@
         "ConVarName": "sketch_maxrounds",
         "DisplayName": "Max Rounds",
         "DefaultValue": "3",
+        "Description": "",
         "Minimum": 1,
         "Maximum": 10
       },
@@ -49,6 +43,7 @@
         "ConVarName": "sketch_drawtime",
         "DisplayName": "Draw Time (s)",
         "DefaultValue": "120",
+        "Description": "",
         "Minimum": 5,
         "Maximum": 180
       },
@@ -58,6 +53,7 @@
         "ConVarName": "sketch_wordpoolsize",
         "DisplayName": "Word Pool Size",
         "DefaultValue": "3",
+        "Description": "",
         "Minimum": 1,
         "Maximum": 5
       },
@@ -67,8 +63,13 @@
         "ConVarName": "sketch_selectwordtime",
         "DisplayName": "Word Selection Time (s)",
         "DefaultValue": "15",
+        "Description": "",
         "Maximum": 60
       }
-    }
+    },
+    "ParentPackage": "",
+    "GeneralExtensions": false,
+    "TargettedExtensions": true,
+    "ExtensionApiVersion": 1
   }
 }
