@@ -1,0 +1,37 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using Sketch;
+@inherits Sandbox.UI.Panel;
+@attribute [StyleSheet("/UI/Overlays/CurrentDrawer.scss")]
+@namespace Sketch.UI
+
+<root>
+    <image @ref=Avatar></image>
+    <label @ref=DrawerText class="drawertext"></label>
+</root>
+
+@code
+{
+    private Image Avatar;
+    private Label DrawerText;
+
+    private RealTimeSince panelOpened;
+    public override void Tick()
+    {
+        var game = Sketch.Game.Current;
+        if (game == null) return;
+
+        if (panelOpened > 3)
+            SetClass("open", false);
+    }
+
+    public void DisplayCurrentDrawer()
+    {
+        var drawer = Sketch.Game.Current.CurrentDrawer;
+        Avatar.SetTexture($"avatar:{drawer.PlayerId}");
+        DrawerText.Text = $"{drawer.Name.Truncate(23, "...")} is selecting a word.";
+
+        SetClass("open", true);
+        panelOpened = 0;
+    }
+}

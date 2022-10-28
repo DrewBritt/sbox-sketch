@@ -1,0 +1,30 @@
+﻿currentdrawer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: rgba(10, 10, 10, 0.5);
+    backdrop-filter: blur( 20px ) brightness( 0.5 );
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+
+    &.open {
+        opacity: 1;
+    }
+
+    image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+        margin-bottom: 20px;
+    }
+
+    .drawertext {
+        font-size: 30px;
+    }
+}
