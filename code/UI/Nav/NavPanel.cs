@@ -2,7 +2,7 @@
 using System.Linq;
 using Sandbox.UI;
 
-namespace Sketch;
+namespace Sketch.UI;
 
 public partial class NavPanel : Panel
 {

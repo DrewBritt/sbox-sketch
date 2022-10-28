@@ -1,0 +1,61 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@inherits Panel;
+@attribute [StyleSheet("/UI/Settings/GameSettings.scss"), NavTarget("Settings/GameSettings")]
+@namespace Sketch.UI
+
+<root>
+    <div class="inputfields">
+        <div class="field">
+            <text>Max Rounds</text>
+            <SliderEntry min="1" max="10" Value:bind=@MaxRounds></SliderEntry>
+        </div>
+        <div class="field">
+            <text>Draw Time (s)</text>
+            <SliderEntry min="5" max="180" Value:bind=@DrawTime></SliderEntry>
+        </div>
+        <div class="field">
+            <text>Word Pool Size</text>
+            <SliderEntry min="1" max="5" Value:bind=@WordPoolSize></SliderEntry>
+        </div>
+        <div class="field">
+            <text>Select Word Time (s)</text>
+            <SliderEntry min="0" max="60" Value:bind=@SelectWordTime></SliderEntry>
+        </div>
+        
+    </div>
+    <div class="buttons">
+        <button @onclick=@ResetGame>Reset Game</button>
+        <button @onclick=@SkipWord>Skip Word</button>
+    </div>
+</root>
+
+@code
+{
+    private int MaxRounds
+    {
+        get { return Sketch.Game.MaxRounds; }
+        set { ConsoleSystem.Run($"sketch_maxrounds {value}"); }
+    }
+
+    private int DrawTime
+    {
+        get { return Sketch.Game.DrawTime; }
+        set { ConsoleSystem.Run($"sketch_drawtime {value}"); }
+    }
+
+    private int WordPoolSize
+    {
+        get { return Sketch.Game.WordPoolSize; }
+        set { ConsoleSystem.Run($"sketch_wordpoolsize {value}"); }
+    }
+
+    private int SelectWordTime
+    {
+        get { return Sketch.Game.SelectWordTime; }
+        set { ConsoleSystem.Run($"sketch_selectwordtime {value}"); }
+    }
+
+    public void ResetGame() => ConsoleSystem.Run($"sketch_resetgame");
+    public void SkipWord() => ConsoleSystem.Run($"sketch_skipword");
+}

@@ -2,7 +2,7 @@
 using Sandbox;
 using Sandbox.UI;
 
-namespace Sketch;
+namespace Sketch.UI;
 
 [Library("navbutton")]
 public class NavButton : Button

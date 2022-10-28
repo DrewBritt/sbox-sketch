@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Sketch;
+namespace Sketch.UI;
 
 public class NavTargetAttribute : Attribute, Sandbox.ITypeAttribute
 {
