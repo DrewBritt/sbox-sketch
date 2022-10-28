@@ -1,0 +1,61 @@
+﻿scoreboardentry {
+    padding: 4px;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+    text-stroke: 2px black;
+
+    image {
+        width: 37px;
+        height: 37px;
+        border-radius: 30px;
+        margin-right: 10px;
+    }
+
+    .isdrawing {
+        font-size: 20px;
+        opacity: 0;
+
+        &.enable {
+            opacity: 1;
+        }
+    }
+
+    .isspeaking {
+        font-size: 20px;
+        flex-grow: 1;
+        opacity: 0;
+
+        &.enable {
+            opacity: 1;
+        }
+    }
+
+    .hasguessed {
+        font-size: 20px;
+        opacity: 0;
+
+        &.enable {
+            opacity: 1;
+        }
+    }
+
+    .score {
+        order: 5;
+    }
+
+    &.first {
+        background-color: rgba( 212, 175, 55, 0.9 );
+        border-radius: 10px 10px 0px 0px;
+    }
+
+    &.second {
+        background-color: rgba( 192, 192,192, 0.9 );
+    }
+
+    &.third {
+        background-color: rgba( 148, 94, 40, 0.9 );
+        border-radius: 0px 0px 10px 10px;
+    }
+}

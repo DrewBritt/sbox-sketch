@@ -1,0 +1,48 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+@using Sketch;
+@inherits Panel; // Explicitly state inheritance to stop VS from freaking out
+@attribute [StyleSheet("/UI/Scoreboard/ScoreboardEntry.scss")]
+@namespace Sketch.UI
+
+<root>
+    <image style="background-image: url(avatarsmall:@Client.PlayerId)"></image>
+    <label>@Client.Name.Truncate(23, "...")</label>
+
+    <label @ref=IsDrawing class="isdrawing">✏️</label>
+    <label @ref=IsSpeaking class="isspeaking">🎙</label>
+    <label @ref=HasGuessed class="hasguessed">✔️</label>
+
+    <label class="score">@ScoreString</label>
+</root>
+
+@code
+{
+    public Client Client { get; set; }
+    private Label IsDrawing { get; set; }
+    private Label IsSpeaking { get; set; }
+    private Label HasGuessed { get; set; }
+    private string ScoreString => Client.GetInt("GameScore").ToString();
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        if (!firstTime) return;
+
+        IsDrawing.BindClass("enable", () => Sketch.Game.Current.CurrentDrawer == Client);
+
+        IsSpeaking.BindClass("enable", () => Client.TimeSinceLastVoice < 1);
+        IsSpeaking.BindClass("enable", () => Client == Local.Client && Voice.IsRecording);
+
+        HasGuessed.BindClass("enable", () => Sketch.Game.Current.GuessedPlayers.Contains(Client));
+
+        BindClass("first", () => SiblingIndex == 0);
+        BindClass("second", () => SiblingIndex == 1);
+        BindClass("third", () => SiblingIndex == 2);
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(Client?.GetInt("GameScore"));
+    }
+}

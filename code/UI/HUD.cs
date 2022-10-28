@@ -60,27 +60,6 @@ namespace Sketch
             CurrentDrawer.DisplayCurrentDrawer();
         }
 
-
-        /// <summary>
-        /// Used to update scoreboard when needed rather than once a frame
-        /// </summary>
-        [ClientRpc]
-        public void SetScoreboardDirty()
-        {
-            Scoreboard.Dirty = true;
-        }
-
-        /// <summary>
-        /// Used to remove disconnected player from scoreboard.
-        /// Previously this was in Tick() on the Scoreboard, but didn't work correctly with a "dirty" pattern
-        /// as Client.All still contained the disconnected player when Dirty would be set.
-        /// </summary>
-        [ClientRpc]
-        public void RemovePlayerFromScoreboard(Client cl)
-        {
-            Scoreboard.RemoveClient(cl);
-        }
-
         /// <summary>
         /// Sends Word Pool to drawer to display elements on screen
         /// </summary>

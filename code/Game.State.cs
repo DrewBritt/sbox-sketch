@@ -506,8 +506,6 @@ namespace Sketch
             curScore = drawer.GetInt("GameScore");
             drawer.SetInt("GameScore", curScore + (score.FloorToInt() / 3) * 2);
 
-            Hud.SetScoreboardDirty(To.Everyone);
-
             //Check if all players have guessed (rather than checking every tick in state code)
             //TODO: Make this stupid shit not shit probably
             if(ClientUtil.ClientsExceptDrawer(Client.All, CurrentDrawer).SequenceEqual(GuessedPlayers))

@@ -1,0 +1,14 @@
+﻿scoreboard {
+    width: 30%;
+    height: 100%;
+
+    .container {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        border-radius: 10px;
+        border: 2px solid rgba(black, 0);
+        margin-left: 3%;
+        flex-direction: column;
+    }
+}

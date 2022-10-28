@@ -22,7 +22,6 @@ namespace Sketch
         public override void ClientJoined(Client cl)
         {
             ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has joined the game!");
-            Hud.SetScoreboardDirty(To.Everyone);
 
             // Set voice to 2D
             cl.VoiceStereo = false;
@@ -32,7 +31,6 @@ namespace Sketch
         {
             ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has left ({reason})");
             Sound.FromScreen("doorshutting");
-            Hud.RemovePlayerFromScoreboard(To.Everyone, cl);
         }
 
         protected override void OnDestroy()
