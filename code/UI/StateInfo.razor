@@ -1,0 +1,37 @@
+﻿@using System;
+@using Sketch;
+@using Sandbox.UI;
+@inherits Sandbox.UI.Panel; // Explicitly state inheritance to stop VS from freaking out
+@attribute [StyleSheet("/UI/StateInfo.scss")]
+@namespace Sketch.UI
+
+<root>
+    <div class="statecontainer">
+        <label class="roundinfo">ROUND @CurRound/@MaxRounds</label>
+        <label class="statename">@CurStateName</label>
+        <label class="statetime">@CurStateTime</label>
+    </div>
+    <div class="wordcontainer empty">
+        <label @ref=Letters></label>
+    </div>
+</root>
+
+@code
+{
+    public Label Letters { get; set; }
+
+    private int CurRound => Game.Current.CurRound;
+    private int MaxRounds => Game.MaxRounds;
+    private string CurStateName => Game.Current.CurrentStateName.ToUpper();
+    private string CurStateTime => Game.Current.CurrentStateTime;
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        Letters.Parent.BindClass("empty", () => Letters.TextLength == 0);
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(CurRound, MaxRounds, CurStateName, CurStateTime);
+    }
+}
