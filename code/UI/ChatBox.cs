@@ -28,6 +28,7 @@ namespace Sketch
             Input = Container.Add.TextEntry("");
             Input.Placeholder = "Enter your guess here...";
             Input.AddEventListener("onsubmit", () => Submit());
+            Input.AddEventListener("onsubmit", () => FocusChat());
             Input.AddEventListener("onclick", () => FocusChat());
             Input.AcceptsFocus = true;
             Input.AllowEmojiReplace = true;
@@ -53,14 +54,13 @@ namespace Sketch
         {
             var msg = Input.Text.Trim();
             Input.Text = "";
-            Input.Placeholder = "Enter your guess here...";
 
             if(string.IsNullOrWhiteSpace(msg))
                 return;
 
             ChatSay(msg);
 
-            Canvas.TryScrollToBottom();
+            //Canvas.TryScrollToBottom();
         }
 
         public void AddEntry(ulong? id, string name, string message, string additionalClass = null)
