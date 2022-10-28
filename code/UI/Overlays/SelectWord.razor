@@ -1,0 +1,42 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using Sandbox.UI.Construct;
+@using Sketch;
+@inherits Panel; // Explicitly state inheritance to stop VS from freaking out
+@attribute [StyleSheet("/UI/Overlays/SelectWord.scss")]
+@namespace Sketch.UI
+
+<root>
+    <label class="title">SELECT A WORD TO DRAW</label>
+    <div @ref=WordsContainer class="wordscontainer"></div>
+</root>
+
+@code
+{
+    private Panel WordsContainer { get; set; }
+    private RealTimeUntil stateEnd;
+
+    public override void Tick()
+    {
+        if(Sketch.Game.Current == null) return;
+
+        if(stateEnd < 0)
+            SetClass("open", false);
+    }
+
+    public void DisplayWordPool(string[] pool, int time)
+    {
+        WordsContainer.DeleteChildren(true);
+        foreach(string w in pool)
+            WordsContainer.Add.Button(w, "wordbutton", () => SelectedWord(w));
+
+        SetClass("open", true);
+        stateEnd = time;
+    }
+
+    private void SelectedWord(string word)
+    {
+        Sketch.Game.SelectWord(word);
+        stateEnd = -1;
+    }
+}

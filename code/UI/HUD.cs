@@ -47,7 +47,6 @@ namespace Sketch
         public new void PlaySound(string soundname)
         {
             Host.AssertClient();
-
             Sound.FromScreen(soundname);
         }
 
@@ -58,7 +57,6 @@ namespace Sketch
         public void DisplayCurrentDrawer()
         {
             Host.AssertClient();
-
             CurrentDrawer.DisplayCurrentDrawer();
         }
 
@@ -92,9 +90,7 @@ namespace Sketch
         public void SendWordPool(string[] pool, int time)
         {
             Host.AssertClient();
-
-            SelectWord.Pool = pool;
-            SelectWord.DisplayWordPool(time);
+            SelectWord.DisplayWordPool(pool, time);
         }
 
         /// <summary>
@@ -107,7 +103,6 @@ namespace Sketch
         public void SendCurrentLetters(string currentletters)
         {
             Host.AssertClient();
-
             StateInfo.Letters.Text = currentletters;
         }
 
@@ -118,7 +113,6 @@ namespace Sketch
         public void ClearCanvas()
         {
             Host.AssertClient();
-
             DrawCanvas.InitializeCanvasTexture();
         }
 
@@ -171,7 +165,6 @@ namespace Sketch
         public void EnableGameOverPanel()
         {
             Host.AssertClient();
-
             RootPanel.AddChild<GameOver>();
         }
     }

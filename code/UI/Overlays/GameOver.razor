@@ -2,7 +2,7 @@
 @using Sandbox;
 @using Sandbox.UI;
 @using Sandbox.UI.Construct;
-@inherits Sandbox.UI.Panel;
+@inherits Panel; // Explicitly state inheritance to stop VS from freaking out
 @attribute [StyleSheet("/UI/Overlays/GameOver.scss")]
 @namespace Sketch.UI
 
@@ -16,7 +16,7 @@
 
 @code
 {
-    public Panel Top3Container { get; set; }
+    private Panel Top3Container { get; set; }
 
     protected override void OnAfterTreeRender(bool firstTime)
     {
