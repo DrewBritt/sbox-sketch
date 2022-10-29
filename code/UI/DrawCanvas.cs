@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Sandbox;
 using Sandbox.UI;
 
@@ -68,6 +69,50 @@ namespace Sketch
             CanvasInfo[newPixel.Index + 2] = newPixel.Blue;
         }
 
+        //Implementation of Bresenham's line algo, interpolates between points to draw w/o gaps xD
+        public void DrawLine(int xStart, int yStart, int xEnd, int yEnd, Color32 color)
+        {
+            int xDist = Math.Abs(xEnd - xStart), xDir = xStart < xEnd ? 1 : -1;
+            int yDist = Math.Abs(yEnd - yStart), yDir = yStart < yEnd ? 1 : -1;
+
+            int err = (xDist > yDist ? xDist : -yDist) / 2, e = 0;
+
+            for (;;)
+            {
+                if (xStart >= 0 && xStart < width && yStart >= 0 && yStart < height)
+                {
+                    //Calculate pixels in radius locally
+                    var indices = FindPixelsInDistance(new Vector2((float) xStart, (float) yStart), Game.Current.CurrentSize);
+                    foreach(var index in indices)
+                    {
+                        var p = new Pixel
+                        {
+                            Index = index,
+                            Red = color.r,
+                            Green = color.g,
+                            Blue = color.b,
+                        };
+                        FillPixel(p);
+                    }
+                }
+
+                if (xStart == xEnd && yStart == yEnd)
+                    break;
+
+                e = err;
+                if (e > -xDist)
+                {
+                    err -= (int) yDist;
+                    xStart += (int) xDir;
+                }
+                if (e <  yDist)
+                {
+                    err += (int) xDist;
+                    yStart += (int) yDir;
+                }
+            }
+        }
+
         //Left click down + dragging mouse
         //TODO: Proper input probably? Too much of a dumbfuck to figure out
         //how to check AttackPrimary, UI is taking all the mouse events.
@@ -86,29 +131,26 @@ namespace Sketch
             if(pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height)
                 return;
 
+            Color32 color = Game.Current.CurrentColor;
+
             //Add panel position to send to other clients
+            //We grab the last plotted point here so we can interpolate between it and the new point.
+            //Gives us a smoother looking image.
+            //Note that this is using NewPixelsPos which gets regularly cleared. When it gets cleared, there will be gaps in the drawing.
+            //I'm too lazy to fix this, but if the gaps annoy you, there is your hint xD
+            Vector2 oldPos = pos;
+            if (NewPixelsPos.Count > 0)
+                oldPos = NewPixelsPos[NewPixelsPos.Count - 1];
             NewPixelsPos.Add(pos);
+            DrawLine((int) oldPos.x, (int) oldPos.y, (int) pos.x, (int) pos.y, color);
 
             //Calculate pixels in radius locally
-            var indexes = FindPixelsInDistance(pos, Game.Current.CurrentSize);
-            Color32 color = Game.Current.CurrentColor;
-            foreach(var index in indexes)
-            {
-                var p = new Pixel
-                {
-                    Index = index,
-                    Red = color.r,
-                    Green = color.g,
-                    Blue = color.b,
-                };
-                FillPixel(p);
-            }
             RedrawCanvas();
         }
 
         public List<int> FindPixelsInDistance(Vector2 pos, int radius)
         {
-            List<int> indexes = new List<int>();
+            List<int> indices = new List<int>();
             int xpos = (int)pos.x;
             int ypos = (int)pos.y;
 
@@ -126,11 +168,11 @@ namespace Sketch
 
                     //Pixel found, calculate and add index
                     int index = (y * width * 4) + (x * 4);
-                    indexes.Add(index);
+                    indices.Add(index);
                 }
             }
 
-            return indexes;
+            return indices;
         }
     }
 }
