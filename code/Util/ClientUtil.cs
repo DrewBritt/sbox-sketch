@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Sandbox;
-using static Sketch.Game;
 
 namespace Sketch
 {
@@ -25,10 +24,10 @@ namespace Sketch
         /// <returns></returns>
         public static bool CanDraw(Client cl)
         {
-            if(Current.CurrentDrawer != cl)
+            if(Game.Current.CurrentDrawer != cl)
                 return false;
 
-            if(Current.CurrentStateName != "Playing")
+            if(Game.Current.CurrentStateName != "Playing")
                 return false;
 
             return true;
