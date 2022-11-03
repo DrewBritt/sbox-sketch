@@ -76,14 +76,29 @@ public partial class DrawCanvas : Image
     public void RedrawCanvas() => Texture.Update(CanvasInfo);
 
     /// <summary>
-    /// Fill a Pixel in on our Canvas.
+    /// Update the canvas with delta position data. This is called on non-drawer clients with delta data
+    /// retrieved from the drawer client.
     /// </summary>
-    /// <param name="newPixel"></param>
-    public void FillPixel(Pixel newPixel)
+    public void UpdateCanvas(Vector2[] positions)
     {
-        CanvasInfo[newPixel.Index] = newPixel.Red;
-        CanvasInfo[newPixel.Index + 1] = newPixel.Green;
-        CanvasInfo[newPixel.Index + 2] = newPixel.Blue;
+        Color32 color = Game.Current.CurrentColor;
+
+        Vector2 lastPos = new Vector2(-1, -1);
+        foreach(var p in positions)
+        {
+            // Set lastPos before on first iteration
+            if(lastPos.x == -1 && lastPos.y == -1)
+                lastPos = p;
+
+            // Skip origin positions (sometimes a bunch of these are sent, networking bug?)
+            if(p.x == 0 && p.y == 0) continue;
+
+            DrawLine((int)lastPos.x, (int)lastPos.y, (int)p.x, (int)p.y, color);
+            lastPos = p;
+        }
+
+        lastPos.x = -1; lastPos.y = -1;
+        RedrawCanvas();
     }
 
     /// <summary>
@@ -145,7 +160,7 @@ public partial class DrawCanvas : Image
     /// <summary>
     /// Finds pixels in a circular radius around pos.
     /// </summary>
-    public List<int> FindPixelsInRadius(Vector2 pos, int radius)
+    private List<int> FindPixelsInRadius(Vector2 pos, int radius)
     {
         List<int> indices = new List<int>();
         int xpos = (int)pos.x;
@@ -175,7 +190,7 @@ public partial class DrawCanvas : Image
     }
 
     // Implementation of Bresenham's line algo, interpolates between points to draw w/o gaps xD
-    public void DrawLine(int xStart, int yStart, int xEnd, int yEnd, Color32 color)
+    private void DrawLine(int xStart, int yStart, int xEnd, int yEnd, Color32 color)
     {
         int xDist = Math.Abs(xEnd - xStart), xDir = xStart < xEnd ? 1 : -1;
         int yDist = Math.Abs(yEnd - yStart), yDir = yStart < yEnd ? 1 : -1;
@@ -216,5 +231,16 @@ public partial class DrawCanvas : Image
                 yStart += (int)yDir;
             }
         }
+    }
+
+    /// <summary>
+    /// Fill a Pixel in on our Canvas.
+    /// </summary>
+    /// <param name="newPixel"></param>
+    private void FillPixel(Pixel newPixel)
+    {
+        CanvasInfo[newPixel.Index] = newPixel.Red;
+        CanvasInfo[newPixel.Index + 1] = newPixel.Green;
+        CanvasInfo[newPixel.Index + 2] = newPixel.Blue;
     }
 }

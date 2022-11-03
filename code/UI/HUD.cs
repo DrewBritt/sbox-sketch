@@ -123,25 +123,7 @@ public partial class Hud : HudEntity<RootPanel>
     public void UpdateGuessersCanvas(Vector2[] positions)
     {
         Host.AssertClient();
-
-        Color32 color = Game.Current.CurrentColor;
-
-        Vector2 lastPos = new Vector2(-1, -1);
-        foreach(var p in positions)
-        {
-            // Set lastPos before on first iteration
-            if(lastPos.x == -1 && lastPos.y == -1)
-                lastPos = p;
-
-            // Skip origin positions (sometimes a bunch of these are sent, networking bug?)
-            if(p.x == 0 && p.y == 0) continue;
-
-            DrawCanvas.DrawLine((int)lastPos.x, (int)lastPos.y, (int)p.x, (int)p.y, color);
-            lastPos = p;
-        }
-
-        lastPos.x = -1; lastPos.y = -1;
-        DrawCanvas.RedrawCanvas();
+        DrawCanvas.UpdateCanvas(positions);
     }
 
     [ClientRpc]
