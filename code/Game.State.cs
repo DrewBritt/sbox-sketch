@@ -181,7 +181,7 @@ namespace Sketch
                 Current.Hud.SendCurrentLetters(To.Single(Current.CurrentDrawer), word);
 
                 //Only send current letters (at this point, just _'s) to everyone else
-                var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawer);
+                var tosend = Client.All.Where(c => c != Game.Current.CurrentDrawer);
                 Current.Hud.SendCurrentLetters(To.Multiple(tosend), Current.CurrentLettersString());
             }
 
@@ -214,9 +214,7 @@ namespace Sketch
                     Current.CurrentLetters[ranNum] = Current.CurrentWord[ranNum];
 
                     //Update only guesser's UI
-                    //TODO: Probably remove this garbage function. Set bool on drawer client and only update if false,
-                    //then send letters to everyone instead?
-                    var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawer);
+                    var tosend = Client.All.Where(c => c != Game.Current.CurrentDrawer);
                     Current.Hud.SendCurrentLetters(To.Multiple(tosend), Current.CurrentLettersString());
 
                     //Reset letter timer
@@ -507,11 +505,8 @@ namespace Sketch
             drawer.SetInt("GameScore", curScore + (score.FloorToInt() / 3) * 2);
 
             //Check if all players have guessed (rather than checking every tick in state code)
-            //TODO: Make this stupid shit not shit probably
-            if(ClientUtil.ClientsExceptDrawer(Client.All, CurrentDrawer).SequenceEqual(GuessedPlayers))
-            {
+            if(Client.All.Where(c => c != Game.Current.CurrentDrawer).Count() == GuessedPlayers.Count)
                 Current.CurrentState = new PostPlayingState();
-            }
         }
 
         /// <summary>
@@ -528,7 +523,7 @@ namespace Sketch
                 positions[i / 2] = new Vector2(data[i].ToInt(), data[i + 1].ToInt());
             }
 
-            var tosend = ClientUtil.ClientsExceptDrawer(Client.All, Current.CurrentDrawer);
+            var tosend = Client.All.Where(c => c != Game.Current.CurrentDrawer);
             Current.Hud.UpdateGuessersCanvas(To.Multiple(tosend), positions);
         }
         #endregion
