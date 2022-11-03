@@ -14,6 +14,7 @@ namespace Sketch
         {
             if(IsServer)
             {
+                Words.AddToWordList(Words.BaseListPath);
                 PrecacheInit();
                 Hud = new Hud();
             }

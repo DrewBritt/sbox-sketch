@@ -10,23 +10,32 @@ namespace Sketch
     /// </summary>
     public static class Words
     {
-        public static List<string> WordList;
-        public static string ListPath = "/data/wordlist.json";
+        private static List<string> WordList = new List<string>();
+        public static string BaseListPath = "/data/wordlist.json";
 
-        /// <summary>
-        /// Initializes Words.WordList (duh dumbass) from local file.
-        /// Errors out if file does not exist.
-        /// </summary>
-        public static void InitWordList()
+        public static void AddToWordList(string path)
         {
-            if(FileSystem.Mounted.FileExists(ListPath))
+            if(FileSystem.Mounted.FileExists(path))
             {
-                //WordList = FileSystem.Mounted.ReadAllText(ListPath)
-                WordList = FileSystem.Mounted.ReadJson<string[]>(ListPath).ToList();
+                var words = FileSystem.Mounted.ReadJson<string[]>(path).ToList();
+                WordList.AddRange(words);
                 return;
             }
 
-            Log.Error("Sketch: WordList not loaded.");
+            Log.Error($"Sketch: file at {path} not found.");
+        }
+
+        public static void RemoveFromWordList(string path)
+        {
+            if(FileSystem.Mounted.FileExists(path))
+            {
+                var words = FileSystem.Mounted.ReadJson<string[]>(path).ToList();
+                foreach(var word in words)
+                    WordList.Remove(word);
+                return;
+            }
+
+            Log.Error($"Sketch: file at {path} not found.");
         }
 
         /// <summary>
