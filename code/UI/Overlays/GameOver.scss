@@ -13,6 +13,7 @@
         color: white;
         font-size: 65px;
         align-items: center;
+        text-stroke: 6px black;
     }
 
     .top3container {
@@ -29,6 +30,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-stroke: 2px black;
 
             image {
                 height: 100px;

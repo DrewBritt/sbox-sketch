@@ -1,6 +1,4 @@
-﻿
-$primary: rgb(10, 34, 57) !default;
-$primary-alt: white !default;
+﻿@import "Theme.scss";
 
 $switch-padding: 6px !default;
 .slider
@@ -13,12 +11,11 @@ $switch-padding: 6px !default;
 
 	> .thumb
 	{
-		background-color: $primary;
+		background-color: $primary-alt;
 		position: absolute;
-		width: 20px;
-		height: 20px;
-		border-radius: 1000px;
-		box-shadow: 2px 2px 10px black;
+		width: 25px;
+		height: 25px;
+		border-radius: 100px;
 		transition: all 0.2s ease-out;
 
 		&:hover

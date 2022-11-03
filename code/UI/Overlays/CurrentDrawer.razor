@@ -28,7 +28,7 @@
     public void DisplayCurrentDrawer()
     {
         var drawer = Sketch.Game.Current.CurrentDrawer;
-        Avatar.SetTexture($"avatar:{drawer.PlayerId}");
+        Avatar.SetTexture($"avatarbig:{drawer.PlayerId}");
         DrawerText.Text = $"{drawer.Name.Truncate(23, "...")} is selecting a word.";
 
         SetClass("open", true);

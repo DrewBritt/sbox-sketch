@@ -3,13 +3,14 @@
   "Type": "game",
   "Org": "pmg",
   "Ident": "sketch",
-  "Tags": null,
+  "Tags": "",
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
   "ResourcePaths": [
     "/data/*",
-    "/ui/*"
+    "/ui/*",
+    "/fonts/*"
   ],
   "HasCode": true,
   "CodePath": "code",
@@ -70,6 +71,22 @@
         "DefaultValue": "15",
         "Maximum": 60
       }
+    },
+    "ParentPackage": "",
+    "GeneralExtensions": false,
+    "TargettedExtensions": true,
+    "ExtensionApiVersion": 1001,
+    "Physics": {
+      "SubSteps": 1,
+      "TimeScale": 1,
+      "Gravity": "0,0,-800",
+      "AirDensity": 1.2,
+      "SleepingEnabled": true,
+      "SimulationMode": "Continuous",
+      "PositionIterations": 2,
+      "VelocityIterations": 8,
+      "SoftBodyIterations": 1,
+      "SoftBodySubsteps": 1
     }
   }
 }

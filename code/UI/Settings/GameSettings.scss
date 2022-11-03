@@ -19,9 +19,9 @@ gamesettings {
             flex-direction: column;
 
             text {
-                font-size: 18px;
+                font-size: 20px;
                 margin-bottom: 10px;
-                //text-stroke: 2px black;
+                text-stroke: 2px black;
             }
         }
     }
@@ -36,7 +36,8 @@ gamesettings {
         button {
             width: 30%;
             height: 50%;
-            border: 2px solid rgba( black, 0 );
+            border: 2px solid rgba( black, .2 );
+            text-stroke: 2px black;
             border-radius: 10px;
             background-color: rgba(10, 34, 57, 1);
             font-size: 20px;

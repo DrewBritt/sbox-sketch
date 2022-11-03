@@ -18,13 +18,14 @@
     }
 
     image {
-        width: 100px;
-        height: 100px;
-        border-radius: 50px;
+        width: 150px;
+        height: 150px;
+        border-radius: 100px;
         margin-bottom: 20px;
     }
 
     .drawertext {
-        font-size: 30px;
+        font-size: 50px;
+        text-stroke: 4px black;
     }
 }
