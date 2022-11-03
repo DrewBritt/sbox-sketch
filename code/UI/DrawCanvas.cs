@@ -83,7 +83,7 @@ public partial class DrawCanvas : Image
     {
         Color32 color = Game.Current.CurrentColor;
 
-        Vector2 lastPos = new Vector2(-1, -1);
+        lastPos = new Vector2(-1, -1);
         foreach(var p in positions)
         {
             // Set lastPos before on first iteration
