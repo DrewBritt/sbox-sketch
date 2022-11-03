@@ -175,7 +175,7 @@ public partial class DrawCanvas : Image
     }
 
     // Implementation of Bresenham's line algo, interpolates between points to draw w/o gaps xD
-    private void DrawLine(int xStart, int yStart, int xEnd, int yEnd, Color32 color)
+    public void DrawLine(int xStart, int yStart, int xEnd, int yEnd, Color32 color)
     {
         int xDist = Math.Abs(xEnd - xStart), xDir = xStart < xEnd ? 1 : -1;
         int yDist = Math.Abs(yEnd - yStart), yDir = yStart < yEnd ? 1 : -1;
