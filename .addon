@@ -3,7 +3,7 @@
   "Type": "game",
   "Org": "pmg",
   "Ident": "sketch",
-  "Tags": "",
+  "Tags": null,
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
