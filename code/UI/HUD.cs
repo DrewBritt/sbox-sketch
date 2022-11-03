@@ -96,7 +96,7 @@ public partial class Hud : HudEntity<RootPanel>
     }
 
     /// <summary>
-    /// Grabs updated pixel data and sends to server
+    /// Server is grabbing updated pixel data from drawer's (local) canvas.
     /// </summary>
     [ClientRpc]
     public void FetchDeltaCanvasData()
@@ -112,12 +112,13 @@ public partial class Hud : HudEntity<RootPanel>
             updatedPixels += $"{p},";
         }
 
-        Vector2 last = DrawCanvas.NewPixelsPos[DrawCanvas.NewPixelsPos.Count - 1];
         DrawCanvas.NewPixelsPos.Clear();
-        //DrawCanvas.NewPixelsPos.Add(last);
         Game.ReceiveDeltaCanvasData(updatedPixels);
     }
 
+    /// <summary>
+    /// Server is sending "delta canvas data" to guesser clients.
+    /// </summary>
     [ClientRpc]
     public void UpdateGuessersCanvas(Vector2[] positions)
     {
@@ -126,7 +127,7 @@ public partial class Hud : HudEntity<RootPanel>
         Color32 color = Game.Current.CurrentColor;
         foreach(var p in positions)
         {
-            var indexes = DrawCanvas.FindPixelsInDistance(p, Game.Current.CurrentSize);
+            var indexes = DrawCanvas.FindPixelsInRadius(p, Game.Current.CurrentSize); 
             foreach(var index in indexes)
             {
                 var pixel = new Pixel
