@@ -89,6 +89,8 @@ chatentry {
         min-height: 24px;
         border-radius: 100px;
         margin-right: 10px;
+        background-position: center;
+        background-size: cover;
     }
 
     &.noname .name {
