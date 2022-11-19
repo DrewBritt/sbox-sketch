@@ -31,7 +31,7 @@
     [Event.BuildInput]
     public void BuildInput(InputBuilder b)
     {
-        if(b.Pressed(InputButton.Menu) && ConsoleSystem.GetValue("sv_cheats") == "1")
+        if(b.Pressed(InputButton.Menu) && (Local.Client.IsListenServerHost || Local.Client.HasPermission("admin")))
             SetClass("open", !HasClass("open"));
     }
 }
