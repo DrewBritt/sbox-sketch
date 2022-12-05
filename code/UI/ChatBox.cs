@@ -11,7 +11,7 @@ public partial class ChatBox : Panel
 
     public Panel Container { get; protected set; }
     public Panel Canvas { get; protected set; }
-    public TextEntry Input { get; protected set; }
+    public TextEntry TextInput { get; protected set; }
 
     public ChatBox()
     {
@@ -24,35 +24,35 @@ public partial class ChatBox : Panel
         Canvas = Container.Add.Panel("chat_canvas");
         Canvas.PreferScrollToBottom = true;
 
-        Input = Container.Add.TextEntry("");
-        Input.Placeholder = "Enter your guess here...";
-        Input.AddEventListener("onsubmit", () => Submit());
-        Input.AddEventListener("onsubmit", () => FocusChat());
-        Input.AddEventListener("onclick", () => FocusChat());
-        Input.AcceptsFocus = true;
-        Input.AllowEmojiReplace = true;
+        TextInput = Container.Add.TextEntry("");
+        TextInput.Placeholder = "Enter your guess here...";
+        TextInput.AddEventListener("onsubmit", () => Submit());
+        TextInput.AddEventListener("onsubmit", () => FocusChat());
+        TextInput.AddEventListener("onclick", () => FocusChat());
+        TextInput.AcceptsFocus = true;
+        TextInput.AllowEmojiReplace = true;
     }
 
     [Event.BuildInput]
-    public void BuildInput(InputBuilder b)
+    public void BuildInput()
     {
-        if(b.Pressed(InputButton.Chat))
+        if(Input.Pressed(InputButton.Chat))
             FocusChat();
     }
 
     void FocusChat()
     {
-        Input.Focus();
-        Input.Placeholder = "";
-        Input.CaretPosition = 0;
+        TextInput.Focus();
+        TextInput.Placeholder = "";
+        TextInput.CaretPosition = 0;
 
         Canvas.TryScrollToBottom();
     }
 
     void Submit()
     {
-        var msg = Input.Text.Trim();
-        Input.Text = "";
+        var msg = TextInput.Text.Trim();
+        TextInput.Text = "";
 
         if(string.IsNullOrWhiteSpace(msg))
             return;

@@ -75,7 +75,7 @@
     "ParentPackage": "",
     "GeneralExtensions": false,
     "TargettedExtensions": true,
-    "ExtensionApiVersion": 1001,
+    "ExtensionApiVersion": 1002,
     "Physics": {
       "SubSteps": 1,
       "TimeScale": 1,
@@ -87,6 +87,56 @@
       "VelocityIterations": 8,
       "SoftBodyIterations": 1,
       "SoftBodySubsteps": 1
-    }
+    },
+    "DefaultLeaderboards": null,
+    "PackageSettings": [
+      {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sketch_maxrounds",
+        "DisplayName": "Max Rounds",
+        "DefaultValue": "2.7158275",
+        "Description": "# of rounds to play before returning to lobby.",
+        "Group": "Gameplay",
+        "Minimum": 1,
+        "Maximum": 10
+      },
+      {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sketch_drawtime",
+        "DisplayName": "Draw Time (s)",
+        "DefaultValue": "90.40168",
+        "Description": "Time (in seconds) to draw/guess.",
+        "Group": "Gameplay",
+        "Minimum": 5,
+        "Maximum": 180
+      },
+      {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sketch_wordpoolsize",
+        "DisplayName": "Word Pool Size",
+        "DefaultValue": "2.8657074",
+        "Description": "# of words the drawer gets to pick from.",
+        "Group": "Gameplay",
+        "Minimum": 1,
+        "Maximum": 5
+      },
+      {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sketch_selectwordtime",
+        "DisplayName": "Word Selection Time (s)",
+        "DefaultValue": "14.748201",
+        "Description": "Time (in seconds) the drawer gets to pick their word.",
+        "Group": "",
+        "Maximum": 60
+      }
+    ],
+    "Summary": "Sketch or Guess...",
+    "Description": "\u270F\uFE0F Draw the selected word to the best of your ability, or guess what\u0027s being drawn! \u270F\uFE0F\n\nPlease direct feedback to Kidd#2977 on Discord.",
+    "Public": true,
+    "ReplaceTags": "art social draw"
   }
 }
