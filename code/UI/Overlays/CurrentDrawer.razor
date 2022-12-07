@@ -18,7 +18,7 @@
     private RealTimeSince panelOpened;
     public override void Tick()
     {
-        var game = Sketch.Game.Current;
+        var game = Sketch.GameManager.Current;
         if (game == null) return;
 
         if (panelOpened > 3)
@@ -27,8 +27,8 @@
 
     public void DisplayCurrentDrawer()
     {
-        var drawer = Sketch.Game.Current.CurrentDrawer;
-        Avatar.SetTexture($"avatarbig:{drawer.PlayerId}");
+        var drawer = Sketch.GameManager.Current.CurrentDrawer;
+        Avatar.SetTexture($"avatarbig:{drawer.SteamId}");
         DrawerText.Text = $"{drawer.Name.Truncate(23, "...")} is selecting a word.";
 
         SetClass("open", true);

@@ -2,7 +2,7 @@
 
 namespace Sketch
 {
-    public partial class Game
+    public partial class GameManager
     {
         private void PrecacheInit()
         {

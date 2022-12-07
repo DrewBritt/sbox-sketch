@@ -81,7 +81,7 @@ public partial class DrawCanvas : Image
     /// </summary>
     public void UpdateCanvas(Vector2[] positions)
     {
-        Color32 color = Game.Current.CurrentColor;
+        Color32 color = GameManager.Current.CurrentColor;
 
         lastPos = new Vector2(-1, -1);
         foreach(var p in positions)
@@ -143,7 +143,7 @@ public partial class DrawCanvas : Image
         // Check for OOB
         if(pos.x < 0 || pos.y < 0 || pos.x > width || pos.y > height) return;
 
-        Color32 curColor = Game.Current.CurrentColor;
+        Color32 curColor = GameManager.Current.CurrentColor;
 
         // Set lastPos early if we weren't drawing before this frame
         // (indicated by {-1, -1})
@@ -202,7 +202,7 @@ public partial class DrawCanvas : Image
             if(xStart >= 0 && xStart < width && yStart >= 0 && yStart < height)
             {
                 //Calculate pixels in radius locally
-                var indices = FindPixelsInRadius(new Vector2((float)xStart, (float)yStart), Game.Current.CurrentSize);
+                var indices = FindPixelsInRadius(new Vector2((float)xStart, (float)yStart), GameManager.Current.CurrentSize);
                 foreach(var index in indices)
                 {
                     var p = new Pixel

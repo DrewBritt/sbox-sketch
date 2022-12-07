@@ -20,10 +20,10 @@
 {
     public Label Letters { get; set; }
 
-    private int CurRound => Game.Current.CurRound;
-    private int MaxRounds => Game.MaxRounds;
-    private string CurStateName => Game.Current.CurrentStateName.ToUpper();
-    private string CurStateTime => Game.Current.CurrentStateTime;
+    private int CurRound => GameManager.Current.CurRound;
+    private int MaxRounds => GameManager.MaxRounds;
+    private string CurStateName => GameManager.Current.CurrentStateName.ToUpper();
+    private string CurStateTime => GameManager.Current.CurrentStateTime;
 
     protected override void OnAfterTreeRender(bool firstTime)
     {

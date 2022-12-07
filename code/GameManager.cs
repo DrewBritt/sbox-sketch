@@ -4,13 +4,13 @@ using Sketch.UI;
 
 namespace Sketch
 {
-    public partial class Game : Sandbox.Game
+    public partial class GameManager : Sandbox.GameManager
     {
-        public static new Game Current => Sandbox.Game.Current as Game;
+        public static new GameManager Current => Sandbox.GameManager.Current as GameManager;
 
         public Hud Hud { get; set; }
 
-        public Game() : base()
+        public GameManager() : base()
         {
             if(IsServer)
             {
@@ -22,7 +22,7 @@ namespace Sketch
 
         public override void ClientJoined(Client cl)
         {
-            ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has joined the game!");
+            ChatBox.AddInformation(To.Everyone, (ulong)cl.SteamId, $"{cl.Name} has joined the game!");
 
             // Set voice to 2D
             cl.VoiceStereo = false;
@@ -30,7 +30,7 @@ namespace Sketch
 
         public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
         {
-            ChatBox.AddInformation(To.Everyone, (ulong)cl.PlayerId, $"{cl.Name} has left ({reason})");
+            ChatBox.AddInformation(To.Everyone, (ulong)cl.SteamId, $"{cl.Name} has left ({reason})");
             Sound.FromScreen("doorshutting");
         }
 
@@ -45,7 +45,7 @@ namespace Sketch
         /// <summary>
         /// Called to set the camera up, clientside only.
         /// </summary>
-        Angles angles;
+        /*Angles angles;
         public override CameraSetup BuildCamera(CameraSetup camSetup)
         {
             angles += new Angles(0, -1.0f, 0.0f) * RealTime.Delta;
@@ -57,7 +57,7 @@ namespace Sketch
             camSetup.Viewer = null;
 
             return camSetup;
-        }
+        }*/
 
         public override bool CanHearPlayerVoice(Client source, Client dest)
         {

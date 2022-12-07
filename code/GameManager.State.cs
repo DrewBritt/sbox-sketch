@@ -5,7 +5,7 @@ using Sandbox;
 
 namespace Sketch
 {
-    public partial class Game
+    public partial class GameManager
     {
         #region States
         public class BaseState
@@ -181,7 +181,7 @@ namespace Sketch
                 Current.Hud.SendCurrentLetters(To.Single(Current.CurrentDrawer), word);
 
                 //Only send current letters (at this point, just _'s) to everyone else
-                var tosend = Client.All.Where(c => c != Game.Current.CurrentDrawer);
+                var tosend = Client.All.Where(c => c != GameManager.Current.CurrentDrawer);
                 Current.Hud.SendCurrentLetters(To.Multiple(tosend), Current.CurrentLettersString());
             }
 
@@ -214,7 +214,7 @@ namespace Sketch
                     Current.CurrentLetters[ranNum] = Current.CurrentWord[ranNum];
 
                     //Update only guesser's UI
-                    var tosend = Client.All.Where(c => c != Game.Current.CurrentDrawer);
+                    var tosend = Client.All.Where(c => c != GameManager.Current.CurrentDrawer);
                     Current.Hud.SendCurrentLetters(To.Multiple(tosend), Current.CurrentLettersString());
 
                     //Reset letter timer
@@ -482,7 +482,7 @@ namespace Sketch
         /// <summary>
         /// Holds players that have guessed the current word.
         /// </summary>
-        [Net] public List<Client> GuessedPlayers { get; set; } = new List<Client>();
+        [Net] public IList<Client> GuessedPlayers { get; set; }
 
         /// <summary>
         /// Player successfully guessed the word.
@@ -505,7 +505,7 @@ namespace Sketch
             drawer.SetInt("GameScore", curScore + (score.FloorToInt() / 3) * 2);
 
             //Check if all players have guessed (rather than checking every tick in state code)
-            if(Client.All.Where(c => c != Game.Current.CurrentDrawer).Count() == GuessedPlayers.Count)
+            if(Client.All.Where(c => c != GameManager.Current.CurrentDrawer).Count() == GuessedPlayers.Count)
                 Current.CurrentState = new PostPlayingState();
         }
 
@@ -523,7 +523,7 @@ namespace Sketch
                 positions[i / 2] = new Vector2(data[i].ToInt(), data[i + 1].ToInt());
             }
 
-            var tosend = Client.All.Where(c => c != Game.Current.CurrentDrawer);
+            var tosend = Client.All.Where(c => c != GameManager.Current.CurrentDrawer);
             Current.Hud.UpdateGuessersCanvas(To.Multiple(tosend), positions);
         }
         #endregion

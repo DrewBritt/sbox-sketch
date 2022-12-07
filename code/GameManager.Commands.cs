@@ -3,7 +3,7 @@ using Sandbox;
 
 namespace Sketch
 {
-    public partial class Game
+    public partial class GameManager
     {
         /// <summary>
         /// Generic handler for invalid command arguments.

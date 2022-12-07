@@ -28,7 +28,7 @@
         Navigate("Settings/GameSettings");
     }
 
-    [Event.BuildInput]
+    [Event.Client.BuildInput]
     public void BuildInput()
     {
         if(Input.Pressed(InputButton.Menu) && (Local.Client.IsListenServerHost || Local.Client.HasPermission("admin")))

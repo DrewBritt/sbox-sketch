@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
-using static Sketch.Game;
+using static Sketch.GameManager;
 
 namespace Sketch.UI;
 
@@ -33,7 +33,7 @@ public partial class ChatBox : Panel
         TextInput.AllowEmojiReplace = true;
     }
 
-    [Event.BuildInput]
+    [Event.Client.BuildInput]
     public void BuildInput()
     {
         if(Input.Pressed(InputButton.Chat))
@@ -120,7 +120,7 @@ public partial class ChatBox : Panel
         if(message.Contains('\n') || message.Contains('\r'))
             return;
 
-        var game = Game.Current;
+        var game = GameManager.Current;
 
         //Checks should only be ran if currently playing game
         if(game.CurrentState is PlayingState)
@@ -128,7 +128,7 @@ public partial class ChatBox : Panel
             //Highlight drawer's chat (also prevents them from guessing the word)
             if(ConsoleSystem.Caller == game.CurrentDrawer)
             {
-                AddDrawerChatEntry(To.Everyone, (ulong)ConsoleSystem.Caller.PlayerId, $"{ConsoleSystem.Caller.Name}:", message);
+                AddDrawerChatEntry(To.Everyone, (ulong)ConsoleSystem.Caller.SteamId, $"{ConsoleSystem.Caller.Name}:", message);
                 return;
             }
 
@@ -136,7 +136,7 @@ public partial class ChatBox : Panel
             var guessed = game.GuessedPlayers;
             if(guessed.Contains(ConsoleSystem.Caller))
             {
-                AddGuessedChatEntry(To.Multiple(game.GuessedPlayers), (ulong)ConsoleSystem.Caller.PlayerId, $"{ConsoleSystem.Caller.Name}:", message);
+                AddGuessedChatEntry(To.Multiple(game.GuessedPlayers), (ulong)ConsoleSystem.Caller.SteamId, $"{ConsoleSystem.Caller.Name}:", message);
                 return;
             }
 
@@ -146,14 +146,14 @@ public partial class ChatBox : Panel
             //Found word
             if(words[0].ToLower() == game.CurrentWord.ToLower())
             {
-                AddInformation(To.Everyone, (ulong)ConsoleSystem.Caller.PlayerId, $"{ConsoleSystem.Caller.Name} has guessed the word!", true);
+                AddInformation(To.Everyone, (ulong)ConsoleSystem.Caller.SteamId, $"{ConsoleSystem.Caller.Name} has guessed the word!", true);
                 Sound.FromScreen("xylophonealert");
                 game.SetPlayerGuessed(ConsoleSystem.Caller);
                 return;
             }
         }
 
-        AddChatEntry(To.Everyone, ConsoleSystem.Caller.PlayerId.ToString(), $"{ConsoleSystem.Caller.Name}:", message);
+        AddChatEntry(To.Everyone, ConsoleSystem.Caller.SteamId.ToString(), $"{ConsoleSystem.Caller.Name}:", message);
     }
 }
 

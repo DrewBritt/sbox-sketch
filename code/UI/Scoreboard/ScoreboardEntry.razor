@@ -7,7 +7,7 @@
 @namespace Sketch.UI
 
 <root>
-    <image style="background-image: url(avatarsmall:@Client.PlayerId)"></image>
+    <image style="background-image: url(avatarsmall:@Client.SteamId)"></image>
     <label>@Client.Name.Truncate(23, "...")</label>
 
     <label @ref=IsDrawing class="isdrawing">✏️</label>
@@ -29,12 +29,12 @@
     {
         if (!firstTime) return;
 
-        IsDrawing.BindClass("enable", () => Sketch.Game.Current.CurrentDrawer == Client);
+        IsDrawing.BindClass("enable", () => Sketch.GameManager.Current.CurrentDrawer == Client);
 
         IsSpeaking.BindClass("enable", () => Client.TimeSinceLastVoice < 1);
         IsSpeaking.BindClass("enable", () => Client == Local.Client && Voice.IsRecording);
 
-        HasGuessed.BindClass("enable", () => Sketch.Game.Current.GuessedPlayers.Contains(Client));
+        HasGuessed.BindClass("enable", () => Sketch.GameManager.Current.GuessedPlayers.Contains(Client));
 
         BindClass("first", () => SiblingIndex == 0);
         BindClass("second", () => SiblingIndex == 1);

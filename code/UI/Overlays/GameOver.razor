@@ -45,7 +45,7 @@
             if(i == 1)
                 p.AddClass("first");
 
-            p.Add.Image($"avatarbig:{c.PlayerId}");
+            p.Add.Image($"avatarbig:{c.SteamId}");
             p.Add.Label(c.Name);
             p.Add.Label(c.GetInt("GameScore").ToString());
         }

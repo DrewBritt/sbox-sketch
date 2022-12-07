@@ -34,25 +34,25 @@
 {
     private int MaxRounds
     {
-        get { return Sketch.Game.MaxRounds; }
+        get { return Sketch.GameManager.MaxRounds; }
         set { ConsoleSystem.Run($"sketch_maxrounds {value}"); }
     }
 
     private int DrawTime
     {
-        get { return Sketch.Game.DrawTime; }
+        get { return Sketch.GameManager.DrawTime; }
         set { ConsoleSystem.Run($"sketch_drawtime {value}"); }
     }
 
     private int WordPoolSize
     {
-        get { return Sketch.Game.WordPoolSize; }
+        get { return Sketch.GameManager.WordPoolSize; }
         set { ConsoleSystem.Run($"sketch_wordpoolsize {value}"); }
     }
 
     private int SelectWordTime
     {
-        get { return Sketch.Game.SelectWordTime; }
+        get { return Sketch.GameManager.SelectWordTime; }
         set { ConsoleSystem.Run($"sketch_selectwordtime {value}"); }
     }
 

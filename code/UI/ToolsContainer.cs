@@ -54,18 +54,18 @@ public partial class ToolsContainer : Panel
         }
 
         TrashCan = Add.Panel("trashcan");
-        TrashCan.Add.Button("", "trashbutton", () => Game.ClearCanvas());
+        TrashCan.Add.Button("", "trashbutton", () => GameManager.ClearCanvas());
 
-        BindClass("enable", () => Game.Current.CurrentDrawer == Local.Client);
+        BindClass("enable", () => GameManager.Current.CurrentDrawer == Local.Client);
     }
 
     public void UpdateColor(Color newColor)
     {
-        Game.SetCurrentColor(newColor.Rgba);
+        GameManager.SetCurrentColor(newColor.Rgba);
     }
 
     public void UpdateSize(int size)
     {
-        Game.SetCurrentSize(size);
+        GameManager.SetCurrentSize(size);
     }
 }

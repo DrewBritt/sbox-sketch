@@ -18,7 +18,7 @@
 
     public override void Tick()
     {
-        if(Sketch.Game.Current == null) return;
+        if(Sketch.GameManager.Current == null) return;
 
         if(stateEnd < 0)
             SetClass("open", false);
@@ -36,7 +36,7 @@
 
     private void SelectedWord(string word)
     {
-        Sketch.Game.SelectWord(word);
+        Sketch.GameManager.SelectWord(word);
         stateEnd = -1;
     }
 }

@@ -9,10 +9,10 @@ public static class ClientUtil
     /// <returns></returns>
     public static bool CanDraw(Client cl)
     {
-        if(Game.Current.CurrentDrawer != cl)
+        if(GameManager.Current.CurrentDrawer != cl)
             return false;
 
-        if(Game.Current.CurrentStateName != "Playing")
+        if(GameManager.Current.CurrentStateName != "Playing")
             return false;
 
         return true;

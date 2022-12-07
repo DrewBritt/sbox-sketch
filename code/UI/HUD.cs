@@ -113,7 +113,7 @@ public partial class Hud : HudEntity<RootPanel>
         }
 
         DrawCanvas.NewPixelsPos.Clear();
-        Game.ReceiveDeltaCanvasData(updatedPixels);
+        GameManager.ReceiveDeltaCanvasData(updatedPixels);
     }
 
     /// <summary>
