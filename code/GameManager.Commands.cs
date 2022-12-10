@@ -79,7 +79,7 @@ namespace Sketch
             Current.CurRound = 1;
             Current.Hud.ClearCanvas(To.Everyone);
             Current.CurrentLetters.Clear();
-            foreach(var c in Client.All)
+            foreach(var c in Game.Clients)
                 c.SetInt("GameScore", 0);
 
             Current.CurrentState = new WaitingForPlayersState();

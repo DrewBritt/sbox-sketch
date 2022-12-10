@@ -27,7 +27,7 @@ namespace Sketch
 
             public virtual void Tick()
             {
-                if(Client.All.Count == 1)
+                if(Game.Clients.Count == 1)
                     SetState(new WaitingForPlayersState());
 
                 if(Current.CurrentDrawer != null && !Current.CurrentDrawer.IsValid())
@@ -55,7 +55,7 @@ namespace Sketch
 
             public override void Tick()
             {
-                if(Client.All.Count > 1)
+                if(Game.Clients.Count > 1)
                 {
                     SetState(new PreSelectingState());
                 }
@@ -74,7 +74,7 @@ namespace Sketch
 
             public PreSelectingState() : base()
             {
-                Current.CurrentDrawer = Client.All[Current.CurrentDrawerIndex];
+                Current.CurrentDrawer = Game.Clients.ToArray()[Current.CurrentDrawerIndex];
                 Current.Hud.DisplayCurrentDrawer(To.Everyone);
             }
 
@@ -181,7 +181,7 @@ namespace Sketch
                 Current.Hud.SendCurrentLetters(To.Single(Current.CurrentDrawer), word);
 
                 //Only send current letters (at this point, just _'s) to everyone else
-                var tosend = Client.All.Where(c => c != GameManager.Current.CurrentDrawer);
+                var tosend = Game.Clients.Where(c => c != GameManager.Current.CurrentDrawer);
                 Current.Hud.SendCurrentLetters(To.Multiple(tosend), Current.CurrentLettersString());
             }
 
@@ -214,7 +214,7 @@ namespace Sketch
                     Current.CurrentLetters[ranNum] = Current.CurrentWord[ranNum];
 
                     //Update only guesser's UI
-                    var tosend = Client.All.Where(c => c != GameManager.Current.CurrentDrawer);
+                    var tosend = Game.Clients.Where(c => c != GameManager.Current.CurrentDrawer);
                     Current.Hud.SendCurrentLetters(To.Multiple(tosend), Current.CurrentLettersString());
 
                     //Reset letter timer
@@ -276,7 +276,7 @@ namespace Sketch
                     Current.Hud.SendCurrentLetters(To.Everyone, "");
 
                     //New drawer
-                    if(Current.CurrentDrawerIndex != Client.All.Count - 1)
+                    if(Current.CurrentDrawerIndex != Game.Clients.Count - 1)
                     {
                         Current.CurrentDrawerIndex++;
                         SetState(new PreSelectingState());
@@ -358,7 +358,7 @@ namespace Sketch
             {
                 if(stateEnds < 0)
                 {
-                    Client.All.ToList().ForEach(cl => cl.Kick());
+                    Game.Clients.ToList().ForEach(cl => cl.Kick());
                 }
             }
         }
@@ -373,11 +373,9 @@ namespace Sketch
         [Net] public string CurrentStateName { get; set; }
         [Net] public string CurrentStateTime { get; set; }
 
-        [Event.Tick]
-        public void OnTick()
+        [Event.Tick.Server]
+        public void OnServerTick()
         {
-            if(Host.IsClient) return;
-
             CurrentStateName = CurrentState.StateName();
             CurrentStateTime = CurrentState.StateTime();
             CurrentState.Tick();
@@ -395,9 +393,6 @@ namespace Sketch
         /// </summary>
         [ConVar.Replicated("sketch_drawtime", Help = "How long players have to draw/guess.", Min = 5, Max = 180)]
         public static int DrawTime { get; set; }
-
-        [Net] public Client CurrentDrawer { get; set; }
-        public int CurrentDrawerIndex = 0;
         #endregion
 
         #region Word Management
@@ -470,6 +465,16 @@ namespace Sketch
         #endregion
 
         #region Drawing Management
+        // Because of Client being removed for IClient, which is no longer an Entity, we can't just slap a [Net] on Client properties anymore.
+        // Therefore, we keep track of and network the SteamId of the drawer instead, and use that to find the appropriate IClient.
+        public IClient CurrentDrawer
+        {
+            get { return Game.Clients.Where(c => c.SteamId == _currentDrawerSteamId).FirstOrDefault(); }
+            set { _currentDrawerSteamId = value.SteamId; }
+        }
+        [Net] private long _currentDrawerSteamId { get; set; }
+        private int CurrentDrawerIndex = 0;
+
         /// <summary>
         /// Drawer's currently selected color.
         /// </summary>
@@ -482,13 +487,13 @@ namespace Sketch
         /// <summary>
         /// Holds players that have guessed the current word.
         /// </summary>
-        [Net] public IList<Client> GuessedPlayers { get; set; }
+        [Net] public IList<IClient> GuessedPlayers { get; set; }
 
         /// <summary>
         /// Player successfully guessed the word.
         /// </summary>
         /// <param name="cl"></param>
-        public void SetPlayerGuessed(Client cl)
+        public void SetPlayerGuessed(IClient cl)
         {
             //Player score is calculated by lerping between 400 and 1000, 
             //Delta is higher if player is faster
@@ -505,7 +510,7 @@ namespace Sketch
             drawer.SetInt("GameScore", curScore + (score.FloorToInt() / 3) * 2);
 
             //Check if all players have guessed (rather than checking every tick in state code)
-            if(Client.All.Where(c => c != GameManager.Current.CurrentDrawer).Count() == GuessedPlayers.Count)
+            if(Game.Clients.Where(c => c != Current.CurrentDrawer).Count() == GuessedPlayers.Count)
                 Current.CurrentState = new PostPlayingState();
         }
 
@@ -523,7 +528,7 @@ namespace Sketch
                 positions[i / 2] = new Vector2(data[i].ToInt(), data[i + 1].ToInt());
             }
 
-            var tosend = Client.All.Where(c => c != GameManager.Current.CurrentDrawer);
+            var tosend = Game.Clients.Where(c => c != Current.CurrentDrawer);
             Current.Hud.UpdateGuessersCanvas(To.Multiple(tosend), positions);
         }
         #endregion

@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Diagnostics;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 using static Sketch.GameManager;
@@ -87,7 +88,7 @@ public partial class ChatBox : Panel
         Current?.AddEntry(playerid.ToULong(), name, message);
 
         // Only log clientside if we're not the listen server host
-        if(!Global.IsListenServer)
+        if(!Game.IsListenServer)
         {
             Log.Info($"{name}: {message}");
         }

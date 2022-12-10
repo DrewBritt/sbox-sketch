@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security.Cryptography;
 using Sandbox;
 using Sketch.UI;
 
@@ -12,7 +13,7 @@ namespace Sketch
 
         public GameManager() : base()
         {
-            if(IsServer)
+            if(Game.IsServer)
             {
                 Words.AddToWordList(Words.BaseListPath);
                 PrecacheInit();
@@ -20,15 +21,15 @@ namespace Sketch
             }
         }
 
-        public override void ClientJoined(Client cl)
+        public override void ClientJoined(IClient cl)
         {
             ChatBox.AddInformation(To.Everyone, (ulong)cl.SteamId, $"{cl.Name} has joined the game!");
 
             // Set voice to 2D
-            cl.VoiceStereo = false;
+            cl.Voice.WantsStereo = false;
         }
 
-        public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
+        public override void ClientDisconnect(IClient cl, NetworkDisconnectionReason reason)
         {
             ChatBox.AddInformation(To.Everyone, (ulong)cl.SteamId, $"{cl.Name} has left ({reason})");
             Sound.FromScreen("doorshutting");
@@ -59,9 +60,9 @@ namespace Sketch
             return camSetup;
         }*/
 
-        public override bool CanHearPlayerVoice(Client source, Client dest)
+        public override bool CanHearPlayerVoice(IClient source, IClient dest)
         {
-            Host.AssertServer();
+            Game.AssertServer();
 
             return true;
         }

@@ -19,7 +19,7 @@
 
 @code
 {
-    public Client Client { get; set; }
+    public IClient Client { get; set; }
     private Label IsDrawing { get; set; }
     private Label IsSpeaking { get; set; }
     private Label HasGuessed { get; set; }
@@ -31,8 +31,8 @@
 
         IsDrawing.BindClass("enable", () => Sketch.GameManager.Current.CurrentDrawer == Client);
 
-        IsSpeaking.BindClass("enable", () => Client.TimeSinceLastVoice < 1);
-        IsSpeaking.BindClass("enable", () => Client == Local.Client && Voice.IsRecording);
+        IsSpeaking.BindClass("enable", () => Client.Voice.LastHeard < 1);
+        IsSpeaking.BindClass("enable", () => Client == Game.LocalClient && Voice.IsRecording);
 
         HasGuessed.BindClass("enable", () => Sketch.GameManager.Current.GuessedPlayers.Contains(Client));
 

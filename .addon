@@ -14,7 +14,6 @@
   ],
   "HasCode": true,
   "CodePath": "code",
-  "RootNamespace": "Sketch",
   "Metadata": {
     "MapList": [
       "empty.map"

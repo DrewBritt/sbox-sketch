@@ -31,7 +31,7 @@
     [Event.Client.BuildInput]
     public void BuildInput()
     {
-        if(Input.Pressed(InputButton.Menu) && (Local.Client.IsListenServerHost || Local.Client.HasPermission("admin")))
+        if(Input.Pressed(InputButton.Menu) && Game.LocalClient.IsListenServerHost)
             SetClass("open", !HasClass("open"));
     }
 }

@@ -133,7 +133,7 @@ public partial class DrawCanvas : Image
         if(!isDrawing) return;
 
         // Not current drawer, block drawing.
-        if(!ClientUtil.CanDraw(Local.Client)) return;
+        if(!ClientUtil.CanDraw(Game.LocalClient)) return;
 
         // Map mouse position to panel position.
         // This is still currently kinda shit and sticks out sometimes,

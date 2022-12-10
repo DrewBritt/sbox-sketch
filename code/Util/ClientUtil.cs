@@ -7,7 +7,7 @@ public static class ClientUtil
     /// Returns whether or not the passed client is able to draw.
     /// </summary>
     /// <returns></returns>
-    public static bool CanDraw(Client cl)
+    public static bool CanDraw(IClient cl)
     {
         if(GameManager.Current.CurrentDrawer != cl)
             return false;

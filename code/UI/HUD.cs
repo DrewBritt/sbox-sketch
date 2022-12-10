@@ -19,7 +19,7 @@ public partial class Hud : HudEntity<RootPanel>
 
     public Hud()
     {
-        if(!IsClient)
+        if(!Game.IsClient)
             return;
 
         RootPanel.StyleSheet.Load("/ui/Hud.scss");
@@ -46,7 +46,7 @@ public partial class Hud : HudEntity<RootPanel>
     [ClientRpc]
     public new void PlaySound(string soundname)
     {
-        Host.AssertClient();
+        Game.AssertClient();
         Sound.FromScreen(soundname);
     }
 
@@ -56,7 +56,7 @@ public partial class Hud : HudEntity<RootPanel>
     [ClientRpc]
     public void DisplayCurrentDrawer()
     {
-        Host.AssertClient();
+        Game.AssertClient();
         CurrentDrawer.DisplayCurrentDrawer();
     }
 
@@ -68,7 +68,7 @@ public partial class Hud : HudEntity<RootPanel>
     [ClientRpc]
     public void SendWordPool(string[] pool, int time)
     {
-        Host.AssertClient();
+        Game.AssertClient();
         SelectWord.DisplayWordPool(pool, time);
     }
 
@@ -81,7 +81,7 @@ public partial class Hud : HudEntity<RootPanel>
     [ClientRpc]
     public void SendCurrentLetters(string currentletters)
     {
-        Host.AssertClient();
+        Game.AssertClient();
         StateInfo.Letters.Text = currentletters;
     }
 
@@ -91,7 +91,7 @@ public partial class Hud : HudEntity<RootPanel>
     [ClientRpc]
     public void ClearCanvas()
     {
-        Host.AssertClient();
+        Game.AssertClient();
         DrawCanvas.InitializeCanvasTexture();
     }
 
@@ -101,7 +101,7 @@ public partial class Hud : HudEntity<RootPanel>
     [ClientRpc]
     public void FetchDeltaCanvasData()
     {
-        Host.AssertClient();
+        Game.AssertClient();
 
         if(DrawCanvas.NewPixelsPos.Count == 0)
             return;
@@ -122,14 +122,14 @@ public partial class Hud : HudEntity<RootPanel>
     [ClientRpc]
     public void UpdateGuessersCanvas(Vector2[] positions)
     {
-        Host.AssertClient();
+        Game.AssertClient();
         DrawCanvas.UpdateCanvas(positions);
     }
 
     [ClientRpc]
     public void EnableGameOverPanel()
     {
-        Host.AssertClient();
+        Game.AssertClient();
         RootPanel.AddChild<GameOver>();
     }
 }

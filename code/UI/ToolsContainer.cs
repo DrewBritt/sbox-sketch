@@ -56,7 +56,7 @@ public partial class ToolsContainer : Panel
         TrashCan = Add.Panel("trashcan");
         TrashCan.Add.Button("", "trashbutton", () => GameManager.ClearCanvas());
 
-        BindClass("enable", () => GameManager.Current.CurrentDrawer == Local.Client);
+        BindClass("enable", () => GameManager.Current.CurrentDrawer == Game.LocalClient);
     }
 
     public void UpdateColor(Color newColor)
